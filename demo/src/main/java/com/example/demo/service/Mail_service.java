@@ -25,5 +25,11 @@ public class Mail_service implements Mail_DAO{
         return mail_dao.log_in(m);
     }
 
+    @Override
+    @Transactional
+    public Mail uptade(Mail m) {
+        return mail_dao.uptade(m);
+    }
+
 
 }

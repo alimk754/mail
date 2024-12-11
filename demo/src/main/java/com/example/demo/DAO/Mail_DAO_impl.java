@@ -36,6 +36,12 @@ public class Mail_DAO_impl implements Mail_DAO{
         else throw new RuntimeException("Not found");
     }
 
+    @Override
+    public Mail uptade(Mail m) {
+        Mail mail=entityManager.merge(m);
+        return mail;
+    }
+
     @ExceptionHandler
     ResponseEntity<Returned> handle(RuntimeException e){
         Returned r=new Returned();
