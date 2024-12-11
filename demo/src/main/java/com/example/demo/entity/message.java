@@ -1,28 +1,16 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.engine.internal.Cascade;
-
-import javax.lang.model.element.Name;
-import java.util.List;
 
 @Entity
 @Table(name = "message")
-
-public class Message {
+public class message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "ID")
     private int id;
-    @Column(name = "message")
+    @Column(name="message")
     private String message;
-    @ManyToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "mapping",
-            joinColumns = @JoinColumn(name = "messages_id"),
-            inverseJoinColumns = @JoinColumn(name="mail_id")
-    )
-    List<Mail> mails;
 
     public int getId() {
         return id;
@@ -40,11 +28,10 @@ public class Message {
         this.message = message;
     }
 
-    public Message() {
+    public message() {
     }
 
-    public Message(String message) {
+    public message(String message) {
         this.message = message;
     }
-
 }

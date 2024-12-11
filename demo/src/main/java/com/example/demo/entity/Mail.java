@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 @Entity
 @Table(name="mail")
@@ -12,37 +13,65 @@ public class Mail {
     private String email;
     @Column(name = "pass")
     private String password;
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name="email_idin")
+    List<message> in=new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name="email_idout")
+    List<message> out=new ArrayList<>();
 
-    @ManyToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "mapping",
-            joinColumns = @JoinColumn(name = "mail_id"),
-            inverseJoinColumns = @JoinColumn(name="message_id")
-    )
-    private List<Message> messages;
+    public List<message> getIn() {
+        return in;
+    }
 
-    public List<Message> getMessages() {
-        return messages;
+    public void setIn(List<message> in) {
+        this.in = in;
     }
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
+    public void addin(message m){
+
+        in.add(m);
     }
+    public void addout(message m){
+
+        out.add(m);
+
+    }
+
+    public List<message> getOut() {
+        return out;
+    }
+
+    public void setOut(List<message> out) {
+        this.out = out;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Mail() {
     }
 
-    public Mail(String email, String password, List<Message> messages) {
+    public Mail(String email, String password) {
         this.email = email;
         this.password = password;
-        this.messages = messages;
     }
     static class builder{
         private String email;
         private String password;
-        private List<Message> messages;
-        public builder messages(List<Message> m){
-            messages=m;
-            return this;
-        }
+
         public builder password(String pass){
             password=pass;
             return this;
@@ -52,7 +81,7 @@ public class Mail {
             return this;
         }
         public Mail build(){
-            return new Mail(email,password,messages);
+            return new Mail(email,password);
         }
     }
 
