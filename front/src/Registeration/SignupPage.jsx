@@ -14,6 +14,8 @@ const SignupPage = () => {
     confirmPassword: ''
   });
 
+  const[ErrorMessage,setErrorMEssage]=useState(null); 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -27,9 +29,9 @@ const SignupPage = () => {
 
     // Basic password validation
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setErrorMEssage("Passwords do not match!");
       return;
-    }
+    }else setErrorMEssage(null);
 
     try {
       const { username, password } = formData;
@@ -37,14 +39,14 @@ const SignupPage = () => {
       const response = await axios.post('http://localhost:8080/api/mail', {email : username,password : password });
 
       console.log(response)
-      if (response.status === 200) 
+      if (response.status === 200) {
         console.log('Signup successful:', response.data);
-      else 
+        setErrorMEssage(null);
+      }else 
         console.error('Signup failed:', response.data.error);
       
     } catch (error) {
-
-      console.error('Error occurred during signup:', error.response.data.message);
+      setErrorMEssage(error.response.data.message);
     }
   };
 
@@ -104,7 +106,7 @@ const SignupPage = () => {
               placeholder="Enter confirm password"
             />
           </div>
-          <SubmitButton />
+          <SubmitButton error={ErrorMessage} />
         </form>
       </div>
     </div>

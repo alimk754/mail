@@ -9,6 +9,9 @@ const LoginPage = () => {
     password: '',
   });
 
+  const[ErrorMessage,setErrorMEssage]=useState(null); 
+ 
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prevState => ({
@@ -25,13 +28,14 @@ const LoginPage = () => {
 
       // Handle the response from the backend
       console.log(response);
-      if (response.status === 200) 
+      if (response.status === 200) {
+        setErrorMEssage(null);
         console.log('Login successful:', response.data);
-      else 
+      }else 
         console.error('Login failed:', response.data.error);
       
     } catch (error) {
-      console.error('Error occurred during login:', error.response.data.message);
+      setErrorMEssage(error.response.data.message);
     }
   };
 
@@ -43,6 +47,8 @@ const LoginPage = () => {
             formData={formData}
             onInputChange={handleInputChange}
             onSubmit={handleSubmit}
+            error={ErrorMessage}
+            
           />
           <LoginIllustration />
         </div>

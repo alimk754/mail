@@ -34,7 +34,7 @@ public class Mail_DAO_impl implements Mail_DAO{
         if(mail!=null) {
             return mail;
         }
-        else throw new RuntimeException("Not found");
+        else throw new RuntimeException("Username Not found");
     }
 
     @Override

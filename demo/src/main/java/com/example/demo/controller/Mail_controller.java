@@ -35,7 +35,7 @@ public class Mail_controller {
         Mail DB_mail= mailService.log_in(mail);
         if(DB_mail.getPassword().equals(m.getPassword()))
             return ResponseEntity.ok(DB_mail);
-        else throw new RuntimeException("not now");
+        else throw new RuntimeException("Wrong Password");
     }
     @PutMapping("/message")
     Mail addin_message(@RequestBody DTO_mail obj) {
