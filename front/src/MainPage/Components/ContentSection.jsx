@@ -28,12 +28,12 @@ const ContentSection = ({
   };
 
   return (
-    <div className="relative p-6 bg-white shadow-sm rounded-lg">
-      <h3 className="text-2xl font-bold text-gray-800 mb-6 border-b border-gray-200 pb-3">
+    <div>
+      <h3 className="text-2xl font-bold text-gray-800 mb-6">
         {title}
       </h3>
-      
-      <div className="relative mb-6">
+      <div className="relative bg-white mb-6 rounded-lg space-y-4">
+       <div className="relative mb-6">
         <div className="relative flex-grow">
           <input
             type="text"
@@ -54,9 +54,9 @@ const ContentSection = ({
             </button>
           )}
         </div>
-      </div>
+       </div>
 
-      <div className="mt-4 flex justify-end space-around space-x-6">  {/* Increased space-x from space-x-3 to space-x-6 */}
+       <div className="mt-4 flex justify-end space-around space-x-6">  {/* Increased space-x from space-x-3 to space-x-6 */}
         <button
           onClick={onSort}
           className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 active:scale-95"
@@ -71,6 +71,7 @@ const ContentSection = ({
           <Filter size={18} className="mr-2" />
           {filterLabel}
         </button>
+       </div>
       </div>
     </div>
   );

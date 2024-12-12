@@ -32,11 +32,11 @@ const ComposeForm = () => {
         set_subject('');
         set_content('');
         setImportance('medium');
-        console.log('Login successful:', response.data);
+        console.log('successful:', response.data);
         setUser(response.data);
         
       }else 
-        console.error('Login failed:', response.data.error);
+        console.error('failed:', response.data.error);
       
     } catch (error) {
       set_to('');
@@ -58,16 +58,6 @@ const ComposeForm = () => {
     <div>
       <h3 className="text-2xl font-bold text-gray-800 mb-6">New Message</h3>
       <div className="space-y-4">
-         <div>
-          <input
-            type="text"
-            placeholder="From"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
-            onChange={(e)=>set_from(e.target.value)}
-            value={from} 
-            disabled
-          />
-        </div>
         <div>
           <input
             type="text"
