@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { LoginForm } from './LoginForm';
 import { LoginIllustration } from './LoginIllustration';
+import { Datacontext } from '../main';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  
+  const {user,setUser} =useContext(Datacontext);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -29,13 +30,12 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post('http://localhost:8080/api/mail/login', {email : formData.username, password : formData.password});
-
-      // Handle the response from the backend
       console.log(response);
       if (response.status === 200) {
         setErrorMEssage(null);
         console.log('Login successful:', response.data);
-        
+        setUser(u=>response.data);
+        console.log(user);
         navigate('/main page');
       }else 
         console.error('Login failed:', response.data.error);

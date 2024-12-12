@@ -22,16 +22,23 @@ const ComposeForm = () => {
        subject:subject,
        importance: importance === "high" ? 10 : importance === "medium" ? 5 : 0, 
        });
-       
       console.log(response);
       if (response.status === 200) {
-       
+        set_to('');
+        set_from('');
+        set_subject('');
+        set_content('');
+        setImportance('medium');
         console.log('Login successful:', response.data);
       }else 
         console.error('Login failed:', response.data.error);
       
     } catch (error) {
-      
+      set_to('');
+      set_from('');
+      set_subject('');
+      set_content('');
+      setImportance('medium');
     }
 
   }
@@ -51,7 +58,8 @@ const ComposeForm = () => {
             type="text"
             placeholder="From"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
-            onChange={(e)=>set_from(e.target.value)} 
+            onChange={(e)=>set_from(e.target.value)}
+            value={from} 
           />
         </div>
         <div>
@@ -60,6 +68,7 @@ const ComposeForm = () => {
             placeholder="To"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
             onChange={(e)=>set_to(e.target.value)}
+            value={to}
           />
         </div>
         <div>
@@ -68,6 +77,7 @@ const ComposeForm = () => {
             placeholder="subject"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
             onChange={(e)=>set_subject(e.target.value)}
+            value={subject}
           />
         </div>
         <div>
@@ -114,6 +124,7 @@ const ComposeForm = () => {
             rows={10}
             placeholder="Write your message here..."
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
+            value={content}
           />
         </div>
         <div>
