@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { use } from 'react';
 import axios from 'axios';
+import { Datacontext } from '../../main';
 const ComposeForm = () => {
+  const {user,setUser}=useContext(Datacontext);
   const [importance, setImportance] = useState('medium');
   const [to,set_to]=useState("");
-  const [from,set_from]=useState("");
+  const [from,set_from]=useState(user.email);
   const [content,set_content]=useState("");
   const [subject,set_subject]=useState("");
+ 
   const handleClick=async (e)=>{
     e.preventDefault();
     console.log(to);
@@ -30,6 +33,8 @@ const ComposeForm = () => {
         set_content('');
         setImportance('medium');
         console.log('Login successful:', response.data);
+        setUser(response.data);
+        
       }else 
         console.error('Login failed:', response.data.error);
       
@@ -60,6 +65,7 @@ const ComposeForm = () => {
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
             onChange={(e)=>set_from(e.target.value)}
             value={from} 
+            disabled
           />
         </div>
         <div>
