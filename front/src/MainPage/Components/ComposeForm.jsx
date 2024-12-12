@@ -28,7 +28,6 @@ const ComposeForm = () => {
       console.log(response);
       if (response.status === 200) {
         set_to('');
-        set_from('');
         set_subject('');
         set_content('');
         setImportance('medium');
@@ -40,10 +39,10 @@ const ComposeForm = () => {
       
     } catch (error) {
       set_to('');
-      set_from('');
       set_subject('');
       set_content('');
       setImportance('medium');
+      console.log(error);
     }
 
   }

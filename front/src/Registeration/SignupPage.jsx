@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, {useContext ,useState } from 'react';
 import axios from 'axios';
 import {useNavigate } from 'react-router-dom';
 import Header from './Header';
 import InputField from './InputField';
 import SubmitButton from './SubmitButton';
+import { Datacontext } from '../main';
+
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +18,7 @@ const SignupPage = () => {
   });
 
   const navigate = useNavigate();
+  const {user,setUser} =useContext(Datacontext);
 
   const[ErrorMessage,setErrorMEssage]=useState(null); 
 
@@ -46,7 +49,9 @@ const SignupPage = () => {
       if (response.status === 200) {
         console.log('Signup successful:', response.data);
         setErrorMEssage(null);
-
+        setUser(u=>response.data);
+        console.log(user);
+        
         navigate('/main page');
       }else 
         console.error('Signup failed:', response.data.error);
