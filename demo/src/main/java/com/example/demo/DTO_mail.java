@@ -4,6 +4,7 @@ import com.example.demo.entity.Message;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,16 @@ public class DTO_mail {
     List<Message> in=new ArrayList<>();
     List<Message> out=new ArrayList<>();
     private String message;
+
+    private LocalDateTime created_at;
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
+    }
 
     public DTO_mail() {
     }

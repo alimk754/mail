@@ -43,7 +43,13 @@ public class Mail_controller {
          Mail mail1=mailService.log_in(user1);
          Mail user2=new Mail.builder().email(obj.getToemail()).build();
          Mail mail2=mailService.log_in(user2);
-         Message m1=new Message.massageBuilder().message(obj.getMessage()).sender(mail1).reciever(mail2).subject(obj.getSubject()).importance(obj.getImportance()).build();
+         Message m1=new Message.massageBuilder()
+                 .message(obj.getMessage())
+                 .sender(mail1).reciever(mail2)
+                 .subject(obj.getSubject())
+                 .importance(obj.getImportance())
+                 .created_at()
+                 .build();
          mail1.addout(m1);
 
          Mail returned_mail=mailService.uptade(mail1);
