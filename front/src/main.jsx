@@ -1,9 +1,20 @@
-import { StrictMode, useState } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import Routes from "./router";
-import './index.css'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import App from "./App";
+import SignupPage from './Registeration/SignupPage';
 
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "signup",
+    element: <SignupPage />,
+  },
+]);
 
 
 
@@ -11,6 +22,6 @@ import './index.css'
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Routes></Routes>
+    <RouterProvider router={router} />
   </StrictMode>
 );

@@ -6,6 +6,8 @@ import com.example.demo.entity.Mail;
 import com.example.demo.entity.Message;
 import com.example.demo.service.Mail_service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,16 +20,22 @@ public class Mail_controller {
     }
 
     @PostMapping("/mail")
-    Mail sign_up(@RequestBody DTO_mail m){
-        Mail mail=new Mail.builder().email(m.getEmail()).password(m.getPassword()).build();
-        return mailService.sign_up(mail);
+    public ResponseEntity<Mail> signUp(@RequestBody DTO_mail m) {
+        Mail mail = new Mail.builder()
+                .email(m.getEmail())
+                .password(m.getPassword())
+                .build();
+
+        Mail savedMail = mailService.sign_up(mail);
+        return ResponseEntity.ok(savedMail);
     }
     @PostMapping("/mail/login")
-    Mail log_in(@RequestBody DTO_mail m){
+    ResponseEntity<Mail> log_in(@RequestBody DTO_mail m){
         Mail mail=new Mail.builder().email(m.getEmail()).build();
         Mail DB_mail= mailService.log_in(mail);
-
-        return DB_mail;
+        if(DB_mail.getPassword().equals(m.getPassword()))
+            return ResponseEntity.ok(DB_mail);
+        else throw new RuntimeException("not now");
     }
     @PutMapping("/message")
     Mail addin_message(@RequestBody DTO_mail obj) {
