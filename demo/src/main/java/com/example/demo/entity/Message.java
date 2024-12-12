@@ -2,6 +2,9 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -23,11 +26,35 @@ public class Message {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_email")
     private Mail reciever;
-    @Column(name = "name of")
-    private String recieved;
+    @Column(name = "toemail")
+    private String TO;
 
-    public String getRecieved() {
-        return recieved;
+    @Column(name = "fromemail")
+    private String FROM;
+    @Column(name = "created_at", updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL")
+    private LocalDate createdAt;
+    public String getTO() {
+        return TO;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setTO(String TO) {
+        this.TO = TO;
+    }
+
+    public String getFROM() {
+        return FROM;
+    }
+
+    public void setFROM(String FROM) {
+        this.FROM = FROM;
     }
 
     public int getImportance() {
@@ -96,15 +123,21 @@ public class Message {
 
         public massageBuilder sender(Mail user1) {
             m.sender = user1;
+            m.FROM = user1.getEmail();
             return this;
         }
 
         public massageBuilder reciever(Mail user) {
             m.reciever = user;
-            m.recieved=user.getEmail();
+            m.TO=user.getEmail();
             return this;
         }
 
+        public massageBuilder created_at() {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            m.createdAt= LocalDateTime.now().toLocalDate();
+            return this;
+        }
 
         public Message build() {
             return m;
