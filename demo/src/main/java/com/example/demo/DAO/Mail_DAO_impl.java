@@ -1,6 +1,7 @@
 package com.example.demo.DAO;
 
 import com.example.demo.entity.Mail;
+import com.example.demo.entity.Message;
 import com.example.demo.entity.Returned;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class Mail_DAO_impl implements Mail_DAO{
         Mail mail=entityManager.merge(m);
         return mail;
     }
+
 
     @ExceptionHandler
     ResponseEntity<Returned> handle(RuntimeException e){

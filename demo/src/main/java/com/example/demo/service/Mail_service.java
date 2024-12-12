@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.DAO.Mail_DAO;
 import com.example.demo.entity.Mail;
+import com.example.demo.entity.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ public class Mail_service implements Mail_DAO{
     public Mail uptade(Mail m) {
         return mail_dao.uptade(m);
     }
+
 
 
 }

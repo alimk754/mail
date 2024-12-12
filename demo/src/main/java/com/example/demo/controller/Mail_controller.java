@@ -22,24 +22,26 @@ public class Mail_controller {
         Mail mail=new Mail.builder().email(m.getEmail()).password(m.getPassword()).build();
         return mailService.sign_up(mail);
     }
-    @PostMapping("/mail/login")
+    @GetMapping("/mail/login")
     Mail log_in(@RequestBody DTO_mail m){
         Mail mail=new Mail.builder().email(m.getEmail()).build();
-        return mailService.log_in(mail);
+        Mail DB_mail= mailService.log_in(mail);
+        if(DB_mail.getPassword()!=m.getPassword()){
+            throw new RuntimeException();
+        }
+        else return DB_mail;
     }
-    @PutMapping("/inmessages")
-    Mail addin_message(@RequestBody DTO_mail obj){
-        Message m1=obj.getMessage().clone();
-        Mail mail1=new Mail.builder().email(obj.getFromemail()).build();
+    @PutMapping("/message")
+    Mail addin_message(@RequestBody DTO_mail obj) {
+         Mail user1=new Mail.builder().email(obj.getFromemail()).build();
+         Mail mail1=mailService.log_in(user1);
+         Mail user2=new Mail.builder().email(obj.getToemail()).build();
+         Mail mail2=mailService.log_in(user2);
+         Message m1=new Message.builder().message(obj.getMessage().getMessage()).sender(mail1).reciever(mail2).build();
+         mail1.addin(m1);
 
-        Mail mail2=new Mail.builder().email(obj.getToemail()).build();
-        Mail DB_mail=mailService.log_in(mail1);
-        DB_mail.addin(m1);
-        mailService.uptade(DB_mail);
-        Mail DB_mail2=mailService.log_in(mail2);
-        DB_mail2.addout(m1);
-        mailService.uptade(DB_mail2);
-        return DB_mail;
+         Mail returned_mail=mailService.uptade(mail1);
+         return returned_mail;
     }
 
 
