@@ -1,8 +1,41 @@
 import React, { useState } from 'react';
-
+import { use } from 'react';
+import axios from 'axios';
 const ComposeForm = () => {
   const [importance, setImportance] = useState('medium');
-  
+  const [to,set_to]=useState("");
+  const [from,set_from]=useState("");
+  const [content,set_content]=useState("");
+  const [subject,set_subject]=useState("");
+  const handleClick=async (e)=>{
+    e.preventDefault();
+    console.log(to);
+    console.log(from);
+    console.log(subject);
+    console.log(content);
+
+
+    try {
+      const response = await axios.put('http://localhost:8080/api/message', {toemail : to,
+       fromemail : from,
+       message : content,
+       subject:subject,
+       importance: importance === "high" ? 10 : importance === "medium" ? 5 : 0, 
+       });
+       
+      console.log(response);
+      if (response.status === 200) {
+       
+        console.log('Login successful:', response.data);
+      }else 
+        console.error('Login failed:', response.data.error);
+      
+    } catch (error) {
+      
+    }
+
+  }
+
   const options = [
     { value: 'high', label: 'High', color: 'bg-red-500', borderColor: 'border-red-500', textColor: 'text-red-600' },
     { value: 'medium', label: 'Medium', color: 'bg-yellow-500', borderColor: 'border-yellow-500', textColor: 'text-yellow-600' },
@@ -13,18 +46,28 @@ const ComposeForm = () => {
     <div>
       <h3 className="text-2xl font-bold text-gray-800 mb-6">New Message</h3>
       <div className="space-y-4">
-        <div>
+         <div>
           <input
             type="text"
-            placeholder="To"
+            placeholder="From"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
+            onChange={(e)=>set_from(e.target.value)} 
           />
         </div>
         <div>
           <input
             type="text"
-            placeholder="Subject"
+            placeholder="To"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
+            onChange={(e)=>set_to(e.target.value)}
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="subject"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
+            onChange={(e)=>set_subject(e.target.value)}
           />
         </div>
         <div>
@@ -67,13 +110,14 @@ const ComposeForm = () => {
         </div>
         <div>
           <textarea
+            onChange={(e)=>set_content(e.target.value)}
             rows={10}
             placeholder="Write your message here..."
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
           />
         </div>
         <div>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onClick={handleClick}>
             Send Message
           </button>
         </div>

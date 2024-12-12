@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { LoginForm } from './LoginForm';
 import { LoginIllustration } from './LoginIllustration';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -32,6 +35,8 @@ const LoginPage = () => {
       if (response.status === 200) {
         setErrorMEssage(null);
         console.log('Login successful:', response.data);
+        
+        navigate('/main page');
       }else 
         console.error('Login failed:', response.data.error);
       

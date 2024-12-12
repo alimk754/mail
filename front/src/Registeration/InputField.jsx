@@ -15,7 +15,7 @@ const InputField = ({
       <input 
         name={name}
         type={type}
-        minLength={ type === 'password' ? 8 : (type === 'tel' ? 12 : 3) }
+        minLength={ type === 'password' ? 8 : (type === 'tel' ? 11 : 3) }
         maxLength={ type === 'password' ? 16 : (type === 'tel' ? 20 : 30) }
         value={value}
         onChange={onChange}
