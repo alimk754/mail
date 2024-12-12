@@ -13,17 +13,37 @@ public class Message {
     private int id;
     @Column(name = "message")
     private String message;
+    @Column(name = "subject")
+    private String subject;
+    @Column(name="importance")
+    private int importance;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_email")
     private Mail sender;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_email")
     private Mail reciever;
+    @Column(name = "name of")
+    private String recieved;
 
-    public Message(String message, Mail sender, Mail reciever) {
-        this.message = message;
-        this.sender = sender;
-        this.reciever = reciever;
+    public String getRecieved() {
+        return recieved;
+    }
+
+    public int getImportance() {
+        return importance;
+    }
+
+    public void setImportance(int importance) {
+        this.importance = importance;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public int getId() {
@@ -54,30 +74,43 @@ public class Message {
         return new Message(message);
     }
 
-    public static class builder {
-        private String message;
-        private Mail sender;
-        private Mail reciever;
+    public static class massageBuilder {
+        private Message m;
 
-        public builder message(String pass) {
-            message = pass;
+        public massageBuilder() {
+            m = new Message();
+        }
+
+        public massageBuilder message(String message) {
+            m.message = message;
+            return this;
+        }
+        public massageBuilder subject(String message) {
+            m.subject = message;
+            return this;
+        }
+        public massageBuilder importance(int imp) {
+            m.importance = imp;
             return this;
         }
 
-        public builder sender(Mail user1) {
-            sender = user1;
+        public massageBuilder sender(Mail user1) {
+            m.sender = user1;
             return this;
         }
 
-        public builder reciever(Mail user) {
-            reciever = user;
+        public massageBuilder reciever(Mail user) {
+            m.reciever = user;
+            m.recieved=user.getEmail();
             return this;
         }
 
 
         public Message build() {
-            return new Message(message, sender, reciever);
+            return m;
         }
 
     }
+
 }
+

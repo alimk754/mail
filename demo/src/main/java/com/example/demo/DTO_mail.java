@@ -10,14 +10,31 @@ import java.util.List;
 public class DTO_mail {
     private String email;
     private String fromemail;
-
+    private String subject;
+    private int importance;
     private String toemail;
     private String password;
     List<Message> in=new ArrayList<>();
     List<Message> out=new ArrayList<>();
-    private Message message;
+    private String message;
 
     public DTO_mail() {
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public int getImportance() {
+        return importance;
+    }
+
+    public void setImportance(int importance) {
+        this.importance = importance;
     }
 
     public String getFromemail() {
@@ -53,11 +70,11 @@ public class DTO_mail {
         this.password = password;
     }
 
-    public Message getMessage() {
+    public String  getMessage() {
         return message;
     }
 
-    public void setMessage(Message message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 

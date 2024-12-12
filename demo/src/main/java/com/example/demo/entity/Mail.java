@@ -13,11 +13,11 @@ public class Mail {
     private String email;
     @Column(name = "pass")
     private String password;
-    @OneToMany(mappedBy = "sender",
+    @OneToMany(mappedBy = "reciever",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
     List<Message> in=new ArrayList<>();
-    @OneToMany(mappedBy = "reciever",
+    @OneToMany(mappedBy = "sender",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
     List<Message> out=new ArrayList<>();

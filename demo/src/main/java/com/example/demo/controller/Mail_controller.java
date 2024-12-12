@@ -22,14 +22,12 @@ public class Mail_controller {
         Mail mail=new Mail.builder().email(m.getEmail()).password(m.getPassword()).build();
         return mailService.sign_up(mail);
     }
-    @GetMapping("/mail/login")
+    @PostMapping("/mail/login")
     Mail log_in(@RequestBody DTO_mail m){
         Mail mail=new Mail.builder().email(m.getEmail()).build();
         Mail DB_mail= mailService.log_in(mail);
-        if(DB_mail.getPassword()!=m.getPassword()){
-            throw new RuntimeException();
-        }
-        else return DB_mail;
+
+        return DB_mail;
     }
     @PutMapping("/message")
     Mail addin_message(@RequestBody DTO_mail obj) {
@@ -37,8 +35,8 @@ public class Mail_controller {
          Mail mail1=mailService.log_in(user1);
          Mail user2=new Mail.builder().email(obj.getToemail()).build();
          Mail mail2=mailService.log_in(user2);
-         Message m1=new Message.builder().message(obj.getMessage().getMessage()).sender(mail1).reciever(mail2).build();
-         mail1.addin(m1);
+         Message m1=new Message.massageBuilder().message(obj.getMessage()).sender(mail1).reciever(mail2).subject(obj.getSubject()).importance(obj.getImportance()).build();
+         mail1.addout(m1);
 
          Mail returned_mail=mailService.uptade(mail1);
          return returned_mail;
