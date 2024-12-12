@@ -18,6 +18,7 @@ const LoginPage = () => {
       ...prevState,
       [name]: type === 'checkbox' ? checked : value
     }));
+    setErrorMEssage(e => null);
   };
 
   const handleSubmit = async (e) => {

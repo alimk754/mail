@@ -22,6 +22,7 @@ const SignupPage = () => {
       ...prevState,
       [name]: value
     }));
+    setErrorMEssage(e => null);
   };
 
   const handleSubmit = async (e) => {
