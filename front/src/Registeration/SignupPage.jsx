@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {useNavigate } from 'react-router-dom';
 import Header from './Header';
 import InputField from './InputField';
 import SubmitButton from './SubmitButton';
@@ -13,6 +14,8 @@ const SignupPage = () => {
     password: '',
     confirmPassword: ''
   });
+
+  const navigate = useNavigate();
 
   const[ErrorMessage,setErrorMEssage]=useState(null); 
 
@@ -43,6 +46,8 @@ const SignupPage = () => {
       if (response.status === 200) {
         console.log('Signup successful:', response.data);
         setErrorMEssage(null);
+
+        navigate('/main page');
       }else 
         console.error('Signup failed:', response.data.error);
       

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './Components/Sidebar';
 import ComposeForm from './Components/ComposeForm';
 import ContentSection from './Components/ContentSection';
 
-const MainPage = ({ onLogout }) => {
+const MainPage = () => {
   const [isSidebar, setSidebar] = useState(true);
   const [activeSection, setActiveSection] = useState('compose');
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setSidebar(!isSidebar);
@@ -13,6 +15,10 @@ const MainPage = ({ onLogout }) => {
 
   const navigateSection = (section) => {
     setActiveSection(section);
+  };
+
+  const onLogout = () => {
+    navigate('/');
   };
 
   return (
