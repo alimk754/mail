@@ -1,9 +1,11 @@
 import './App.css';
 import LoginPage from './Log in/LoginPage';
+import MainPage from './MainPage';
 const App = () => {
   
   return (
-    <LoginPage />
+    // <LoginPage />
+    <MainPage></MainPage>
   );
 };
 export default App;
