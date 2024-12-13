@@ -54,6 +54,8 @@ public class Mail {
     }
 
     public Mail() {
+        in=new ArrayList<>();
+        out=new ArrayList<>();
     }
 
     public Mail(String email, String password, List<Message> in, List<Message> out) {

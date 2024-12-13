@@ -1,8 +1,9 @@
-import React ,{useContext}from 'react';
-import { Clock, User, AlertTriangle } from 'lucide-react';
-import { Datacontext } from '../../main';
+import React, { useState } from 'react';
+import { Clock, User, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+
 const MessageItem = ({ message }) => {
-  const {user,setUser} =useContext(Datacontext);
+  const [isExpanded, setIsExpanded] = useState(false);
+
   // Function to get importance color
   const getImportanceColor = (importance) => {
     if (importance == 10) return 'bg-red-500';
@@ -11,28 +12,48 @@ const MessageItem = ({ message }) => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 mb-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
-      <div className="flex items-center justify-between mb-2">
+    <div className="bg-white shadow-md rounded-lg mb-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+      <div 
+        className="p-4 cursor-pointer flex items-center justify-between"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <div className="flex items-center space-x-2">
           <User className="text-gray-500" size={16} />
-          <span className="font-semibold text-gray-700"><b>from </b>{message.from===user.email? "you" :message.from}</span>
+          <span className="font-semibold text-gray-700">from :{message.from}</span>
         </div>
         <div className="flex items-center space-x-2">
           <User className="text-gray-500" size={16} />
-          <span className="font-semibold text-gray-700"><b>to </b>{message.to===user.email? "you" :message.to}</span>
+          <span className="font-semibold text-gray-700">to :{message.to}</span>
         </div>
-        <div 
-          className={`${getImportanceColor(message.importance)} w-4 h-4 rounded-full`}
-          title={`Importance: ${message.importance}`}
-        />
+        <div className="mb-2">
+            <h3 className="text-lg font-bold text-gray-800">Subject: {message.subject}</h3>
+        </div>
+        <div className="flex justify-between text-sm text-gray-500">
+    
+            <div className="flex items-center">
+              <Clock className="mr-2" size={14} />
+              <span>{message.createdAt}</span>
+            </div>
+          </div>
+        <div className="flex items-center space-x-2">
+          <div 
+            className={`${getImportanceColor(message.importance)} w-4 h-4 rounded-full`}
+            title={`Importance: ${message.importance}`}
+          />
+          {isExpanded ? <ChevronUp /> : <ChevronDown />}
+        </div>
+      
       </div>
-      <div className="mb-2">
-        <h3 className="text-lg font-semibold text-gray-800"><b>subject</b> :{message.subject}</h3>
-      </div>
-      <div className="flex items-center text-gray-500 text-sm">
-        <Clock className="mr-2" size={14} />
-        <span>{message.createdAt}</span>
-      </div>
+      
+      {isExpanded && (
+        <div className="p-4 bg-gray-50 border-t">
+         
+          <div className="mb-2">
+            <p className="text-gray-700">{message.message}</p>
+          </div>
+         
+        </div>
+      )}
     </div>
   );
 };
