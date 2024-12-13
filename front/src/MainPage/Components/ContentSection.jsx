@@ -83,7 +83,7 @@ const ContentSection = ({
         setSearchTerm={searchTerm}
         />
       <div>
-       <MessageList messages={messages} handlePageReload={handlePageReload}/>
+       <MessageList title={title} messages={messages} handlePageReload={handlePageReload}/>
       </div>
     </div>
   );

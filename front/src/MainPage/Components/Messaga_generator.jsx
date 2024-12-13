@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { Clock, User, ChevronDown, ChevronUp, Trash2  } from 'lucide-react';
+import { Clock, User, ChevronDown, ChevronUp, Trash2, Undo  } from 'lucide-react';
 import { Datacontext } from '../../main';
 import axios from 'axios';
 
-const MessageItem = ({ message ,handlePageReload}) => {
+const MessageItem = ({title, message ,handlePageReload}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { user, setUser } = useContext(Datacontext);
 
@@ -88,9 +88,9 @@ const MessageItem = ({ message ,handlePageReload}) => {
         </div>
 
         <div className="col-span-1">
-          <button onClick={(e) => DeleteMessage(e)} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
-          <Trash2 size={16} />
-          </button>
+          {(title !== "Trash") ? <button onClick={(e) => DeleteMessage(e)} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
+          <Trash2 size={20} /></button> :<button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
+          <Undo size={20} /></button>}
         </div>
 
         {/* Importance and Expand Icon Column */}
@@ -115,11 +115,11 @@ const MessageItem = ({ message ,handlePageReload}) => {
   );
 };
 
-const MessageList = ({ messages,handlePageReload }) => {
+const MessageList = ({title, messages,handlePageReload }) => {
   return (
     <div className="space-y-4">
       {messages.map((message) => (
-        <MessageItem key={message.id} message={message} handlePageReload={handlePageReload} />
+        <MessageItem title = {title} key={message.id} message={message} handlePageReload={handlePageReload} />
       ))}
     </div>
   );

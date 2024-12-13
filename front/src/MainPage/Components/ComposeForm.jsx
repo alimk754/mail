@@ -27,6 +27,10 @@ const ComposeForm = () => {
      setError("All fields are required");
       return;
     }
+    if (to === user.email){
+      setError("You cannot send a message to yourself");
+      return;
+    }
 
     
     console.log(to);
@@ -161,11 +165,6 @@ const ComposeForm = () => {
            
           />
         </div>
-        <div>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onClick={handleClick}>
-            Send Message
-          </button>
-        </div>
 
         {error && (
         <div className="mt-3 text-sm bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded flex items-center">
@@ -184,6 +183,11 @@ const ComposeForm = () => {
         </div>
       )}
 
+        <div>
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onClick={handleClick}>
+            Send Message
+          </button>
+        </div>
 
       </div>
     </div>
