@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, {useContext ,useState } from 'react';
 import { Clock, User, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Datacontext } from '../../main';
 
 const MessageItem = ({ message }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const {user,setUser} =useContext(Datacontext);
 
   // Function to get importance color
   const getImportanceColor = (importance) => {
@@ -19,11 +21,11 @@ const MessageItem = ({ message }) => {
       >
         <div className="flex items-center space-x-2">
           <User className="text-gray-500" size={16} />
-          <span className="font-semibold text-gray-700">from :{message.from}</span>
+          <span className="font-semibold text-gray-700">from :{user.email === message.from ? "You" : message.from}</span>
         </div>
         <div className="flex items-center space-x-2">
           <User className="text-gray-500" size={16} />
-          <span className="font-semibold text-gray-700">to :{message.to}</span>
+          <span className="font-semibold text-gray-700">to :{user.email === message.to ? "You" : message.to}</span>
         </div>
         <div className="mb-2">
             <h3 className="text-lg font-bold text-gray-800">Subject: {message.subject}</h3>
@@ -48,9 +50,9 @@ const MessageItem = ({ message }) => {
       {isExpanded && (
         <div className="p-4 bg-gray-50 border-t">
          
-          <div className="mb-2">
-            <p className="text-gray-700">{message.message}</p>
-          </div>
+         <div className="mb-2">
+              <p className="text-gray-700 break-all">{message.message}</p>
+        </div>
          
         </div>
       )}
