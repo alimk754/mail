@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Clock, User, ChevronDown, ChevronUp, Trash2  } from 'lucide-react';
 import { Datacontext } from '../../main';
+import axios from 'axios';
 
 const MessageItem = ({ message }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -12,6 +13,24 @@ const MessageItem = ({ message }) => {
     if (importance == 5) return 'bg-yellow-500';
     return 'bg-green-500';
   };
+
+  const DeleteMessage = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/${message.id}`);
+      console.log(response);
+      if (response.status === 200) {
+        
+        console.log(' successful:', response.data);
+        setUser(u=>response.data);
+        console.log(user);
+      
+      }else 
+        console.error(' failed:', response.data.error);
+      
+    } catch (error) {
+      console.error('delete failed:', error);
+    }
+  }
 
   return (
     <div className="bg-white shadow-md rounded-lg mb-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
@@ -49,7 +68,7 @@ const MessageItem = ({ message }) => {
         </div>
 
         <div className="col-span-1">
-          <button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
+          <button onClick={(e) => DeleteMessage(e)} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
           <Trash2 size={16} />
           </button>
         </div>

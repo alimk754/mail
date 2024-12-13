@@ -26,7 +26,8 @@ function Main(){
     in:[],
     out:[],
     password:"",
-    email:""
+    email:"",
+    trash:[],
 })
 return(
     <StrictMode>

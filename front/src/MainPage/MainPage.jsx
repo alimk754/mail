@@ -49,7 +49,7 @@ const MainPage = () => {
             </ContentSection>
           )}
           {activeSection === 'trash' && (
-            <ContentSection title="Trash" messages={[]}>
+            <ContentSection title="Trash" messages={user.trash===null? []:user.trash}>
               <div className="text-gray-600">Deleted messages will appear here</div>
             </ContentSection>
           )}
