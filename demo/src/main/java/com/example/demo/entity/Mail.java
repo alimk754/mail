@@ -25,6 +25,7 @@ public class Mail {
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
+    @JoinColumn(name = "trash")
     List<Message> trash=new ArrayList<>();
 
     public List<Message> getIn() {
