@@ -3,7 +3,7 @@ import MessageList from './Messaga_generator';
 import { Datacontext } from '../../main';
 import { Service } from './service';
 import axios from 'axios';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw, Trash2 } from 'lucide-react';
 const ContentSection = ({
    title,
    children,
@@ -54,12 +54,20 @@ const ContentSection = ({
       <h3 className="text-2xl font-bold text-gray-800 mb-6">
         {title}
       </h3>
+      <div className='flex'>
       <button
           className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500"
           onClick={handlePageReload}
       >
           <RefreshCcw className="mr-2" size={18} />
       </button>
+      <button
+          className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500"
+          onClick={handlePageReload}
+      >
+          <Trash2 className="mr-2" size={18} />
+      </button>
+      </div>
       </div>
       <Service 
         handleClearSearch={handleClearSearch} 
