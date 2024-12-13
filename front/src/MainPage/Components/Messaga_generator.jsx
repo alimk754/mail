@@ -1,7 +1,8 @@
-import React from 'react';
+import React ,{useContext}from 'react';
 import { Clock, User, AlertTriangle } from 'lucide-react';
-
+import { Datacontext } from '../../main';
 const MessageItem = ({ message }) => {
+  const {user,setUser} =useContext(Datacontext);
   // Function to get importance color
   const getImportanceColor = (importance) => {
     if (importance == 10) return 'bg-red-500';
@@ -14,7 +15,11 @@ const MessageItem = ({ message }) => {
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-2">
           <User className="text-gray-500" size={16} />
-          <span className="font-semibold text-gray-700"><b>from </b>{message.from}</span>
+          <span className="font-semibold text-gray-700"><b>from </b>{message.from===user.email? "you" :message.from}</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <User className="text-gray-500" size={16} />
+          <span className="font-semibold text-gray-700"><b>to </b>{message.to===user.email? "you" :message.to}</span>
         </div>
         <div 
           className={`${getImportanceColor(message.importance)} w-4 h-4 rounded-full`}

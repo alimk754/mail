@@ -11,12 +11,13 @@ const ContentSection = ({
    onFilter,
    searchPlaceholder = "Search...",
    sortLabel = "Sort",
-   filterLabel = "Filter"
+   filterLabel = "Filter",
+   messages=[]
 }) => {
 
   const {user,setUser} =useContext(Datacontext);
   const [searchTerm, setSearchTerm] = useState('');
-  const inbox=user.in; 
+  
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -48,7 +49,7 @@ const ContentSection = ({
         setSearchTerm={searchTerm}
         />
       <div>
-       <MessageList messages={inbox} />;
+       <MessageList messages={messages} />
       </div> 
     </div>
   );
