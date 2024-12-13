@@ -1,9 +1,11 @@
-import React, { useRef } from 'react';
-import { Paperclip, X, File, Image, FileText, Video } from 'lucide-react';
+import React, { useRef ,useState} from 'react';
+import FilePreview from './FilePreview';
+import { Paperclip, X, File, Image, FileText, Video, Eye } from 'lucide-react';
 
 const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
   const maxFileSize = 200 * 1024 * 1024;
   const fileInputRef = useRef(null);
+  const [previewFile, setPreviewFile] = useState(null);
 
   const formatFileSize = (bytes) => {
     if (bytes < 1024) return `${bytes} B`;
@@ -89,16 +91,34 @@ const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
                     ({formatFileSize(file.size)})
                   </span>
                 </div>
-                <button
-                  onClick={() => removeAttachment(index)}
-                  className="text-gray-500 hover:text-red-500 flex-shrink-0 ml-2"
-                >
-                  <X size={20} />
-                </button>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setPreviewFile(file)}
+                    className="text-gray-500 hover:text-blue-500 flex-shrink-0"
+                    title="Preview file"
+                  >
+                    <Eye size={20} />
+                  </button>
+                  <button
+                    onClick={() => removeAttachment(index)}
+                    className="text-gray-500 hover:text-red-500 flex-shrink-0"
+                    title="Remove file"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
               </div>
             );
           })}
         </div>
+      )}
+
+      {previewFile && (
+        <FilePreview
+          file={previewFile}
+          onClose={() => setPreviewFile(null)}
+          formatFileSize={formatFileSize}
+        />
       )}
 
       {error && (
