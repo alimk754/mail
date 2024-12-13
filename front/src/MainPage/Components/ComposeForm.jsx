@@ -28,7 +28,7 @@ const ComposeForm = () => {
       return;
     }
 
-    console.log(formData);
+    
     console.log(to);
     console.log(from);
     console.log(subject);
