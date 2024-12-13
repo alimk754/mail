@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { Paperclip, X, File, Image, FileText, Video } from 'lucide-react';
 
 const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
-  const maxFileSize = 200 * 1024 * 1024; 
+  const maxFileSize = 200 * 1024 * 1024;
+  const fileInputRef = useRef(null);
+
+  const formatFileSize = (bytes) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    
+  };
 
   const getFileIcon = (type) => {
     if (type.startsWith('image/')) return Image;
@@ -13,9 +21,11 @@ const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
+    
     let valid = true;
     
     files.forEach(file => {
+        
       if (file.size > maxFileSize) {
         setError(`File ${file.name} exceeds 200MB limit`);
         valid = false;
@@ -26,10 +36,17 @@ const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
       setAttachments(prev => [...prev, ...files]);
       setError(null);
     }
+    e.target.value = '';
   };
 
   const removeAttachment = (index) => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
+   
+    setError(null);
+    
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -39,13 +56,19 @@ const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
           <Paperclip size={20} />
           <span>Attach files</span>
           <input
+            ref={fileInputRef}
             type="file"
             multiple
             onChange={handleFileSelect}
             className="hidden"
-            accept="image/*,video/*,application/pdf,text/*"
+            accept="*/*"
           />
         </label>
+        {attachments.length > 0 && (
+          <span className="text-sm text-gray-500">
+            {attachments.length} file{attachments.length !== 1 ? 's' : ''} selected
+          </span>
+        )}
       </div>
 
       {attachments.length > 0 && (
@@ -54,25 +77,33 @@ const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
             const FileIcon = getFileIcon(file.type);
             return (
               <div
-                key={index}
+                key={`${file.name}-${index}`}
                 className="flex items-center justify-between p-2 bg-gray-50 rounded-lg border border-gray-200"
               >
-                <div className="flex items-center space-x-2">
-                  <FileIcon size={20} className="text-gray-500" />
-                  <span className="text-sm text-gray-700">{file.name}</span>
-                  <span className="text-xs text-gray-500">
-                    ({(file.size / 1024).toFixed(1)} KB)
+                <div className="flex items-center space-x-2 flex-1 min-w-0">
+                  <FileIcon size={20} className="text-gray-500 flex-shrink-0" />
+                  <span className="text-sm text-gray-700 truncate">
+                    {file.name}
+                  </span>
+                  <span className="text-xs text-gray-500 flex-shrink-0">
+                    ({formatFileSize(file.size)})
                   </span>
                 </div>
                 <button
                   onClick={() => removeAttachment(index)}
-                  className="text-gray-500 hover:text-red-500"
+                  className="text-gray-500 hover:text-red-500 flex-shrink-0 ml-2"
                 >
                   <X size={20} />
                 </button>
               </div>
             );
           })}
+        </div>
+      )}
+
+      {error && (
+        <div className="text-sm text-red-600">
+          {error}
         </div>
       )}
     </div>
