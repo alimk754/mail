@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 @Entity
 @Table(name="mail")
@@ -21,6 +22,10 @@ public class Mail {
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
     List<Message> out=new ArrayList<>();
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
+    List<Message> trash=new ArrayList<>();
 
     public List<Message> getIn() {
         return in;
@@ -33,6 +38,34 @@ public class Mail {
     }
     public void addout(Message m){
         out.add(m);
+    }
+    public void addtrash(Message m) {trash.add(m);}
+    public void deletein(int id){
+        Iterator<Message> iterator = in.iterator();
+        while (iterator.hasNext()) {
+            Message m = iterator.next();
+            if (m.getId()==id) {
+                iterator.remove();
+            }
+        }
+    }
+    public void deleteout(int id){
+        Iterator<Message> iterator = out.iterator();
+        while (iterator.hasNext()) {
+            Message m = iterator.next();
+            if (m.getId()==id) {
+                iterator.remove();
+            }
+        }
+    }
+    public void deletetrash(int id){
+        Iterator<Message> iterator = trash.iterator();
+        while (iterator.hasNext()) {
+            Message m = iterator.next();
+            if (m.getId()==id) {
+                iterator.remove();
+            }
+        }
     }
     public List<Message> getOut() {
         return out;

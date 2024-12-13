@@ -43,6 +43,11 @@ public class Mail_DAO_impl implements Mail_DAO{
         return mail;
     }
 
+    @Override
+    public Message getbyid(int id) {
+        return entityManager.find(Message.class,id);
+    }
+
 
     @ExceptionHandler
     ResponseEntity<Returned> handle(RuntimeException e){

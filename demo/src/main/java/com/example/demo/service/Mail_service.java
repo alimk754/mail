@@ -32,6 +32,11 @@ public class Mail_service implements Mail_DAO{
         return mail_dao.uptade(m);
     }
 
+    @Override
+    @Transactional
+    public Message getbyid(int id) {
+        return mail_dao.getbyid(id);
+    }
 
 
 }

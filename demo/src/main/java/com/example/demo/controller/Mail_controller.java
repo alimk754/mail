@@ -6,6 +6,7 @@ import com.example.demo.entity.Mail;
 import com.example.demo.entity.Message;
 import com.example.demo.service.Mail_service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Meta;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,20 @@ public class Mail_controller {
     @Autowired
     public Mail_controller(Mail_service mailService) {
         this.mailService = mailService;
+    }
+    @DeleteMapping("/{id}")
+    public Mail semi_deleteMessage(@PathVariable int id){
+        Message message=mailService.getbyid(id);
+        Mail m1=new Mail.builder().email(message.getFROM()).build();
+        m1=mailService.log_in(m1);
+        m1.deleteout(id);
+        m1.addtrash(message);
+        m1=mailService.uptade(m1);
+        Mail m2=new Mail.builder().email(message.getTO()).build();
+        m2=mailService.log_in(m2);
+        m2.deletein(id);
+        m2=mailService.uptade(m2);
+        return m1;
     }
 
     @PostMapping("/mail")
