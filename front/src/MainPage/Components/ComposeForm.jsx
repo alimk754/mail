@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Datacontext } from '../../main';
 import { Service } from './service';
 
-import FileAttachment from '../../FileAttachment';//
+import FileAttachment from '../../Attachments/FileAttachment';//
 
 
 const ComposeForm = () => {

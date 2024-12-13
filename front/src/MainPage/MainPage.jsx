@@ -1,5 +1,5 @@
 import React, { useState,useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { replace, useNavigate } from 'react-router-dom';
 import Sidebar from './Components/Sidebar';
 import ComposeForm from './Components/ComposeForm';
 import ContentSection from './Components/ContentSection';
@@ -18,7 +18,8 @@ const MainPage = () => {
   };
 
   const onLogout = () => {
-    navigate('/');
+    setUser(u => null);
+    navigate('/', { replace: true, state: { disableUndo: true } });
   };
 
   return (
