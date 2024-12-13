@@ -36,14 +36,14 @@ const MessageItem = ({ message }) => {
         </div>
 
         {/* Subject Column */}
-        <div className="col-span-3">
+        <div className="col-span-4">
           <h3 className="text-lg font-bold text-gray-800 truncate">
             Subject: {message.subject}
           </h3>
         </div>
 
         {/* Timestamp Column */}
-        <div className="col-span-3 flex items-center text-sm text-gray-500">
+        <div className="col-span-2 flex items-center text-sm text-gray-500">
           <Clock className="mr-2" size={14} />
           <span className="truncate">{message.createdAt}</span>
         </div>
