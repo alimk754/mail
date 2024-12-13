@@ -3,6 +3,10 @@ import { use } from 'react';
 import axios from 'axios';
 import { Datacontext } from '../../main';
 import { Service } from './service';
+
+import FileAttachment from '../../FileAttachment';//
+
+
 const ComposeForm = () => {
   const {user,setUser}=useContext(Datacontext);
   const [importance, setImportance] = useState('medium');
@@ -13,13 +17,18 @@ const ComposeForm = () => {
   const [error,setError]=useState(null);
 
 
- 
+  const [attachments, setAttachments] = useState([]);//
+
+
+
   const handleClick=async (e)=>{
     e.preventDefault();
     if (!to.trim()  || !subject.trim() || !content.trim()) {
      setError("All fields are required");
       return;
     }
+
+    console.log(formData);
     console.log(to);
     console.log(from);
     console.log(subject);
@@ -128,6 +137,18 @@ const ComposeForm = () => {
             ))}
           </div>
         </div>
+
+        <FileAttachment 
+          attachments={attachments}
+          setAttachments={setAttachments}
+          error={error}
+          setError={setError}
+        />
+
+
+
+
+
         <div>
           <textarea
             onChange={(e)=>{set_content(e.target.value)
