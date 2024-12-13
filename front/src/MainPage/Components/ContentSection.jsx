@@ -63,7 +63,7 @@ const ContentSection = ({
       </button>
       <button
           className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500"
-          onClick={handlePageReload}
+          
       >
           <Trash2 className="mr-2" size={18} />
       </button>

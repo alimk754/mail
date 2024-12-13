@@ -7,8 +7,7 @@ const MessageItem = ({ message ,handlePageReload}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { user, setUser } = useContext(Datacontext);
 
-  // Function to get importance color
-  const getImportanceColor = (importance) => {
+  const getImportanceColor = (importance)=>{
     if (importance == 10) return 'bg-red-500';
     if (importance == 5) return 'bg-yellow-500';
     return 'bg-green-500';
@@ -56,8 +55,8 @@ const MessageItem = ({ message ,handlePageReload}) => {
   return (
     <div className="bg-white shadow-md rounded-lg mb-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
       <div 
-        className="p-4 cursor-pointer grid grid-cols-12 items-center gap-4"
-        onClick={() => setIsExpanded(!isExpanded)}
+        className="p-4 grid grid-cols-12 items-center gap-4"
+        
       >
         {/* From Column */}
         <div className="col-span-2 flex items-center space-x-2">
@@ -100,7 +99,8 @@ const MessageItem = ({ message ,handlePageReload}) => {
             className={`${getImportanceColor(message.importance)} w-4 h-4 rounded-full`}
             title={`Importance: ${message.importance}`}
           />
-          {isExpanded ? <ChevronUp /> : <ChevronDown />}
+          {isExpanded ? <ChevronUp className='cursor-pointer transition-all duration-300 ease-in-out transform hover:text-red-500 hover:scale-110' onClick={() => setIsExpanded(!isExpanded)}/> 
+          : <ChevronDown className='cursor-pointer transition-all duration-300 ease-in-out transform hover:text-blue-500 hover:scale-110' onClick={() => setIsExpanded(!isExpanded)}/>}
         </div>
       </div>
       
