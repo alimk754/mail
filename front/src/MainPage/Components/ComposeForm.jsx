@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { use } from 'react';
 import axios from 'axios';
 import { Datacontext } from '../../main';
+import { Service } from './service';
 const ComposeForm = () => {
   const {user,setUser}=useContext(Datacontext);
   const [importance, setImportance] = useState('medium');
@@ -64,6 +65,7 @@ const ComposeForm = () => {
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
             onChange={(e)=>set_to(e.target.value)}
             value={to}
+            required
           />
         </div>
         <div>
@@ -73,6 +75,7 @@ const ComposeForm = () => {
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
             onChange={(e)=>set_subject(e.target.value)}
             value={subject}
+            required
           />
         </div>
         <div>
@@ -104,6 +107,7 @@ const ComposeForm = () => {
                   checked={importance === option.value}
                   onChange={(e) => setImportance(e.target.value)}
                   className="hidden"
+                  required
                 />
                 <div className={`w-3 h-3 rounded-full ${option.color} ${
                   importance === option.value ? 'shadow-lg' : ''
