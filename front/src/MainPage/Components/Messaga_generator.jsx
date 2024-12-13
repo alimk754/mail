@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Clock, User, ChevronDown, ChevronUp } from 'lucide-react';
+import { Clock, User, ChevronDown, ChevronUp, Trash2  } from 'lucide-react';
 import { Datacontext } from '../../main';
 
 const MessageItem = ({ message }) => {
@@ -20,7 +20,7 @@ const MessageItem = ({ message }) => {
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {/* From Column */}
-        <div className="col-span-3 flex items-center space-x-2">
+        <div className="col-span-2 flex items-center space-x-2">
           <User className="text-gray-500" size={16} />
           <span className="font-semibold text-gray-700 truncate">
             from: {user.email === message.from ? "You" : message.from}
@@ -28,7 +28,7 @@ const MessageItem = ({ message }) => {
         </div>
 
         {/* To Column */}
-        <div className="col-span-3 flex items-center space-x-2">
+        <div className="col-span-2 flex items-center space-x-2">
           <User className="text-gray-500" size={16} />
           <span className="font-semibold text-gray-700 truncate">
             to: {user.email === message.to ? "You" : message.to}
@@ -43,9 +43,15 @@ const MessageItem = ({ message }) => {
         </div>
 
         {/* Timestamp Column */}
-        <div className="col-span-2 flex items-center text-sm text-gray-500">
+        <div className="col-span-3 flex items-center text-sm text-gray-500">
           <Clock className="mr-2" size={14} />
           <span className="truncate">{message.createdAt}</span>
+        </div>
+
+        <div className="col-span-1">
+          <button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
+          <Trash2 size={16} />
+          </button>
         </div>
 
         {/* Importance and Expand Icon Column */}
@@ -59,7 +65,7 @@ const MessageItem = ({ message }) => {
       </div>
       
       {isExpanded && (
-        <div className="p-4 bg-gray-50 border-t">
+        <div className="p-4 bg-gray-100 border-t">
           <div className="mb-2">
             <p className="text-gray-700 break-all">{message.message}</p>
           </div>
