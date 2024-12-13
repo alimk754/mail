@@ -41,8 +41,14 @@ public class Mail_controller {
     Mail addin_message(@RequestBody DTO_mail obj) {
          Mail user1=new Mail.builder().email(obj.getFromemail()).build();
          Mail mail1=mailService.log_in(user1);
-         Mail user2=new Mail.builder().email(obj.getToemail()).build();
-         Mail mail2=mailService.log_in(user2);
+        Mail user2=new Mail.builder().email(obj.getToemail()).build();
+        Mail mail2;
+         try{
+             mail2=mailService.log_in(user2);
+         }catch(Exception e){
+             throw new RuntimeException("User Not Found");
+         }
+
          Message m1=new Message.massageBuilder()
                  .message(obj.getMessage())
                  .sender(mail1).reciever(mail2)

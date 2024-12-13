@@ -10,9 +10,16 @@ const ComposeForm = () => {
   const [from,set_from]=useState(user.email);
   const [content,set_content]=useState("");
   const [subject,set_subject]=useState("");
+  const [error,setError]=useState(null);
+
+
  
   const handleClick=async (e)=>{
     e.preventDefault();
+    if (!to.trim()  || !subject.trim() || !content.trim()) {
+     setError("All fields are required");
+      return;
+    }
     console.log(to);
     console.log(from);
     console.log(subject);
@@ -28,6 +35,7 @@ const ComposeForm = () => {
        });
       console.log(response);
       if (response.status === 200) {
+        setError(null)
         set_to('');
         set_subject('');
         set_content('');
@@ -36,14 +44,11 @@ const ComposeForm = () => {
         setUser(response.data);
         
       }else 
-        console.error('failed:', response.data.error);
+        console.error('failed:', response.data.message);
       
     } catch (error) {
-      set_to('');
-      set_subject('');
-      set_content('');
-      setImportance('medium');
-      console.log(error);
+
+      setError(error.response.data.message);
     }
 
   }
@@ -63,9 +68,10 @@ const ComposeForm = () => {
             type="text"
             placeholder="To"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
-            onChange={(e)=>set_to(e.target.value)}
+            onChange={(e)=>{set_to(e.target.value)
+                            setError(e => null)}}
             value={to}
-            required
+            
           />
         </div>
         <div>
@@ -73,9 +79,12 @@ const ComposeForm = () => {
             type="text"
             placeholder="subject"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
-            onChange={(e)=>set_subject(e.target.value)}
+            onChange={(e)=>{set_subject(e.target.value)
+              setError(e => null)
+            }}
             value={subject}
             required
+           
           />
         </div>
         <div>
@@ -105,9 +114,11 @@ const ComposeForm = () => {
                   name="importance"
                   value={option.value}
                   checked={importance === option.value}
-                  onChange={(e) => setImportance(e.target.value)}
+                  onChange={(e) =>{ setImportance(e.target.value) 
+                         setError(e => null)}}
                   className="hidden"
                   required
+                  
                 />
                 <div className={`w-3 h-3 rounded-full ${option.color} ${
                   importance === option.value ? 'shadow-lg' : ''
@@ -119,11 +130,14 @@ const ComposeForm = () => {
         </div>
         <div>
           <textarea
-            onChange={(e)=>set_content(e.target.value)}
+            onChange={(e)=>{set_content(e.target.value)
+              setError(e => null)
+            }}
             rows={10}
             placeholder="Write your message here..."
             className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-blue-600"
             value={content}
+           
           />
         </div>
         <div>
@@ -131,6 +145,25 @@ const ComposeForm = () => {
             Send Message
           </button>
         </div>
+
+        {error && (
+        <div className="mt-3 text-sm bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded flex items-center">
+          <svg
+            className="w-4 h-4 mr-2 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {error}
+        </div>
+      )}
+
+
       </div>
     </div>
   );
