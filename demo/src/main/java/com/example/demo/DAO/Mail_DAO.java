@@ -10,6 +10,7 @@ public interface Mail_DAO {
     Mail log_in(Mail m);
     Mail uptade(Mail m);
     Message getbyid(int id);
+    Message uptademess(Message m);
 
 
 }

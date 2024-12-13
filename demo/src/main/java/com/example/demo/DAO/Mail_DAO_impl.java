@@ -48,6 +48,11 @@ public class Mail_DAO_impl implements Mail_DAO{
         return entityManager.find(Message.class,id);
     }
 
+    @Override
+    public Message uptademess(Message m) {
+        return entityManager.merge(m);
+    }
+
 
     @ExceptionHandler
     ResponseEntity<Returned> handle(RuntimeException e){

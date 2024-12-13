@@ -15,7 +15,9 @@ const MessageItem = ({ message }) => {
   };
 
   const DeleteMessage = async () => {
+    if(message.from==user.email){
     try {
+    
       const response = await axios.delete(`http://localhost:8080/api/${message.id}`);
       console.log(response);
       if (response.status === 200) {
@@ -30,6 +32,25 @@ const MessageItem = ({ message }) => {
     } catch (error) {
       console.error('delete failed:', error);
     }
+  }
+  else{
+    try {
+    
+      const response = await axios.delete(`http://localhost:8080/api/mess/${message.id}`);
+      console.log(response);
+      if (response.status === 200) {
+        
+        console.log(' successful:', response.data);
+        setUser(u=>response.data);
+        console.log(user);
+      
+      }else 
+        console.error(' failed:', response.data.error);
+      
+    } catch (error) {
+      console.error('delete failed:', error);
+    }
+  }
   }
 
   return (

@@ -50,6 +50,15 @@ public class Mail {
             }
         }
     }
+
+    public List<Message> getTrash() {
+        return trash;
+    }
+
+    public void setTrash(List<Message> trash) {
+        this.trash = trash;
+    }
+
     public void deleteout(int id){
         Iterator<Message> iterator = out.iterator();
         while (iterator.hasNext()) {

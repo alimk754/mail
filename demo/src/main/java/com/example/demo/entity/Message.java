@@ -37,6 +37,14 @@ public class Message {
         return TO;
     }
 
+    public void setSender(Mail sender) {
+        this.sender = sender;
+    }
+
+    public void setReciever(Mail reciever) {
+        this.reciever = reciever;
+    }
+
     public LocalDate getCreatedAt() {
         return createdAt;
     }

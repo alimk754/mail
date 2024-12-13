@@ -22,15 +22,34 @@ public class Mail_controller {
     @DeleteMapping("/{id}")
     public Mail semi_deleteMessage(@PathVariable int id){
         Message message=mailService.getbyid(id);
+        message.setSender(null);
+        message.setReciever(null);
         Mail m1=new Mail.builder().email(message.getFROM()).build();
         m1=mailService.log_in(m1);
+        m1.deleteout(id);
         m1.deleteout(id);
         m1.addtrash(message);
         m1=mailService.uptade(m1);
         Mail m2=new Mail.builder().email(message.getTO()).build();
         m2=mailService.log_in(m2);
         m2.deletein(id);
+        m2.deleteout(id);
         m2=mailService.uptade(m2);
+        mailService.uptademess(message);
+        return m1;
+    }
+    @DeleteMapping("/mess/{id}")
+    public Mail semi_delete(@PathVariable int id){
+        System.out.println(id);
+        Message message=mailService.getbyid(id);
+        message.setReciever(null);
+        Mail m1=new Mail.builder().email(message.getTO()).build();
+        m1=mailService.log_in(m1);
+        m1.deleteout(id);
+        m1.deleteout(id);
+        m1.addtrash(message);
+        m1=mailService.uptade(m1);
+        mailService.uptademess(message);
         return m1;
     }
 
