@@ -5,7 +5,9 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name="mail")
 public class Mail {
@@ -17,21 +19,21 @@ public class Mail {
     @OneToMany(mappedBy = "reciever",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
-    List<Message> in=new ArrayList<>();
+    Set<Message> in;
     @OneToMany(mappedBy = "sender",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
-    List<Message> out=new ArrayList<>();
+    Set<Message> out;
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
     @JoinColumn(name = "trash")
-    List<Message> trash=new ArrayList<>();
+    Set<Message> trash;
 
-    public List<Message> getIn() {
+    public Set<Message> getIn() {
         return in;
     }
-    public void setIn(List<Message> in) {
+    public void setIn(HashSet<Message> in) {
         this.in = in;
     }
     public void addin(Message m){
@@ -51,11 +53,11 @@ public class Mail {
         }
     }
 
-    public List<Message> getTrash() {
+    public Set<Message> getTrash() {
         return trash;
     }
 
-    public void setTrash(List<Message> trash) {
+    public void setTrash(HashSet<Message> trash) {
         this.trash = trash;
     }
 
@@ -77,10 +79,10 @@ public class Mail {
             }
         }
     }
-    public List<Message> getOut() {
+    public Set<Message> getOut() {
         return out;
     }
-    public void setOut(List<Message> out) {
+    public void setOut(HashSet<Message> out) {
         this.out = out;
     }
     public String getEmail() {
@@ -97,11 +99,12 @@ public class Mail {
     }
 
     public Mail() {
-        in=new ArrayList<>();
-        out=new ArrayList<>();
+        in=new HashSet<>();
+        out=new HashSet<>();
+        trash=new HashSet<>();
     }
 
-    public Mail(String email, String password, List<Message> in, List<Message> out) {
+    public Mail(String email, String password, HashSet<Message> in, HashSet<Message> out) {
         this.email = email;
         this.password = password;
         this.in = in;
@@ -111,8 +114,8 @@ public class Mail {
     public static class builder{
         private String email;
         private String password;
-        private List <Message> in;
-        private List <Message> out;
+        private HashSet <Message> in;
+        private HashSet <Message> out;
 
         public builder password(String pass){
             password=pass;
@@ -122,11 +125,11 @@ public class Mail {
             email=email1;
             return this;
         }
-        public builder in(List<Message> in){
+        public builder in(HashSet<Message> in){
             in=in;
             return this;
         }
-        public builder out(List<Message> out){
+        public builder out(HashSet<Message> out){
             out=out;
             return this;
         }

@@ -44,13 +44,15 @@ public class Mail_controller {
         Message message=mailService.getbyid(id);
         message.setReciever(null);
         Mail m1=new Mail.builder().email(message.getTO()).build();
+        Mail m2=new Mail.builder().email(message.getFROM()).build();
         m1=mailService.log_in(m1);
         m1.deleteout(id);
         m1.deleteout(id);
         m1.addtrash(message);
-        m1=mailService.uptade(m1);
+
         mailService.uptademess(message);
-        return m1;
+        mailService.uptade(m1);
+        return mailService.log_in(m2);
     }
 
     @PostMapping("/mail")

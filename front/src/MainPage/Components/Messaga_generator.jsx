@@ -3,7 +3,7 @@ import { Clock, User, ChevronDown, ChevronUp, Trash2  } from 'lucide-react';
 import { Datacontext } from '../../main';
 import axios from 'axios';
 
-const MessageItem = ({ message }) => {
+const MessageItem = ({ message ,handlePageReload}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { user, setUser } = useContext(Datacontext);
 
@@ -38,19 +38,19 @@ const MessageItem = ({ message }) => {
     
       const response = await axios.delete(`http://localhost:8080/api/mess/${message.id}`);
       console.log(response);
-      if (response.status === 200) {
+      
         
         console.log(' successful:', response.data);
         setUser(u=>response.data);
         console.log(user);
       
-      }else 
-        console.error(' failed:', response.data.error);
-      
+
     } catch (error) {
       console.error('delete failed:', error);
     }
+
   }
+  handlePageReload();
   }
 
   return (
@@ -115,11 +115,11 @@ const MessageItem = ({ message }) => {
   );
 };
 
-const MessageList = ({ messages }) => {
+const MessageList = ({ messages,handlePageReload }) => {
   return (
     <div className="space-y-4">
       {messages.map((message) => (
-        <MessageItem key={message.id} message={message} />
+        <MessageItem key={message.id} message={message} handlePageReload={handlePageReload} />
       ))}
     </div>
   );
