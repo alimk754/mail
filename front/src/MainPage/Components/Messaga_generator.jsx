@@ -13,6 +13,23 @@ const MessageItem = ({title, message ,handlePageReload}) => {
     if (importance == 5) return 'bg-yellow-500';
     return 'bg-green-500';
   };
+  const retrieve=async()=>{
+    try {
+    
+      const response = await axios.get("http://localhost:8080/api/retrieve/${message.id}");
+      console.log(response);
+      if (response.status === 200) {
+        console.log(' successful:', response.data);
+        setUser(u=>response.data);
+        console.log(user);
+      }else 
+        console.error(' failed:', response.data.error);
+      
+    } catch (error) {
+      console.error('delete failed:', error);
+    }
+    handlePageReload();
+}
 
   const DeleteMessage = async () => {
     if(message.from==user.email){
@@ -91,7 +108,7 @@ const MessageItem = ({title, message ,handlePageReload}) => {
         <div className="col-span-1">
           {(title !== "Trash") ? <button onClick={(e) => DeleteMessage(e)} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
           <Trash2 size={20} /></button> :<button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
-          <Undo size={20} /></button>}
+          <Undo size={20} onClick={retrieve}/></button>}
         </div>
 
         {/* Importance and Expand Icon Column */}

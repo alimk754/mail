@@ -22,6 +22,21 @@ public class Mail_controller {
     public Mail_controller(Mail_service mailService) {
         this.mailService = mailService;
     }
+    @GetMapping("/retrieve/{id}")
+    public ResponseEntity<Mail> retrieve(@PathVariable int id){
+        Message m=mailService.getbyid(id);
+        Mail mail1=mailService.log_in(new Mail.builder().email(m.getFROM()).build());
+        m.setSender(mail1);
+        mail1.deletetrash(id);
+        Mail mail2=mailService.log_in(new Mail.builder().email(m.getTO()).build());
+        m.setReciever(mail2);
+        mail2.deletetrash(id);
+        mailService.uptademess(m);
+        Mail m1=mailService.uptade(mail1);
+        mailService.uptade(mail2);
+        return ResponseEntity.ok(m1);
+
+    }
     @DeleteMapping("/{id}")
     public Mail semi_deleteMessage(@PathVariable int id){
         Message message=mailService.getbyid(id);
