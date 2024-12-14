@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name="mail")
-public class Mail {
+public class Mail implements Subscriber{
     @Id
     @Column(name = "id")
     private String email;
@@ -109,6 +109,13 @@ public class Mail {
         this.password = password;
         this.in = in;
         this.out = out;
+    }
+
+    @Override
+    public void notify_delete(int id,Message message) {
+        deleteout(id);
+        deleteout(id);
+        addtrash(message);
     }
 
     public static class builder{

@@ -13,23 +13,17 @@ const MessageItem = ({title, message ,handlePageReload}) => {
     if (importance == 5) return 'bg-yellow-500';
     return 'bg-green-500';
   };
-  const retrieve=async()=>{
+  const retrieve = async () => {
     try {
-    
-      const response = await axios.get("http://localhost:8080/api/retrieve/${message.id}");
-      console.log(response);
-      if (response.status === 200) {
-        console.log(' successful:', response.data);
-        setUser(u=>response.data);
-        console.log(user);
-      }else 
-        console.error(' failed:', response.data.error);
-      
+        const response = await axios.get(`http://localhost:8080/api/retrieve/${message.id}`);
+        console.log('Full response:', response);
+        console.log('Response data:', response.data);
+        setUser(response.data);
     } catch (error) {
-      console.error('delete failed:', error);
+        console.error('Retrieve failed:', error.response ? error.response.data : error.message);
     }
     handlePageReload();
-}
+};
 
   const DeleteMessage = async () => {
     if(message.from==user.email){

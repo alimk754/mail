@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "message")
-public class Message {
+public class Message implements Subscriber{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -132,6 +132,12 @@ public class Message {
     public Message clone() {
         String message = this.getMessage();
         return new Message(message);
+    }
+
+    @Override
+    public void notify_delete(int id, Message m) {
+        this.setReciever(null);
+        this.setSender(null);
     }
 
     public static class massageBuilder {
