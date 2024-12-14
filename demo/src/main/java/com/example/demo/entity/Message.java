@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,6 +34,30 @@ public class Message {
     private String FROM;
     @Column(name = "created_at", updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL")
     private LocalDate createdAt;
+
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Attachment> attachments = new ArrayList<>();
+
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public void addAttachment(Attachment attachment) {
+        attachments.add(attachment);
+        attachment.setMessage(this);
+    }
+
+    public void removeAttachment(Attachment attachment) {
+        attachments.remove(attachment);
+        attachment.setMessage(null);
+    }
+
+
     public String getTO() {
         return TO;
     }
@@ -144,6 +169,11 @@ public class Message {
         public massageBuilder created_at() {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
             m.createdAt= LocalDateTime.now().toLocalDate();
+            return this;
+        }
+        public massageBuilder attachments(List<Attachment> attachments) {
+            m.attachments = attachments;
+            attachments.forEach(attachment -> attachment.setMessage(m));
             return this;
         }
 

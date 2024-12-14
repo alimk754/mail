@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Clock, User, ChevronDown, ChevronUp, Trash2, Undo  } from 'lucide-react';
 import { Datacontext } from '../../main';
 import axios from 'axios';
+import MessageAttachments from './MessageAttachment';
 
 const MessageItem = ({title, message ,handlePageReload}) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -107,6 +108,8 @@ const MessageItem = ({title, message ,handlePageReload}) => {
       {isExpanded && (
         <div className="p-4 bg-gray-100 border-t">
           <div className="mb-2">
+
+          <MessageAttachments attachments={message.attachments} />
             <p className="text-gray-700 break-all">{message.message}</p>
           </div>
         </div>

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Datacontext } from '../../main';
 import { Service } from './service';
 
-import FileAttachment from '../../Attachments/FileAttachment';//
+import FileAttachment from '../../Attachments/FileAttachment';
 
 
 const ComposeForm = () => {
@@ -17,7 +17,10 @@ const ComposeForm = () => {
   const [error,setError]=useState(null);
 
 
-  const [attachments, setAttachments] = useState([]);//
+  // console.log(user.out[0])
+
+
+  const [attachments, setAttachments] = useState([]);
 
 
 
@@ -32,6 +35,22 @@ const ComposeForm = () => {
       return;
     }
 
+    const attachmentDTOs = await Promise.all(attachments.map(async (file) => {
+      return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+              resolve({
+                  fileName: file.name,
+                  contentType: file.type,
+                  fileSize: file.size,
+                  data: reader.result.split(',')[1] 
+              });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+      });
+  }));
+
     
     console.log(to);
     console.log(from);
@@ -40,31 +59,31 @@ const ComposeForm = () => {
 
 
     try {
-      const response = await axios.put('http://localhost:8080/api/message', {toemail : to,
-       fromemail : from,
-       message : content,
-       subject:subject,
-       importance: importance === "high" ? 10 : importance === "medium" ? 5 : 0, 
-       });
-      console.log(response);
+      const response = await axios.put('http://localhost:8080/api/message', {
+          toemail: to,
+          fromemail: from,
+          message: content,
+          subject: subject,
+          importance: importance === "high" ? 10 : importance === "medium" ? 5 : 0,
+          attachments: attachmentDTOs
+      });
+
       if (response.status === 200) {
-        setError(null)
-        set_to('');
-        set_subject('');
-        set_content('');
-        setImportance('medium');
-        console.log('successful:', response.data);
-        setUser(response.data);
-        
-      }else 
-        console.error('failed:', response.data.message);
-      
-    } catch (error) {
-
+          setError(null);
+          set_to('');
+          set_subject('');
+          set_content('');
+          setImportance('medium');
+          setAttachments([]);
+          console.log('successful:', response.data);
+          setUser(response.data);
+      } else {
+          console.error('failed:', response.data.message);
+      }
+  } catch (error) {
       setError(error.response.data.message);
-    }
-
   }
+};
 
   const options = [
     { value: 'high', label: 'High', color: 'bg-red-500', borderColor: 'border-red-500', textColor: 'text-red-600' },

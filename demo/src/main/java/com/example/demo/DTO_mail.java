@@ -21,6 +21,17 @@ public class DTO_mail {
 
     private LocalDateTime created_at;
 
+    private List<AttachmentDTO> attachments = new ArrayList<>();
+
+
+    public List<AttachmentDTO> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<AttachmentDTO> attachments) {
+        this.attachments = attachments;
+    }
+
     public LocalDateTime getCreated_at() {
         return created_at;
     }
