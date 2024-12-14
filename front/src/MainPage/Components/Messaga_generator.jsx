@@ -25,6 +25,16 @@ const MessageItem = ({title, message ,handlePageReload}) => {
     handlePageReload();
 };
 
+const handleDeleteFromTrash = async () => {
+  try {
+    const response = await axios.delete(`http://localhost:8080/api/delete/${message.id}`);
+
+} catch (error) {
+    console.error('delete failed');
+}
+handlePageReload();
+}
+
   const DeleteMessage = async () => {
     if(message.from==user.email){
     try {
@@ -87,7 +97,7 @@ const MessageItem = ({title, message ,handlePageReload}) => {
         </div>
 
         {/* Subject Column */}
-        <div className="col-span-4">
+        <div className={title === "Trash" ? "col-span-3" : "col-span-4"}>
           <h3 className="text-lg font-bold text-gray-800 truncate">
             Subject: {message.subject}
           </h3>
@@ -104,6 +114,13 @@ const MessageItem = ({title, message ,handlePageReload}) => {
           <Trash2 size={20} /></button> :<button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
           <Undo size={20} onClick={retrieve}/></button>}
         </div>
+
+        {(title === "Trash") &&(
+          <div className="col-span-1">
+            <button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
+            <Trash2 onClick={handleDeleteFromTrash} size={20}/></button>
+          </div>
+        )}
 
         {/* Importance and Expand Icon Column */}
         <div className="col-span-1 flex items-center justify-end space-x-2">

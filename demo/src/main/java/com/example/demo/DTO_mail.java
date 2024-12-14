@@ -17,6 +17,7 @@ public class DTO_mail {
     private String password;
     List<Message> in=new ArrayList<>();
     List<Message> out=new ArrayList<>();
+    List<Message> trash=new ArrayList<>();
     private String message;
 
     private LocalDateTime created_at;
@@ -114,5 +115,13 @@ public class DTO_mail {
 
     public void setOut(List<Message> out) {
         this.out = out;
+    }
+
+    public List<Message> getTrash() {
+        return trash;
+    }
+
+    public void setTrash(List<Message> trash) {
+        this.trash = trash;
     }
 }

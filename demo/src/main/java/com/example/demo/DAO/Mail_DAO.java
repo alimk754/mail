@@ -12,5 +12,7 @@ public interface Mail_DAO {
     Message getbyid(int id);
     Message uptademess(Message m);
 
+    void handleDeleteMessage(int id);
+
 
 }

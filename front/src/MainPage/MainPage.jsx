@@ -18,7 +18,6 @@ const MainPage = () => {
   };
 
   const onLogout = () => {
-    setUser(u => null);
     navigate('/', { replace: true, state: { disableUndo: true } });
   };
 

@@ -31,6 +31,36 @@ const ContentSection = ({
     onSearch && onSearch('');
   };
 
+  const handleDeleteAll = async (e) => {
+    try {
+      let messagesToDelete = [];
+     if (title === "Inbox") {
+       messagesToDelete = user.in;
+     } else if (title === "out Messages") {
+       messagesToDelete = user.out;
+     } else if (title === "Trash") {
+       messagesToDelete = user.trash;
+    }
+
+    const response = await axios.put('http://localhost:8080/api/deleteALl', 
+      title === "Inbox" 
+        ? { in: messagesToDelete } 
+        : title === "out Messages"
+          ? { out: messagesToDelete }
+          : { trash: messagesToDelete }
+    );
+      if (response.status === 200) {
+        console.log('Login successful:');
+        
+      }else 
+        console.error('Login failed:');
+      
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+    handlePageReload();
+  }
+
   const handlePageReload = async (e) => {
 
     try {
@@ -65,7 +95,7 @@ const ContentSection = ({
           className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500"
           
       >
-          <Trash2 className="mr-2" size={18} />
+          <Trash2 onClick={handleDeleteAll} className="mr-2" size={18} />
       </button>
       </div>
       </div>

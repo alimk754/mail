@@ -53,6 +53,11 @@ public class Mail_DAO_impl implements Mail_DAO{
         return entityManager.merge(m);
     }
 
+    @Override
+    public void handleDeleteMessage(int id) {
+        entityManager.remove(entityManager.find(Message.class,id));
+    }
+
 
     @ExceptionHandler
     ResponseEntity<Returned> handle(RuntimeException e){

@@ -44,5 +44,11 @@ public class Mail_service implements Mail_DAO{
         return mail_dao.uptademess(m);
     }
 
+    @Override
+    @Transactional
+    public void handleDeleteMessage(int id) {
+        mail_dao.handleDeleteMessage(id);
+    }
+
 
 }

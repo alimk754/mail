@@ -79,6 +79,28 @@ public class Mail_controller {
         return mailService.log_in((Mail) m2);
     }
 
+    @PutMapping("/deleteALl")
+    public void deleteALl(@RequestBody DTO_mail m){
+        if (!m.getIn().isEmpty()){
+            for (Message message : m.getIn()) {
+                semi_delete(message.getId());
+            }
+        }else if (!m.getOut().isEmpty()){
+            for (Message message : m.getOut()) {
+                semi_deleteMessage(message.getId());
+            }
+        }else if (!m.getTrash().isEmpty()) {
+            for (Message message : m.getTrash()) {
+                mailService.handleDeleteMessage(message.getId());
+            }
+        }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable int id){
+        mailService.handleDeleteMessage(id);
+    }
+
     @PostMapping("/mail")
     public ResponseEntity<Mail> signUp(@RequestBody DTO_mail m) {
         Mail mail = new Mail.builder()
