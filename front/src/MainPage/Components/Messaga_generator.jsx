@@ -111,8 +111,8 @@ handlePageReload();
 
         <div className="col-span-1">
           {(title !== "Trash") ? <button onClick={(e) => DeleteMessage(e)} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
-          <Trash2 size={20} /></button> :<button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
-          <Undo size={20} onClick={retrieve}/></button>}
+          <Trash2 size={20} /></button> :<button onClick={retrieve} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
+          <Undo size={20} /></button>}
         </div>
 
         {(title === "Trash") &&(
