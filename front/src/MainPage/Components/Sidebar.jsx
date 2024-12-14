@@ -58,9 +58,9 @@ const Sidebar = ({
 
               <SidebarButton
                 icon={MessageCircle}
-                label="out Messages"
-                active={activeSection === "out Messages"}
-                onClick={() => navigateSection("out Messages")}
+                label="Sent Mails"
+                active={activeSection === "sent Mails"}
+                onClick={() => navigateSection("sent Mails")}
               />
 
               <SidebarButton

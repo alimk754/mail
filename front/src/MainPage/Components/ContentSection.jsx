@@ -36,7 +36,7 @@ const ContentSection = ({
       let messagesToDelete = [];
      if (title === "Inbox") {
        messagesToDelete = user.in;
-     } else if (title === "out Messages") {
+     } else if (title === "Sent Mails") {
        messagesToDelete = user.out;
      } else if (title === "Trash") {
        messagesToDelete = user.trash;
@@ -45,7 +45,7 @@ const ContentSection = ({
     const response = await axios.put('http://localhost:8080/api/deleteALl', 
       title === "Inbox" 
         ? { in: messagesToDelete } 
-        : title === "out Messages"
+        : title === "Sent Mails"
           ? { out: messagesToDelete }
           : { trash: messagesToDelete }
     );

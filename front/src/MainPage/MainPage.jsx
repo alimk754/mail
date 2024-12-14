@@ -38,8 +38,8 @@ const MainPage = () => {
               <div className="text-gray-600">Your messages will appear here</div>
             </ContentSection>
           )}
-           {activeSection === 'out Messages' && (
-            <ContentSection title="out Messages" messages={user.out===null? []:user.out}>
+           {activeSection === 'sent Mails' && (
+            <ContentSection title="Sent Mails" messages={user.out===null? []:user.out}>
               <div className="text-gray-600">Your out Messages will appear here</div>
             </ContentSection>
           )}
