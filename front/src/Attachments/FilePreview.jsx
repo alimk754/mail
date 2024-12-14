@@ -32,8 +32,8 @@ const FilePreview = ({ file, onClose,formatFileSize }) => {
     document.body.removeChild(link);
   };
 
-  const getPreviewContent = () => {
-    
+
+  const getPreviewContent = () => {        
     if (file.type.startsWith('image/')) {
       return (
         <img
