@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "message")
@@ -29,7 +30,14 @@ public class Message implements Subscriber{
     private Mail reciever;
     @Column(name = "toemail")
     private String TO;
-
+    @ManyToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    @JoinTable(name = "trash",
+            joinColumns = @JoinColumn(name="message_id"),
+            inverseJoinColumns = @JoinColumn(name = "mail_id")
+    )
+    Set<Message> mails;
     @Column(name = "fromemail")
     private String FROM;
     @Column(name = "created_at", updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL")
@@ -38,7 +46,15 @@ public class Message implements Subscriber{
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Attachment> attachments = new ArrayList<>();
 
-
+    public boolean arenull(){
+        return this.sender==null&&this.reciever==null&&mails.isEmpty();
+    }
+    public boolean issendernull(){
+        return this.sender==null;
+    }
+    public boolean isrecievernull(){
+        return this.reciever==null;
+    }
     public List<Attachment> getAttachments() {
         return attachments;
     }
@@ -126,19 +142,33 @@ public class Message implements Subscriber{
     }
 
     public Message(String message) {
+
         this.message = message;
+
     }
 
     public Message clone() {
         String message = this.getMessage();
+
         return new Message(message);
     }
 
     @Override
-    public void notify_delete(int id, Message m) {
+    public void notify_deleteallsender(int id, Message m) {
+        this.setSender(null);
         this.setReciever(null);
+    }
+
+    @Override
+    public void notify_deleteformesender(int id, Message m) {
         this.setSender(null);
     }
+
+    @Override
+    public void notify_deleteformereciver(int id, Message m) {
+        this.setReciever(null);
+    }
+
 
     public static class massageBuilder {
         private Message m;

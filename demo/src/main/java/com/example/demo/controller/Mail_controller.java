@@ -23,82 +23,101 @@ public class Mail_controller {
     public Mail_controller(Mail_service mailService) {
         this.mailService = mailService;
     }
-    @GetMapping("/retrieve/{id}")
-    public ResponseEntity<?> retrieve(@PathVariable int id) {
+    @GetMapping("/retrieve/{id}/{isreciver}")
+    public void retrieve(@PathVariable int id,@PathVariable boolean receiver) {
         try {
             System.out.println("Retrieving message with ID: " + id);
 
             Message m = mailService.getbyid(id);
             if (m == null) {
-                return ResponseEntity.notFound().build();
+                throw new RuntimeException("not found");
             }
-
-            Mail mail1 = mailService.log_in(new Mail.builder().email(m.getFROM()).build());
-            m.setSender(mail1);
-            mail1.deletetrash(id);
-
+            if(!receiver) {
+                Mail mail1 = mailService.log_in(new Mail.builder().email(m.getFROM()).build());
+                m.setSender(mail1);
+                mail1.deletetrash(id);
+            }
             Mail mail2 = mailService.log_in(new Mail.builder().email(m.getTO()).build());
             m.setReciever(mail2);
             mail2.deletetrash(id);
-
             mailService.uptademess(m);
-            Mail m1 = mailService.uptade(mail1);
             mailService.uptade(mail2);
-
-            return ResponseEntity.ok(m1);
         } catch (Exception e) {
             System.err.println("Error in retrieve method: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body(e.getMessage());
         }
+        return;
     }
-    @DeleteMapping("/{id}")
-    public Mail semi_deleteMessage(@PathVariable int id){
+    @DeleteMapping("/{id}/{type}")
+    public Mail semi_delete_out_Meseage(@PathVariable int id,@PathVariable boolean type){
         Message message=mailService.getbyid(id);
-        message.notify_delete(id,message);
+        if(type)
+        message.notify_deleteallsender(id,message);
+        else message.notify_deleteformesender(id,message);
         Mail m1=new Mail.builder().email(message.getFROM()).build();
         m1=mailService.log_in((Mail) m1);
         m1=mailService.uptade((Mail) m1);
         Mail m2=new Mail.builder().email(message.getTO()).build();
         m2=mailService.log_in((Mail) m2);
-        m1.notify_delete(id,message);
+        if(type) m1.notify_deleteallsender(id,message);
+        else m1.notify_deleteformereciver(id,message);
         mailService.uptademess(message);
-        return (Mail) m1;
+        return  m1;
     }
     @DeleteMapping("/mess/{id}")
-    public Mail semi_delete(@PathVariable int id){
-        System.out.println(id);
+    public Mail semi_delete_in_message(@PathVariable int id){
         Message message=mailService.getbyid(id);
-        message.notify_delete(id,message);
-        Subscriber m1=new Mail.builder().email(message.getTO()).build();
-        Subscriber m2=new Mail.builder().email(message.getFROM()).build();
+        message.notify_deleteformereciver(id,new Message());
+        Mail m1=new Mail.builder().email(message.getFROM()).build();
         m1=mailService.log_in((Mail) m1);
-        m1.notify_delete(id,message);
+        m1=mailService.uptade((Mail) m1);
+        Mail m2=new Mail.builder().email(message.getTO()).build();
+        m2=mailService.log_in((Mail) m2);
+        m2.notify_deleteformereciver(id,message);
         mailService.uptademess(message);
-        mailService.uptade((Mail) m1);
-        return mailService.log_in((Mail) m2);
+        return  m1;
     }
 
     @PutMapping("/deleteALl")
     public void deleteALl(@RequestBody DTO_mail m){
         if (!m.getIn().isEmpty()){
             for (Message message : m.getIn()) {
-                semi_delete(message.getId());
+                semi_delete_out_Meseage(message.getId(),true);
             }
         }else if (!m.getOut().isEmpty()){
             for (Message message : m.getOut()) {
-                semi_deleteMessage(message.getId());
+                semi_delete_in_message(message.getId());
             }
         }else if (!m.getTrash().isEmpty()) {
-            for (Message message : m.getTrash()) {
-                mailService.handleDeleteMessage(message.getId());
+            for (Message mess : m.getTrash()) {
+                delete(mess.getId());
             }
         }
     }
 
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable int id){
-        mailService.handleDeleteMessage(id);
+        System.out.println("ffffff");
+
+        Message message=mailService.getbyid(id);
+        System.out.println(message.arenull());
+        System.out.println(message.issendernull());
+        System.out.println(message.isrecievernull());
+        Mail m1=new Mail();
+        if (message.arenull()) {
+            mailService.handleDeleteMessage(message.getId());
+            return;
+        }
+        else if(message.issendernull()){
+            m1=mailService.log_in(new Mail.builder().email(message.getFROM()).build());
+            m1.deletetrash(id);
+        }
+        else {
+            System.out.println("ggggggggggggggg");
+            m1 = mailService.log_in(new Mail.builder().email(message.getTO()).build());
+            m1.deletetrash(id);
+        }
+        mailService.uptade(m1);
     }
 
     @PostMapping("/mail")
