@@ -24,10 +24,13 @@ public class Mail implements Subscriber{
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
     Set<Message> out;
-    @OneToMany(
+    @ManyToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
-    @JoinColumn(name = "trash")
+    @JoinTable(name = "trash",
+            joinColumns = @JoinColumn(name="mail_id"),
+            inverseJoinColumns = @JoinColumn(name = "message_id")
+    )
     Set<Message> trash;
 
     public Set<Message> getIn() {
@@ -112,11 +115,24 @@ public class Mail implements Subscriber{
     }
 
     @Override
-    public void notify_delete(int id,Message message) {
-        deleteout(id);
-        deleteout(id);
-        addtrash(message);
+    public void notify_deleteallsender(int id, Message m) {
+        this.deleteout(id);
+        this.deletein(id);
+        this.addtrash(m);
     }
+
+    @Override
+    public void notify_deleteformesender(int id, Message m) {
+        this.deleteout(id);
+        this.addtrash(m);
+    }
+
+    @Override
+    public void notify_deleteformereciver(int id, Message m) {
+        this.deletein(id);
+        this.addtrash(m);
+    }
+
 
     public static class builder{
         private String email;
