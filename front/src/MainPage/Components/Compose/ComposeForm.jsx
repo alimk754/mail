@@ -6,6 +6,7 @@ import { Service } from '../service';
 
 import FileAttachment from '../../../Attachments/FileAttachment';
  import './ComposeForm.css';
+ import { handlePageReload } from '../PageReload';
 
  const ComposeForm = () => {
   const {user,setUser}=useContext(Datacontext);
@@ -55,6 +56,7 @@ import FileAttachment from '../../../Attachments/FileAttachment';
     } finally {
       setIsLoading(false);
     }
+    handlePageReload(user , setUser);
   };
 
   const options = [

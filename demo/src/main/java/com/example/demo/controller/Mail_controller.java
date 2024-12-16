@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,20 +24,28 @@ public class Mail_controller {
     public Mail_controller(Mail_service mailService) {
         this.mailService = mailService;
     }
-    @GetMapping("/retrieve/{id}/{receiver}")
-    public void retrieve(@PathVariable int id,@PathVariable boolean receiver) {
+    @GetMapping("/retrieve/{id}/{receiver}/{checkUser}")
+    public void retrieve(@PathVariable int id,@PathVariable boolean receiver,@PathVariable boolean checkUser) {
         try {
             System.out.println("Retrieving message with ID: " + id);
 
             Message m = mailService.getbyid(id);
+            System.out.println(LocalDateTime.now());
+            if (checkUser) {
+                m.setCreatedAt(LocalDateTime.now());
+                mailService.uptademess(m);
+            }
+
+
             if (m == null) {
                 throw new RuntimeException("not found");
             }
             if(!receiver) {
-                Mail mail1 = mailService.log_in(new Mail.builder().email(m.getFROM()).build(),"id");
+                Mail mail1 = mailService.log_in(new Mail.builder().email(m.getFROM()).build(), "id");
                 m.setSender(mail1);
                 mail1.deletetrash(id);
             }
+
             Mail mail2 = mailService.log_in(new Mail.builder().email(m.getTO()).build(),"id");
             m.setReciever(mail2);
             mail2.deletetrash(id);

@@ -34,13 +34,13 @@ public class Mail_DAO_impl implements Mail_DAO{
         Mail mail=entityManager.find(Mail.class,m.getEmail());
         if(mail!=null) {
             TypedQuery<Message> query = entityManager.createQuery(
-                    "SELECT m FROM Message m WHERE m.reciever.id = :email ORDER BY m.id DESC",
+                    "SELECT m FROM Message m WHERE m.reciever.email = :email ORDER BY m.createdAt DESC",
                     Message.class
             );
             query.setParameter("email", m.getEmail());
             mail.setIn(query.getResultList());
             TypedQuery<Message> queryin = entityManager.createQuery(
-                    "SELECT m FROM Message m WHERE m.sender.id = :email ORDER BY m.id DESC",
+                    "SELECT m FROM Message m WHERE m.sender.email = :email ORDER BY m.createdAt DESC",
                     Message.class
             );
             queryin.setParameter("email", m.getEmail());

@@ -3,11 +3,14 @@ import { Clock, User, ChevronDown, ChevronUp, Trash2, Undo  } from 'lucide-react
 import { Datacontext } from '../../main';
 import axios from 'axios';
 import MessageAttachments from './MessageAttachment';
+import DeleteOptions from './DeleteOptions';
+import WarningModel from './WarinigModel';
 
 const MessageItem = ({title, message ,handlePageReload}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { user, setUser } = useContext(Datacontext);
   const [showDeleteDiv, setShowDeleteDiv] = useState(false);
+  const [showDeleteWar, setShowDeleteWar] = useState(false);
 
   const getImportanceColor = (importance)=>{
     if (importance == 10) return 'bg-red-500';
@@ -16,16 +19,17 @@ const MessageItem = ({title, message ,handlePageReload}) => {
   };
   const retrieve = async () => {
     try {
+      let checkUser = (message.from === user.email);
       let bool = true;
       if (message.from === user.email) bool = false; // ( !==)
-        const response = await axios.get(`http://localhost:8080/api/retrieve/${message.id}/${bool}`);
+        const response = await axios.get(`http://localhost:8080/api/retrieve/${message.id}/${bool}/${checkUser}`);
         console.log('Full response:', response);
         console.log('Response data:', response.data);
         setUser(response.data);
     } catch (error) {
         console.error('Retrieve failed:', error.response ? error.response.data : error.message);
     }
-    handlePageReload();
+    handlePageReload(user, setUser);
 };
 
 const handleDeleteFromTrash = async () => {
@@ -35,7 +39,7 @@ const handleDeleteFromTrash = async () => {
 } catch (error) {
     console.error('delete failed');
 }
-handlePageReload();
+handlePageReload(user , setUser);
 }
 
   const DeleteMessage = async (bool) => {
@@ -73,7 +77,7 @@ handlePageReload();
     }
 
   }
-  handlePageReload();
+  handlePageReload(user, setUser);
   }
 
   return (
@@ -113,16 +117,27 @@ handlePageReload();
 
         <div className="col-span-1">
           {(title !== "Trash") ? <button onClick={(title === "Sent Mails") ? () => setShowDeleteDiv(true) : () => DeleteMessage(false)} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
-          <Trash2 size={20} /></button> :<button onClick={retrieve} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
-          <Undo size={20} /></button>}
+          <Trash2 size={20} /></button> : <button onClick={retrieve} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
+          <Undo size={20} /></button>} 
         </div>
 
         {(title === "Trash") &&(
           <div className="col-span-1">
             <button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
-            <Trash2 onClick={handleDeleteFromTrash} size={20}/></button>
+            <Trash2 onClick={() => setShowDeleteWar(true)} size={20}/></button>
           </div>
         )}
+
+        {/* Warning Modal */}
+      <WarningModel 
+        isOpen={showDeleteWar}
+        onClose={() => setShowDeleteWar(false)}
+        onConfirm={handleDeleteFromTrash}
+        title="Delete This Messages"
+        message={`Are you sure you want to delete this message from Trash?`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
 
         {/* Importance and Expand Icon Column */}
         <div className="col-span-1 flex items-center justify-end space-x-2">
@@ -144,39 +159,13 @@ handlePageReload();
           </div>
         </div>
       )}
-      {/* Conditional Delete Options Div */}
+      {/* Conditional Delete Options Modal */}
       {showDeleteDiv && (
-        <div
-          className="fixed inset-0 bg-gray-900 bg-opacity-70 flex justify-center items-center z-50"
-          onClick={() => setShowDeleteDiv(false)}
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg text-center space-y-4"
-          >
-            <h2 className="text-xl font-semibold text-gray-800">Delete Options</h2>
-            <p className="text-gray-600">Choose how you want to delete the message:</p>
-            <div className="flex justify-center space-x-4">
-              <button
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                onClick={() => DeleteMessage(false)}
-              >
-                Delete for Me
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                onClick={() => DeleteMessage(true)}
-              >
-                Delete for Everyone
-              </button>
-              <button
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
-                onClick={() => setShowDeleteOptions(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+        <DeleteOptions 
+          onClose={() => setShowDeleteDiv(false)}
+          onDeleteForMe={() => DeleteMessage(false)}
+          onDeleteForEveryone={() => DeleteMessage(true)}
+        />
       )}
     </div>
   );

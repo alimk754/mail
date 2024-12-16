@@ -41,7 +41,7 @@ public class Message implements Subscriber{
     List<Message> mails;
     @Column(name = "fromemail")
     private String FROM;
-    @Column(name = "created_at", updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL")
+    @Column(name = "created_at", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL")
     @JsonFormat(pattern = "yyyy/MM/dd/HH:mm:ss")
     private LocalDateTime createdAt;
 
