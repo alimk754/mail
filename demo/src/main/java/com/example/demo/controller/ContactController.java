@@ -38,6 +38,12 @@ public class ContactController {
         String name = request.getName();
         List<String> emails = request.getEmails();
 
+        for (String e:emails){
+            Mail exist=new Mail.builder().email(e).build();
+            mailService.log_in(exist);
+        }
+
+
 
         Mail mail = mailService.log_in(new Mail.builder().email(email).build());
 
@@ -55,10 +61,7 @@ public class ContactController {
 
         return ResponseEntity.ok(contact);
     }
-    @GetMapping("/test")
-    public String test() {
-        return "Working!";
-    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Contact> updateContact(@PathVariable Long id, @RequestBody ContactDTO contactDTO) {
         Contact contact = mailService.getContactById(id);

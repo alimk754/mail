@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Datacontext } from '../../main';
-import { Trash2, Plus, Mail, Edit2, X, Loader } from 'lucide-react';
+import { Trash2, Plus, Mail, Edit2, X, Loader, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
 const Contact = () => {
@@ -9,6 +9,8 @@ const Contact = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const [newContact, setNewContact] = useState({
     name: '',
     emails: [''],
@@ -47,8 +49,11 @@ const Contact = () => {
         await fetchContacts();
         setNewContact({ name: '', emails: [''] });
         setShowForm(false);
+        setError(null);
       } catch (error) {
-        console.error('Error adding contact:', error);
+        // console.error('Error adding contact:', error);
+        setError(error.response.data.message);
+        // console.log(error.response.data.message)
       } finally {
         setLoading(false);
       }
@@ -126,7 +131,8 @@ const Contact = () => {
     <div className="p-4 relative">
       <div className="flex gap-4 mb-6">
         <button
-          onClick={() => setShowForm(true)}
+          onClick={() =>{ setShowForm(true) 
+                         setError(null);}}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
         >
           <Plus className="h-4 w-4" />
@@ -149,12 +155,22 @@ const Contact = () => {
               </button>
             </div>
 
+            {error && (
+              <div className="mx-4 mt-4">
+                <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm">
+                  <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                  <span>{error}</span>
+                </div>
+              </div>
+            )}
+
             <div className="p-4 space-y-3 overflow-y-auto flex-1">
               <input
                 type="text"
                 placeholder="Name"
                 value={newContact.name}
-                onChange={(e) => setNewContact((prev) => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>{ setNewContact((prev) => ({ ...prev, name: e.target.value }))
+                setError(null); }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
 
@@ -164,7 +180,8 @@ const Contact = () => {
                     type="email"
                     placeholder="Email"
                     value={email}
-                    onChange={(e) => handleEmailChange(index, e.target.value)}
+                    onChange={(e) =>{ setError(null); 
+                           handleEmailChange(index, e.target.value)} }
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   {newContact.emails.length > 1 && (
