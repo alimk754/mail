@@ -4,6 +4,7 @@ import Sidebar from './Components/Sidebar';
 import ComposeForm from './Components/Compose/ComposeForm';
 import ContentSection from './Components/ContentSection';
 import { Datacontext } from '../main';
+import Contact from './Components/Contact';
 const MainPage = () => {
   const [isSidebar, setSidebar] = useState(true);
   const [activeSection, setActiveSection] = useState('compose');
@@ -43,11 +44,24 @@ const MainPage = () => {
               <div className="text-gray-600">Your out Messages will appear here</div>
             </ContentSection>
           )}
+
+
+
+          
           {activeSection === 'contacts' && (
+            <>
             <ContentSection title="Contacts" messages={[]}>
-              <div className="text-gray-600">Your contacts will appear here</div>
+              <div className="text-gray-600">
+               
+              </div>
             </ContentSection>
+            <Contact /></>
           )}
+
+
+
+
+
           {activeSection === 'trash' && (
             <ContentSection title="Trash" messages={user.trash===null? []:user.trash}>
               <div className="text-gray-600">Deleted messages will appear here</div>
