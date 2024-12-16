@@ -35,6 +35,10 @@ public class Mail implements Subscriber{
             fetch = FetchType.LAZY)
     private List<Contact> contacts = new ArrayList<>();
 
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    private List<UserFolder> userFolders=new ArrayList<>();
 
     public List<Contact> getContacts() {
         return contacts;
@@ -43,7 +47,15 @@ public class Mail implements Subscriber{
     public void setContacts(List<Contact> contacts) {
         this.contacts = contacts;
     }
+    public void addFolder(Contact contact) {
+        contacts.add(contact);
+        contact.setMail(this);
+    }
 
+    public void removeFolder(Contact contact) {
+        contacts.remove(contact);
+        contact.setMail(null);
+    }
     public void addContact(Contact contact) {
         contacts.add(contact);
         contact.setMail(this);
@@ -103,6 +115,7 @@ public class Mail implements Subscriber{
             }
         }
     }
+
     public List<Message> getOut() {
         return out;
     }

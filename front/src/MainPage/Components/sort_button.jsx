@@ -72,7 +72,7 @@ const SortingOptionsDiv = () => {
                   className="form-checkbox h-5 w-5 text-blue-600"
                 />
                 <label htmlFor="ascending" className="text-gray-700">
-                  Descending Order
+                  Ascending Order
                 </label>
               </div>
               <div className="flex space-x-2">
