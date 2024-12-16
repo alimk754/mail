@@ -8,6 +8,8 @@ import java.util.List;
 @Entity
 @Table(name = "folder")
 public class UserFolder {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     @Column(name = "folder_name")

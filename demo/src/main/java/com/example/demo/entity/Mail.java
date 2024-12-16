@@ -38,6 +38,7 @@ public class Mail implements Subscriber{
     @OneToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
+    @JoinColumn(name = "mail_id")
     private List<UserFolder> userFolders=new ArrayList<>();
 
     public List<Contact> getContacts() {
