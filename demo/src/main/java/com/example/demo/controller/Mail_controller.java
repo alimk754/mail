@@ -25,14 +25,33 @@ public class Mail_controller {
     }
     @GetMapping("/retrieve/{id}/{receiver}")
     public void retrieve(@PathVariable int id,@PathVariable boolean receiver) {
-        Message m = mailService.getbyid(id);
+        try {
+            System.out.println("Retrieving message with ID: " + id);
 
-
+            Message m = mailService.getbyid(id);
+            if (m == null) {
+                throw new RuntimeException("not found");
+            }
+            if(!receiver) {
+                Mail mail1 = mailService.log_in(new Mail.builder().email(m.getFROM()).build(),"id");
+                m.setSender(mail1);
+                mail1.deletetrash(id);
+            }
+            Mail mail2 = mailService.log_in(new Mail.builder().email(m.getTO()).build(),"id");
+            m.setReciever(mail2);
+            mail2.deletetrash(id);
+            mailService.uptademess(m);
+            mailService.uptade(mail2);
+        } catch (Exception e) {
+            System.err.println("Error in retrieve method: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return;
     }
     @DeleteMapping("/{id}/{type}")
     public Mail semi_delete_out_Meseage(@PathVariable int id,@PathVariable boolean type){
         Message message=mailService.getbyid(id);
-        if(type)
+         if(type)
         message.notify_deleteallsender(id,message);
         else message.notify_deleteformesender(id,message);
         Mail m1=new Mail.builder().email(message.getFROM()).build();

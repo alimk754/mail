@@ -18,6 +18,7 @@ const ContentSection = ({
 
   const {user,setUser} =useContext(Datacontext);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showWarning , setShowWarining] = useState(false);
   
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -34,20 +35,17 @@ const ContentSection = ({
   const handleDeleteAll = async (e) => {
     try {
       let messagesToDelete = [];
-     if (title === "Inbox") {
-       messagesToDelete = user.in;
-     } else if (title === "Sent Mails") {
-       messagesToDelete = user.out;
-     } else if (title === "Trash") {
-       messagesToDelete = user.trash;
-    }
+      if (title === "Inbox") {
+        messagesToDelete = user.in;
+      } else if (title === "Sent Mails") {
+        messagesToDelete = user.out;
+      } else if (title === "Trash") {
+        messagesToDelete = user.trash;
+     }
 
     const response = await axios.put('http://localhost:8080/api/deleteALl', 
-      title === "Inbox" 
-        ? { in: messagesToDelete } 
-        : title === "Sent Mails"
-          ? { out: messagesToDelete }
-          : { trash: messagesToDelete }
+      
+       { trash: user.trash }
     );
       if (response.status === 200) {
         console.log('Login successful:');
@@ -91,12 +89,12 @@ const ContentSection = ({
       >
           <RefreshCcw className="mr-2" size={18} />
       </button>
-      <button
+      {(title === "Trash") && <button
           className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500"
           
       >
-          <Trash2 onClick={handleDeleteAll} className="mr-2" size={18} />
-      </button>
+          <Trash2 onClick={() => setShowWarining(true)} className="mr-2" size={18} />
+      </button>}
       </div>
       </div>
       <Service 
@@ -115,6 +113,35 @@ const ContentSection = ({
       <div>
        <MessageList title={title} messages={messages} handlePageReload={handlePageReload}/>
       </div>
+
+      {/* Conditional Warning Div */}
+      {showWarning && (
+        <div
+          className="fixed inset-0 bg-gray-900 bg-opacity-70 flex justify-center items-center z-50"
+          onClick={() => setShowWarining(false)}
+        >
+          <div
+            className="bg-white p-6 rounded-lg shadow-lg text-center space-y-4"
+          >
+            <h2 className="text-xl font-semibold text-gray-800">Warning</h2>
+            <p className="text-gray-600">Are you sure you want to delete All message?</p>
+            <div className="flex justify-center space-x-4">
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                onClick={(e) => handleDeleteAll (e)}
+              >
+                Yes, Delete
+              </button>
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                onClick={() => setShowWarining(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
