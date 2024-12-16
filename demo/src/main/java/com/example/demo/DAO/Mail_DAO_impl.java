@@ -71,13 +71,30 @@ public class Mail_DAO_impl implements Mail_DAO{
         entityManager.remove(entityManager.find(Message.class,id));
     }
 
-
-    @ExceptionHandler
-    ResponseEntity<Returned> handle(RuntimeException e){
-        Returned r=new Returned();
-        r.setMessage(e.getMessage());
-        r.setStatus(HttpStatus.CONFLICT.value());
-        r.setTime(System.currentTimeMillis());
-        return new ResponseEntity<>(r,HttpStatus.NOT_FOUND);
+    @Override
+    public Mail sort(String sortField, String Asc,String id) {
+        System.out.println(id);
+        System.out.println(sortField);
+        System.out.println(Asc);
+        Mail mail=entityManager.find(Mail.class,id);
+        if(mail!=null) {
+            TypedQuery<Message> query = entityManager.createQuery(
+                    "SELECT m FROM Message m WHERE m.reciever.email = :email ORDER BY m."+sortField+" "+Asc,
+                    Message.class
+            );
+            query.setParameter("email", id);
+            mail.setIn(query.getResultList());
+            TypedQuery<Message> queryin = entityManager.createQuery(
+                    "SELECT m FROM Message m WHERE m.sender.email = :email ORDER BY m."+sortField+" "+Asc,
+                    Message.class
+            );
+            queryin.setParameter("email", id);
+            mail.setOut(queryin.getResultList());
+            return mail;
+        }
+        else throw new RuntimeException();
     }
 }
+
+
+

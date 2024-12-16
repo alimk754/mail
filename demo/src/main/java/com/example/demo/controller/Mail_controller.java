@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.DTO_mail;
 import com.example.demo.AttachmentDTO;
 
+import com.example.demo.Sort_DAO;
 import com.example.demo.entity.Attachment;
 import com.example.demo.entity.Mail;
 import com.example.demo.entity.Message;
@@ -184,7 +185,11 @@ public class Mail_controller {
         mail1.addout(m1);
         return mailService.uptade( mail1);
     }
+    @PostMapping("/sort")
+    public ResponseEntity<Mail> sort(@RequestBody Sort_DAO obj){
 
+          return ResponseEntity.ok(mailService.sort(obj.sortField, obj.isAsc, obj.id));
+    }
 
 
 }

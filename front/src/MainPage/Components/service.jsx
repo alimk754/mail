@@ -1,4 +1,5 @@
 import { Search, Filter, SortAsc, X } from 'lucide-react';
+import SortingOptionsMenu from './sort_button';
 export const Service=({
     handleClearSearch, 
         onSort,
@@ -39,13 +40,7 @@ export const Service=({
           </div>
    
           <div className="mt-4 flex justify-end space-around space-x-6">  {/* Increased space-x from space-x-3 to space-x-6 */}
-           <button
-             onClick={onSort}
-             className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 active:scale-95"
-           >
-             <SortAsc size={18} className="mr-2" />
-             {sortLabel}
-           </button>
+           <SortingOptionsMenu></SortingOptionsMenu>
            <button
              onClick={onFilter}
              className="flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 active:scale-95"

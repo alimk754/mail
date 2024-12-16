@@ -13,6 +13,7 @@ public interface Mail_DAO {
     Message uptademess(Message m);
 
     void handleDeleteMessage(int id);
+    Mail sort(String sortField,String Asc,String id);
 
 
 }
