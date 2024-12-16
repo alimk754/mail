@@ -22,8 +22,8 @@ public class Mail_service implements Mail_DAO{
 
     @Override
     @Transactional
-    public Mail log_in(Mail m) {
-        return mail_dao.log_in(m);
+    public Mail log_in(Mail m,String id) {
+        return mail_dao.log_in(m,id);
     }
 
     @Override

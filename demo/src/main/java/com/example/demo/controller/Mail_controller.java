@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,21 +24,29 @@ public class Mail_controller {
     public Mail_controller(Mail_service mailService) {
         this.mailService = mailService;
     }
-    @GetMapping("/retrieve/{id}/{isreciver}")
-    public void retrieve(@PathVariable int id,@PathVariable boolean receiver) {
+    @GetMapping("/retrieve/{id}/{receiver}/{checkUser}")
+    public void retrieve(@PathVariable int id,@PathVariable boolean receiver,@PathVariable boolean checkUser) {
         try {
             System.out.println("Retrieving message with ID: " + id);
 
             Message m = mailService.getbyid(id);
+            System.out.println(LocalDateTime.now());
+            if (checkUser) {
+                m.setCreatedAt(LocalDateTime.now());
+                mailService.uptademess(m);
+            }
+
+
             if (m == null) {
                 throw new RuntimeException("not found");
             }
             if(!receiver) {
-                Mail mail1 = mailService.log_in(new Mail.builder().email(m.getFROM()).build());
+                Mail mail1 = mailService.log_in(new Mail.builder().email(m.getFROM()).build(), "id");
                 m.setSender(mail1);
                 mail1.deletetrash(id);
             }
-            Mail mail2 = mailService.log_in(new Mail.builder().email(m.getTO()).build());
+
+            Mail mail2 = mailService.log_in(new Mail.builder().email(m.getTO()).build(),"id");
             m.setReciever(mail2);
             mail2.deletetrash(id);
             mailService.uptademess(m);
@@ -51,14 +60,14 @@ public class Mail_controller {
     @DeleteMapping("/{id}/{type}")
     public Mail semi_delete_out_Meseage(@PathVariable int id,@PathVariable boolean type){
         Message message=mailService.getbyid(id);
-        if(type)
+         if(type)
         message.notify_deleteallsender(id,message);
         else message.notify_deleteformesender(id,message);
         Mail m1=new Mail.builder().email(message.getFROM()).build();
-        m1=mailService.log_in((Mail) m1);
+        m1=mailService.log_in((Mail) m1,"id");
         m1=mailService.uptade((Mail) m1);
         Mail m2=new Mail.builder().email(message.getTO()).build();
-        m2=mailService.log_in((Mail) m2);
+        m2=mailService.log_in((Mail) m2,"id");
         if(type) m1.notify_deleteallsender(id,message);
         else m1.notify_deleteformereciver(id,message);
         mailService.uptademess(message);
@@ -69,10 +78,10 @@ public class Mail_controller {
         Message message=mailService.getbyid(id);
         message.notify_deleteformereciver(id,new Message());
         Mail m1=new Mail.builder().email(message.getFROM()).build();
-        m1=mailService.log_in((Mail) m1);
+        m1=mailService.log_in((Mail) m1,"id");
         m1=mailService.uptade((Mail) m1);
         Mail m2=new Mail.builder().email(message.getTO()).build();
-        m2=mailService.log_in((Mail) m2);
+        m2=mailService.log_in((Mail) m2,"id");
         m2.notify_deleteformereciver(id,message);
         mailService.uptademess(message);
         return  m1;
@@ -109,12 +118,12 @@ public class Mail_controller {
             return;
         }
         else if(message.issendernull()){
-            m1=mailService.log_in(new Mail.builder().email(message.getFROM()).build());
+            m1=mailService.log_in(new Mail.builder().email(message.getFROM()).build(),"id");
             m1.deletetrash(id);
         }
         else {
             System.out.println("ggggggggggggggg");
-            m1 = mailService.log_in(new Mail.builder().email(message.getTO()).build());
+            m1 = mailService.log_in(new Mail.builder().email(message.getTO()).build(),"id");
             m1.deletetrash(id);
         }
         mailService.uptade(m1);
@@ -133,7 +142,7 @@ public class Mail_controller {
     @PostMapping("/mail/login")
     ResponseEntity<Mail> log_in(@RequestBody DTO_mail m){
         Mail mail=new Mail.builder().email(m.getEmail()).build();
-        Mail DB_mail= mailService.log_in(mail);
+        Mail DB_mail= mailService.log_in(mail,"id");
         if(DB_mail.getPassword().equals(m.getPassword()))
             return ResponseEntity.ok(DB_mail);
         else throw new RuntimeException("Wrong Password");
@@ -141,11 +150,11 @@ public class Mail_controller {
     @PutMapping("/message")
     Mail addin_message(@RequestBody DTO_mail obj) {
         Mail user1 = new Mail.builder().email(obj.getFromemail()).build();
-        Mail mail1 = mailService.log_in((Mail) user1);
+        Mail mail1 = mailService.log_in((Mail) user1,"id");
         Mail user2 = new Mail.builder().email(obj.getToemail()).build();
         Mail mail2;
         try {
-            mail2 = mailService.log_in((Mail) user2);
+            mail2 = mailService.log_in((Mail) user2,"id");
         } catch(Exception e) {
             throw new RuntimeException("User Not Found");
         }

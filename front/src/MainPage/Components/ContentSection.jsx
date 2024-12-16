@@ -4,6 +4,8 @@ import { Datacontext } from '../../main';
 import { Service } from './service';
 import axios from 'axios';
 import { RefreshCcw, Trash2 } from 'lucide-react';
+import { handlePageReload } from './PageReload';
+import WarningModel from './WarinigModel';
 const ContentSection = ({
    title,
    children,
@@ -18,6 +20,7 @@ const ContentSection = ({
 
   const {user,setUser} =useContext(Datacontext);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showWarning , setShowWarining] = useState(false);
   
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -33,50 +36,21 @@ const ContentSection = ({
 
   const handleDeleteAll = async (e) => {
     try {
-      let messagesToDelete = [];
-     if (title === "Inbox") {
-       messagesToDelete = user.in;
-     } else if (title === "Sent Mails") {
-       messagesToDelete = user.out;
-     } else if (title === "Trash") {
-       messagesToDelete = user.trash;
-    }
-
-    const response = await axios.put('http://localhost:8080/api/deleteALl', 
-      title === "Inbox" 
-        ? { in: messagesToDelete } 
-        : title === "Sent Mails"
-          ? { out: messagesToDelete }
-          : { trash: messagesToDelete }
+    setShowWarining(false);
+    const response = await axios.put('http://localhost:8080/api/deleteALl',  
+       { trash: user.trash }
     );
       if (response.status === 200) {
-        console.log('Login successful:');
+        console.log('Delete successful:');
         
       }else 
-        console.error('Login failed:');
+        console.error('De;ete failed:');
       
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('Delete failed:', error);
     }
-    handlePageReload();
+    handlePageReload(user , setUser);
   }
-
-  const handlePageReload = async (e) => {
-
-    try {
-      const response = await axios.post('http://localhost:8080/api/mail/login', {email : user.email, password : user.password});
-      console.log(response);
-      if (response.status === 200) {
-        console.log('Login successful:', response.data);
-        setUser(u=>response.data);
-        console.log(user);
-      }else 
-        console.error('Login failed:', response.data.error);
-      
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
-  };
 
   return (
     <div>
@@ -87,16 +61,16 @@ const ContentSection = ({
       <div className='flex'>
       <button
           className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500"
-          onClick={handlePageReload}
+          onClick={() => handlePageReload(user , setUser)}
       >
           <RefreshCcw className="mr-2" size={18} />
       </button>
-      <button
+      {(title === "Trash") && <button
           className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500"
           
       >
-          <Trash2 onClick={handleDeleteAll} className="mr-2" size={18} />
-      </button>
+          <Trash2 onClick={() => setShowWarining(true)} className="mr-2" size={18} />
+      </button>}
       </div>
       </div>
       <Service 
@@ -115,6 +89,17 @@ const ContentSection = ({
       <div>
        <MessageList title={title} messages={messages} handlePageReload={handlePageReload}/>
       </div>
+
+      {/* Warning Modal */}
+      <WarningModel 
+        isOpen={showWarning}
+        onClose={() => setShowWarining(false)}
+        onConfirm={(e) => handleDeleteAll (e)}
+        title="Delete All Messages"
+        message={`Are you sure you want to delete all messages in Trash?`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
     </div>
   );
 };

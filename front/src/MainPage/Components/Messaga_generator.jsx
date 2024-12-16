@@ -3,10 +3,14 @@ import { Clock, User, ChevronDown, ChevronUp, Trash2, Undo  } from 'lucide-react
 import { Datacontext } from '../../main';
 import axios from 'axios';
 import MessageAttachments from './MessageAttachment';
+import DeleteOptions from './DeleteOptions';
+import WarningModel from './WarinigModel';
 
 const MessageItem = ({title, message ,handlePageReload}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { user, setUser } = useContext(Datacontext);
+  const [showDeleteDiv, setShowDeleteDiv] = useState(false);
+  const [showDeleteWar, setShowDeleteWar] = useState(false);
 
   const getImportanceColor = (importance)=>{
     if (importance == 10) return 'bg-red-500';
@@ -15,14 +19,17 @@ const MessageItem = ({title, message ,handlePageReload}) => {
   };
   const retrieve = async () => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/retrieve/${message.id}`);
+      let checkUser = (message.from === user.email);
+      let bool = true;
+      if (message.from === user.email) bool = false; // ( !==)
+        const response = await axios.get(`http://localhost:8080/api/retrieve/${message.id}/${bool}/${checkUser}`);
         console.log('Full response:', response);
         console.log('Response data:', response.data);
-  
+        setUser(response.data);
     } catch (error) {
         console.error('Retrieve failed:', error.response ? error.response.data : error.message);
     }
-    handlePageReload();
+    handlePageReload(user, setUser);
 };
 
 const handleDeleteFromTrash = async () => {
@@ -32,19 +39,20 @@ const handleDeleteFromTrash = async () => {
 } catch (error) {
     console.error('delete failed');
 }
-handlePageReload();
+handlePageReload(user , setUser);
 }
 
-  const DeleteMessage = async () => {
+  const DeleteMessage = async (bool) => {
+    setShowDeleteDiv(false);
     if(message.from==user.email){
     try {
     
-      const response = await axios.delete(`http://localhost:8080/api/${message.id}`);
+      const response = await axios.delete(`http://localhost:8080/api/${message.id}/${bool}`);
       console.log(response);
       if (response.status === 200) {
         
         console.log(' successful:', response.data);
-      
+        setUser(u=>response.data);
         console.log(user);
       
       }else 
@@ -59,19 +67,17 @@ handlePageReload();
     
       const response = await axios.delete(`http://localhost:8080/api/mess/${message.id}`);
       console.log(response);
-      
         
         console.log(' successful:', response.data);
-   
+        setUser(u=>response.data);
         console.log(user);
-      
 
     } catch (error) {
       console.error('delete failed:', error);
     }
 
   }
-  handlePageReload();
+  handlePageReload(user, setUser);
   }
 
   return (
@@ -110,17 +116,28 @@ handlePageReload();
         </div>
 
         <div className="col-span-1">
-          {(title !== "Trash") ? <button onClick={(e) => DeleteMessage(e)} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
-          <Trash2 size={20} /></button> :<button onClick={retrieve} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
-          <Undo size={20} /></button>}
+          {(title !== "Trash") ? <button onClick={(title === "Sent Mails") ? () => setShowDeleteDiv(true) : () => DeleteMessage(false)} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
+          <Trash2 size={20} /></button> : <button onClick={retrieve} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
+          <Undo size={20} /></button>} 
         </div>
 
         {(title === "Trash") &&(
           <div className="col-span-1">
             <button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
-            <Trash2 onClick={handleDeleteFromTrash} size={20}/></button>
+            <Trash2 onClick={() => setShowDeleteWar(true)} size={20}/></button>
           </div>
         )}
+
+        {/* Warning Modal */}
+      <WarningModel 
+        isOpen={showDeleteWar}
+        onClose={() => setShowDeleteWar(false)}
+        onConfirm={handleDeleteFromTrash}
+        title="Delete This Messages"
+        message={`Are you sure you want to delete this message from Trash?`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
 
         {/* Importance and Expand Icon Column */}
         <div className="col-span-1 flex items-center justify-end space-x-2">
@@ -141,6 +158,14 @@ handlePageReload();
             <p className="text-gray-700 break-all">{message.message}</p>
           </div>
         </div>
+      )}
+      {/* Conditional Delete Options Modal */}
+      {showDeleteDiv && (
+        <DeleteOptions 
+          onClose={() => setShowDeleteDiv(false)}
+          onDeleteForMe={() => DeleteMessage(false)}
+          onDeleteForEveryone={() => DeleteMessage(true)}
+        />
       )}
     </div>
   );
