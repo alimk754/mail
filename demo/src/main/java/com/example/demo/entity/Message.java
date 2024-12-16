@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -37,11 +38,12 @@ public class Message implements Subscriber{
             joinColumns = @JoinColumn(name="message_id"),
             inverseJoinColumns = @JoinColumn(name = "mail_id")
     )
-    Set<Message> mails;
+    List<Message> mails;
     @Column(name = "fromemail")
     private String FROM;
     @Column(name = "created_at", updatable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL")
-    private LocalDate createdAt;
+    @JsonFormat(pattern = "yyyy/MM/dd/HH:mm:ss")
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Attachment> attachments = new ArrayList<>();
@@ -72,6 +74,14 @@ public class Message implements Subscriber{
         attachments.remove(attachment);
         attachment.setMessage(null);
     }
+    public void removeTrash(Mail mail) {
+        mails.remove(mail);
+        mail.deletetrash(this.id);
+    }
+    public void addTrash(Mail mail) {
+        mails.remove(mail);
+        mail.addtrash(this);
+    }
 
 
     public String getTO() {
@@ -86,11 +96,11 @@ public class Message implements Subscriber{
         this.reciever = reciever;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -204,7 +214,7 @@ public class Message implements Subscriber{
 
         public massageBuilder created_at() {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-            m.createdAt= LocalDateTime.now().toLocalDate();
+            m.createdAt= LocalDateTime.now();
             return this;
         }
         public massageBuilder attachments(List<Attachment> attachments) {

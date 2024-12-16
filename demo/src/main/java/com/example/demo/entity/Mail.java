@@ -5,8 +5,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name="mail")
@@ -19,11 +18,11 @@ public class Mail implements Subscriber{
     @OneToMany(mappedBy = "reciever",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
-    Set<Message> in;
+    List<Message> in;
     @OneToMany(mappedBy = "sender",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
-    Set<Message> out;
+    List<Message> out;
     @ManyToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
@@ -31,12 +30,12 @@ public class Mail implements Subscriber{
             joinColumns = @JoinColumn(name="mail_id"),
             inverseJoinColumns = @JoinColumn(name = "message_id")
     )
-    Set<Message> trash;
+    List<Message> trash;
 
-    public Set<Message> getIn() {
+    public List<Message> getIn() {
         return in;
     }
-    public void setIn(HashSet<Message> in) {
+    public void setIn(List<Message> in) {
         this.in = in;
     }
     public void addin(Message m){
@@ -56,11 +55,11 @@ public class Mail implements Subscriber{
         }
     }
 
-    public Set<Message> getTrash() {
+    public List<Message> getTrash() {
         return trash;
     }
 
-    public void setTrash(HashSet<Message> trash) {
+    public void setTrash(List<Message> trash) {
         this.trash = trash;
     }
 
@@ -82,10 +81,10 @@ public class Mail implements Subscriber{
             }
         }
     }
-    public Set<Message> getOut() {
+    public List<Message> getOut() {
         return out;
     }
-    public void setOut(HashSet<Message> out) {
+    public void setOut(List<Message> out) {
         this.out = out;
     }
     public String getEmail() {
@@ -102,12 +101,12 @@ public class Mail implements Subscriber{
     }
 
     public Mail() {
-        in=new HashSet<>();
-        out=new HashSet<>();
-        trash=new HashSet<>();
+        in=new ArrayList<>();
+        out=new ArrayList<>();
+        trash=new ArrayList<>();
     }
 
-    public Mail(String email, String password, HashSet<Message> in, HashSet<Message> out) {
+    public Mail(String email, String password, List<Message> in, List<Message> out) {
         this.email = email;
         this.password = password;
         this.in = in;
@@ -137,8 +136,8 @@ public class Mail implements Subscriber{
     public static class builder{
         private String email;
         private String password;
-        private HashSet <Message> in;
-        private HashSet <Message> out;
+        private List <Message> in;
+        private List <Message> out;
 
         public builder password(String pass){
             password=pass;
@@ -148,11 +147,11 @@ public class Mail implements Subscriber{
             email=email1;
             return this;
         }
-        public builder in(HashSet<Message> in){
+        public builder in(List<Message> in){
             in=in;
             return this;
         }
-        public builder out(HashSet<Message> out){
+        public builder out(List<Message> out){
             out=out;
             return this;
         }

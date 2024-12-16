@@ -18,7 +18,7 @@ const MessageItem = ({title, message ,handlePageReload}) => {
         const response = await axios.get(`http://localhost:8080/api/retrieve/${message.id}`);
         console.log('Full response:', response);
         console.log('Response data:', response.data);
-  
+        setUser(response.data);
     } catch (error) {
         console.error('Retrieve failed:', error.response ? error.response.data : error.message);
     }
@@ -44,7 +44,7 @@ handlePageReload();
       if (response.status === 200) {
         
         console.log(' successful:', response.data);
-      
+        setUser(u=>response.data);
         console.log(user);
       
       }else 
@@ -62,7 +62,7 @@ handlePageReload();
       
         
         console.log(' successful:', response.data);
-   
+        setUser(u=>response.data);
         console.log(user);
       
 

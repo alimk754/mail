@@ -4,6 +4,7 @@ import com.example.demo.entity.Mail;
 import com.example.demo.entity.Message;
 import com.example.demo.entity.Returned;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,21 @@ public class Mail_DAO_impl implements Mail_DAO{
     }
 
     @Override
-    public Mail log_in(Mail m) {
+    public Mail log_in(Mail m,String id) {
         Mail mail=entityManager.find(Mail.class,m.getEmail());
         if(mail!=null) {
+            TypedQuery<Message> query = entityManager.createQuery(
+                    "SELECT m FROM Message m WHERE m.reciever.id = :email ORDER BY m.id DESC",
+                    Message.class
+            );
+            query.setParameter("email", m.getEmail());
+            mail.setIn(query.getResultList());
+            TypedQuery<Message> queryin = entityManager.createQuery(
+                    "SELECT m FROM Message m WHERE m.sender.id = :email ORDER BY m.id DESC",
+                    Message.class
+            );
+            queryin.setParameter("email", m.getEmail());
+            mail.setOut(queryin.getResultList());
             return mail;
         }
         else throw new RuntimeException("Username Not found");
