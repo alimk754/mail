@@ -63,7 +63,7 @@ public class Mail_controller {
     public void deleteALl(@RequestBody DTO_mail m){
         if (!m.getIn().isEmpty()){
             for (Message message : m.getIn()) {
-                semi_delete_out_Meseage(message.getId(),false);
+                semi_delete_out_Meseage(message.getId(),true);
             }
         }else if (!m.getOut().isEmpty()){
             for (Message message : m.getOut()) {
