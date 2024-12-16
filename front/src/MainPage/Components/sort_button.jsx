@@ -8,6 +8,8 @@ const SortingOptionsDiv = () => {
   const {user,setUser} =useContext(Datacontext);
 
   const sortOptions = [
+    { value: 'FROM', label: 'sender' },
+    { value: 'TO', label: 'Receiver' },
     { value: 'createdAt', label: 'Created Date' },
     { value: 'importance', label: 'Importance' },
     { value: 'subject', label: 'subject' },
@@ -70,7 +72,7 @@ const SortingOptionsDiv = () => {
                   className="form-checkbox h-5 w-5 text-blue-600"
                 />
                 <label htmlFor="ascending" className="text-gray-700">
-                  Ascending Order
+                  Descending Order
                 </label>
               </div>
               <div className="flex space-x-2">
