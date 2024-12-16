@@ -5,21 +5,33 @@ import FilePreview from '../../Attachments/FilePreview';
 const MessageAttachments = ({ attachments }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   
+
   const base64ToFile = (attachment) => {
-    const byteString = atob(attachment.data);
-    const byteNumbers = new Array(byteString.length);
+   
+    const byteCharacters = atob(attachment.data);  
+    const byteArrays = [];
     
-    for (let i = 0; i < byteString.length; i++) {
-      byteNumbers[i] = byteString.charCodeAt(i);
+   
+    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+        const chunk = byteCharacters.slice(offset, offset + 1024);
+        const byteNumbers = new Array(chunk.length);
+        
+        for (let i = 0; i < chunk.length; i++) {
+            byteNumbers[i] = chunk.charCodeAt(i);
+        }
+        
+        byteArrays.push(new Uint8Array(byteNumbers));
     }
+
+   
+    const blob = new Blob(byteArrays, { type: attachment.contentType });
     
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: attachment.contentType });
+    
     return new File([blob], attachment.fileName, { 
-      type: attachment.contentType,
-      lastModified: new Date().getTime()
+        type: attachment.contentType,
+        lastModified: new Date().getTime()
     });
-  };
+};
 
   const handleDownload = (attachment) => {
     const file = base64ToFile(attachment);

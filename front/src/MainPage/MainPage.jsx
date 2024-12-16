@@ -1,7 +1,7 @@
 import React, { useState,useContext } from 'react';
 import { replace, useNavigate } from 'react-router-dom';
 import Sidebar from './Components/Sidebar';
-import ComposeForm from './Components/ComposeForm';
+import ComposeForm from './Components/Compose/ComposeForm';
 import ContentSection from './Components/ContentSection';
 import { Datacontext } from '../main';
 const MainPage = () => {
