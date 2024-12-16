@@ -1,5 +1,6 @@
 package com.example.demo.DAO;
 
+import com.example.demo.entity.Contact;
 import com.example.demo.entity.Mail;
 import com.example.demo.entity.Message;
 import com.example.demo.entity.Returned;
@@ -30,7 +31,7 @@ public class Mail_DAO_impl implements Mail_DAO{
     }
 
     @Override
-    public Mail log_in(Mail m,String id) {
+    public Mail log_in(Mail m) {
         Mail mail=entityManager.find(Mail.class,m.getEmail());
         if(mail!=null) {
             TypedQuery<Message> query = entityManager.createQuery(
@@ -59,6 +60,10 @@ public class Mail_DAO_impl implements Mail_DAO{
     @Override
     public Message getbyid(int id) {
         return entityManager.find(Message.class,id);
+    }
+    @Override
+    public Contact getContactById(long id) {
+        return entityManager.find(Contact.class,id);
     }
 
     @Override

@@ -23,43 +23,31 @@ const Contact = () => {
   const fetchContacts = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`/api/contacts/${encodeURIComponent(user.email)}`);
+      const { data } = await axios.get(`http://localhost:8080/api/contacts/${encodeURIComponent(user.email)}`);
       setContacts(Array.isArray(data) ? data : []); 
-     
+      console.log(contacts)
     } catch (error) {
       console.error('Error fetching contacts:', error);
     } finally {
       setLoading(false);
-      
     }
   };
 
   const handleAddContact = async () => {
     if (newContact.name && newContact.emails[0]) {
       setLoading(true);
-      
-
-
-
-      
       const payload = {
         email: user.email,
         name: newContact.name,
         emails: newContact.emails
       };
       
-      console.log('Sending request to:', '/api/contacts');
-      console.log('With payload:', payload);
-  
       try {
-        const response = await axios.post('/api/contacts', payload);
-        console.log('Response:', response);
-        
+        const response = await axios.post('http://localhost:8080/api/contacts/add', payload);
         await fetchContacts();
         setNewContact({ name: '', emails: [''] });
         setShowForm(false);
       } catch (error) {
-        console.log('Error details:', error.response);
         console.error('Error adding contact:', error);
       } finally {
         setLoading(false);
@@ -70,7 +58,7 @@ const Contact = () => {
   const handleDeleteContact = async (contactId) => {
     setLoading(true);
     try {
-      await axios.delete(`/api/contacts/${contactId}`);
+      await axios.delete(`http://localhost:8080/api/contacts/${contactId}`);
       await fetchContacts();
     } catch (error) {
       console.error('Error deleting contact:', error);
@@ -81,8 +69,12 @@ const Contact = () => {
   };
 
   const handleEditContact = (index) => {
+    const contact = contacts[index];
     setEditIndex(index);
-    setNewContact(contacts[index]);
+    setNewContact({
+      name: contact.name,
+      emails: Array.isArray(contact.emails) ? contact.emails : [contact.emails]
+    });
     setShowForm(true);
   };
 
@@ -90,7 +82,7 @@ const Contact = () => {
     if (newContact.name && newContact.emails[0]) {
       setLoading(true);
       try {
-        await axios.put(`/api/contacts/${contacts[editIndex].id}`, newContact);
+        await axios.put(`http://localhost:8080/api/contacts/${contacts[editIndex].id}`, newContact);
         await fetchContacts();
         setEditIndex(null);
         setNewContact({ name: '', emails: [''] });
@@ -227,17 +219,24 @@ const Contact = () => {
           </div>
         ) : (
           contacts.map((contact, index) => (
-            <div key={contact.id || index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div key={contact.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex justify-between items-start">
                 <div className="flex flex-col">
                   <h3 className="text-lg font-medium text-gray-800">{contact.name}</h3>
                   <div className="mt-1">
-                    {contact.emails.map((email, emailIndex) => (
-                      <div key={emailIndex} className="flex items-center gap-2 text-gray-600">
+                    {Array.isArray(contact.emails) ? (
+                      contact.emails.map((email, emailIndex) => (
+                        <div key={emailIndex} className="flex items-center gap-2 text-gray-600">
+                          <Mail className="h-4 w-4" />
+                          <span>{email}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="flex items-center gap-2 text-gray-600">
                         <Mail className="h-4 w-4" />
-                        <span>{email}</span>
+                        <span>{contact.emails}</span>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
                 <div className="flex gap-1 ml-4">

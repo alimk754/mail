@@ -3,9 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name="mail")
@@ -31,6 +29,30 @@ public class Mail implements Subscriber{
             inverseJoinColumns = @JoinColumn(name = "message_id")
     )
     List<Message> trash;
+
+    @OneToMany(mappedBy = "mail",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    private List<Contact> contacts = new ArrayList<>();
+
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
+    }
+
+    public void addContact(Contact contact) {
+        contacts.add(contact);
+        contact.setMail(this);
+    }
+
+    public void removeContact(Contact contact) {
+        contacts.remove(contact);
+        contact.setMail(null);
+    }
 
     public List<Message> getIn() {
         return in;

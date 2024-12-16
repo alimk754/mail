@@ -1,8 +1,14 @@
 package com.example.demo;
 
+
+
 import com.example.demo.entity.Message;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,7 +29,15 @@ public class DTO_mail {
     private LocalDateTime created_at;
 
     private List<AttachmentDTO> attachments = new ArrayList<>();
+    private List<ContactDTO> contacts = new ArrayList<>();
 
+    public List<ContactDTO> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<ContactDTO> contacts) {
+        this.contacts = contacts;
+    }
 
     public List<AttachmentDTO> getAttachments() {
         return attachments;

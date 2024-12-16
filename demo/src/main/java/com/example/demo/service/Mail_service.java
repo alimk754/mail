@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.DAO.Mail_DAO;
+import com.example.demo.entity.Contact;
 import com.example.demo.entity.Mail;
 import com.example.demo.entity.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class Mail_service {
     }
 
     @Transactional
-    public Mail log_in(Mail m,String id) {
-        return mail_dao.log_in(m,id);
+    public Mail log_in(Mail m) {
+        return mail_dao.log_in(m);
     }
 
     @Transactional
@@ -32,6 +33,10 @@ public class Mail_service {
     @Transactional
     public Message getbyid(int id) {
         return mail_dao.getbyid(id);
+    }
+    @Transactional
+    public Contact getContactById(long id) {
+        return mail_dao.getContactById(id);
     }
 
     @Transactional
