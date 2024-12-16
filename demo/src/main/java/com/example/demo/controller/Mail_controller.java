@@ -23,7 +23,7 @@ public class Mail_controller {
     public Mail_controller(Mail_service mailService) {
         this.mailService = mailService;
     }
-    @GetMapping("/retrieve/{id}/{isreciver}")
+    @GetMapping("/retrieve/{id}/{receiver}")
     public void retrieve(@PathVariable int id,@PathVariable boolean receiver) {
         try {
             System.out.println("Retrieving message with ID: " + id);
@@ -51,8 +51,7 @@ public class Mail_controller {
     @DeleteMapping("/{id}/{type}")
     public Mail semi_delete_out_Meseage(@PathVariable int id,@PathVariable boolean type){
         Message message=mailService.getbyid(id);
-        if(type)
-        message.notify_deleteallsender(id,message);
+        if(type) message.notify_deleteallsender(id,message);
         else message.notify_deleteformesender(id,message);
         Mail m1=new Mail.builder().email(message.getFROM()).build();
         m1=mailService.log_in((Mail) m1);
@@ -80,15 +79,7 @@ public class Mail_controller {
 
     @PutMapping("/deleteALl")
     public void deleteALl(@RequestBody DTO_mail m){
-        if (!m.getIn().isEmpty()){
-            for (Message message : m.getIn()) {
-                semi_delete_out_Meseage(message.getId(),true);
-            }
-        }else if (!m.getOut().isEmpty()){
-            for (Message message : m.getOut()) {
-                semi_delete_in_message(message.getId());
-            }
-        }else if (!m.getTrash().isEmpty()) {
+        if (!m.getTrash().isEmpty()) {
             for (Message mess : m.getTrash()) {
                 delete(mess.getId());
             }
