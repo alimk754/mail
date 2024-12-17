@@ -124,6 +124,7 @@ const ContentSection = ({
         setUser={setUser}
         searchTerm={searchTerm}
         setSearchTerm={searchTerm}
+        title={title}
         />
       <div>
        <MessageList title={title} messages={messages} handlePageReload={handlePageReload}/>
