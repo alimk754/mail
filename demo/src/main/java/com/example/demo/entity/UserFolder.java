@@ -18,6 +18,9 @@ public class UserFolder {
     @JoinColumn(name = "message_id")
     List<Message> messages;
 
+    public UserFolder(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -38,7 +41,16 @@ public class UserFolder {
         this.messages = messages;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public UserFolder() {
         messages=new ArrayList<>();
+
     }
 }

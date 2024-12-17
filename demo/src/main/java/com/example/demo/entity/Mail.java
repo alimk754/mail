@@ -37,7 +37,7 @@ public class Mail implements Subscriber{
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
+            fetch = FetchType.EAGER)
     @JoinColumn(name = "mail_id")
     private List<UserFolder> userFolders=new ArrayList<>();
 
@@ -48,9 +48,8 @@ public class Mail implements Subscriber{
     public void setContacts(List<Contact> contacts) {
         this.contacts = contacts;
     }
-    public void addFolder(Contact contact) {
-        contacts.add(contact);
-        contact.setMail(this);
+    public void addFolder(UserFolder folder) {
+         userFolders.add(folder);
     }
 
     public void removeFolder(Contact contact) {
@@ -140,6 +139,16 @@ public class Mail implements Subscriber{
         in=new ArrayList<>();
         out=new ArrayList<>();
         trash=new ArrayList<>();
+        userFolders=new ArrayList<>();
+
+    }
+
+    public List<UserFolder> getUserFolders() {
+        return userFolders;
+    }
+
+    public void setUserFolders(List<UserFolder> userFolders) {
+        this.userFolders = userFolders;
     }
 
     public Mail(String email, String password, List<Message> in, List<Message> out) {

@@ -4,10 +4,7 @@ import com.example.demo.DTO_mail;
 import com.example.demo.AttachmentDTO;
 
 import com.example.demo.Sort_DAO;
-import com.example.demo.entity.Attachment;
-import com.example.demo.entity.Mail;
-import com.example.demo.entity.Message;
-import com.example.demo.entity.Subscriber;
+import com.example.demo.entity.*;
 import com.example.demo.service.Mail_service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
