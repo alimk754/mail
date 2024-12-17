@@ -40,9 +40,9 @@ public class Contact {
         this.id = id;
     }
 
-//    public Mail getMail() {
-//        return mail;
-//    }
+    public Mail giveMail() {
+        return mail;
+    }
 
     public void setMail(Mail mail) {
         this.mail = mail;

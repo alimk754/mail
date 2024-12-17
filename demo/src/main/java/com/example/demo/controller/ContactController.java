@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @RestController
 @RequestMapping("/api/contacts")
 public class ContactController {
@@ -38,14 +36,27 @@ public class ContactController {
         String name = request.getName();
         List<String> emails = request.getEmails();
 
+        Set<String> unique=new HashSet<>(emails);
+        if(unique.size()!=emails.size())throw new RuntimeException("Duplicate email found");
+
+        Mail mail = mailService.log_in(new Mail.builder().email(email).build());
+        List<Contact> c=mail.getContacts();
+
+
         for (String e:emails){
+            if (email != null && email.equals(e)) {
+                throw new RuntimeException("can't add your account");
+            }
+            for(int i=0;i<c.size();i++){
+                if(c.get(i).getEmails().contains(e))throw new RuntimeException("email already in contacts");
+                if(c.get(i).getName().equals(name))throw new RuntimeException("This contact name used before");
+            }
+
             Mail exist=new Mail.builder().email(e).build();
             mailService.log_in(exist);
         }
 
 
-
-        Mail mail = mailService.log_in(new Mail.builder().email(email).build());
 
 
         Contact contact = new Contact();
@@ -64,19 +75,51 @@ public class ContactController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Contact> updateContact(@PathVariable Long id, @RequestBody ContactDTO contactDTO) {
+
+        String email = contactDTO.getEmail();
+        String name = contactDTO.getName();
+        List<String> emails = contactDTO.getEmails();
+
+        Set<String> unique=new HashSet<>(emails);
+        if(unique.size()!=emails.size())throw new RuntimeException("Duplicate email found");
+
+        Mail mail = mailService.log_in(new Mail.builder().email(email).build());
+        List<Contact> c=mail.getContacts();
+
+
+
+
+        for (String e:emails){
+            if (email != null && email.equals(e)) {
+                throw new RuntimeException("can't add your account");
+            }
+            for(int i=0;i<c.size();i++){
+                if(Objects.equals(c.get(i).getId(), id))continue;
+                if(c.get(i).getEmails().contains(e))throw new RuntimeException("email already in contacts");
+                if(c.get(i).getName().equals(name))throw new RuntimeException("This contact name used before");
+            }
+
+            Mail exist=new Mail.builder().email(e).build();
+            mailService.log_in(exist);
+        }
+
+
         Contact contact = mailService.getContactById(id);
         if (contact == null) {
             return ResponseEntity.notFound().build();
         }
 
-        contact.setName(contactDTO.getName());
-        contact.setEmails(contactDTO.getEmails());
 
-//        Mail mail = contact.getMail();
-//        mailService.uptade(mail);
+        contact.setName(name);
+        contact.setEmails(emails);
+
+        Mail mail1 = contact.giveMail();
+        mailService.uptade(mail1);
 
         return ResponseEntity.ok(contact);
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
@@ -84,12 +127,9 @@ public class ContactController {
         if (contact == null) {
             return ResponseEntity.notFound().build();
         }
-
-
-
-//        Mail mail = contact.getMail();
-//        mail.removeContact(contact);
-//        mailService.uptade(mail);
+        Mail mail = contact.giveMail();
+        mail.removeContact(contact);
+        mailService.uptade(mail);
 
         return ResponseEntity.ok().build();
     }
