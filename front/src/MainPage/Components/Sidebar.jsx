@@ -23,7 +23,7 @@ const Sidebar = ({
       console.log('Adding new category:', newCategory);
       try {
       const response = await axios.put('http://localhost:8080/api/folder/add', 
-         { id:user.email, name:newCategory }
+         { email:user.email, name:newCategory }
       );
         if (response.status === 200) {
           console.log('Login successful:');

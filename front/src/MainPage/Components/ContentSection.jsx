@@ -13,7 +13,8 @@ const ContentSection = ({
    searchPlaceholder = "Search...",
    sortLabel = "Sort",
    filterLabel = "Filter",
-   messages=[]
+   messages=[],
+   navigateSection
 }) => {
 
   const {user,setUser} =useContext(Datacontext);
@@ -125,6 +126,7 @@ const ContentSection = ({
         searchTerm={searchTerm}
         setSearchTerm={searchTerm}
         title={title}
+        navigateSection={navigateSection}
         />
       <div>
        <MessageList title={title} messages={messages} handlePageReload={handlePageReload}/>

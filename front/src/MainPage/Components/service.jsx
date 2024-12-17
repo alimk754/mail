@@ -1,5 +1,6 @@
 import { Search, Filter, SortAsc, X } from 'lucide-react';
 import SortingOptionsMenu from './sort_button';
+import RenameDiv from './Rename_Button';
 export const Service=({
     handleClearSearch, 
         onSort,
@@ -12,7 +13,8 @@ export const Service=({
         setUser,
         searchTerm,
         setSearchTerm,
-        title
+        title,
+        navigateSection
 })=>{
 
     return (
@@ -51,6 +53,11 @@ export const Service=({
              {filterLabel}
            </button>
           </div>}
+    {
+      title!=="Contacts"&&title!=="Inbox"&&title!=="Sent Mails"&&title!=="Trash"?
+      <RenameDiv title={title} navigateSection={navigateSection}></RenameDiv>
+      :<></>
+    }      
          </div>
         
     );

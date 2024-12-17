@@ -17,6 +17,7 @@ const MainPage = () => {
   const navigateSection = (section) => {
     setActiveSection(section);
   };
+  
 
   const onLogout = () => {
     navigate('/', { replace: true, state: { disableUndo: true } });
@@ -64,6 +65,7 @@ const MainPage = () => {
       key={folder.id}
       title={folder.name} 
       messages={folder.messages || []}
+      navigateSection={navigateSection}
     >
       <div className="text-gray-600"></div>
     </ContentSection>

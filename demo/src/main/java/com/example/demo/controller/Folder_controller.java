@@ -18,7 +18,7 @@ public class Folder_controller {
     Mail_service mailService;
     @PutMapping("/add")
     public void add(@RequestBody Folder_DTO folder){
-        Mail m=mailService.log_in(new Mail.builder().email(folder.id).build());
+        Mail m=mailService.log_in(new Mail.builder().email(folder.email).build());
         UserFolder u=new UserFolder(folder.name);
         Iterator<UserFolder> i=m.getUserFolders().iterator();
         while (i.hasNext()) {
@@ -47,6 +47,20 @@ public class Folder_controller {
         System.out.println(id+" "+userName);
         mailService.uptade(m1);
         System.out.println(id+" "+userName);
+        return;
+    }
+    @PutMapping("/rename")
+    public void rename(@RequestBody Folder_DTO folder){
+        Mail m1=mailService.log_in(new Mail.builder().email(folder.email).build());
+        Iterator<UserFolder> i=m1.getUserFolders().iterator();
+        while (i.hasNext()) {
+            UserFolder temp = i.next();
+            if (temp.getName().equals(folder.oldName)) {
+                temp.setName(folder.name);
+            }
+        }
+        mailService.uptade(m1);
+
         return;
     }
 }
