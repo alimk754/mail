@@ -84,7 +84,7 @@ handlePageReload(user , setUser);
     <div className="bg-white shadow-md rounded-lg mb-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
       <div 
         className="p-4 grid grid-cols-12 items-center gap-4"
-        
+        draggable
       >
         {/* From Column */}
         <div className="col-span-2 flex items-center space-x-2">

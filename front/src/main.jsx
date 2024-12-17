@@ -78,6 +78,7 @@ function Main() {
       password: "",
       email: "",
       trash: [],
+      userFolder:[]
     };
   });
 

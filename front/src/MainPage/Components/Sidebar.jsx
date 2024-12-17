@@ -1,5 +1,6 @@
 import SidebarButton from "./SidebarButton";
-import React from "react";
+import React,{useContext} from "react";
+import { Datacontext } from "../../main";
 import { Mail, Trash2, Users, LogOut, Send, Menu, X,MessageCircle } from "lucide-react";
 
 const Sidebar = ({
@@ -9,6 +10,8 @@ const Sidebar = ({
   navigateSection,
   onLogout,
 }) => {
+  const {user}=useContext(Datacontext);
+ 
   return (
     <div
       className={`bg-white shadow-lg transition-all duration-300 flex ${
@@ -62,6 +65,15 @@ const Sidebar = ({
                 active={activeSection === "sent Mails"}
                 onClick={() => navigateSection("sent Mails")}
               />
+       {user.userFolders && user.userFolders.map((e) => (
+  <SidebarButton
+    icon={MessageCircle}
+    key={e.id}
+    label={e.name}
+    active={activeSection === e.name}
+    onClick={() => navigateSection(e.name)}
+  />
+))}
 
               <SidebarButton
                 icon={Trash2}

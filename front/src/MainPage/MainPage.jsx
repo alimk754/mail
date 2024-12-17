@@ -39,7 +39,7 @@ const MainPage = () => {
               <div className="text-gray-600">Your messages will appear here</div>
             </ContentSection>
           )}
-           {activeSection === 'sent Mails' && (
+          {activeSection === 'sent Mails' && (
             <ContentSection title="Sent Mails" messages={user.out===null? []:user.out}>
               <div className="text-gray-600">Your out Messages will appear here</div>
             </ContentSection>
@@ -57,6 +57,19 @@ const MainPage = () => {
             </ContentSection>
             <Contact /></>
           )}
+
+          {user.userFolders.map((folder) => (
+  activeSection === folder.name && (
+    <ContentSection 
+      key={folder.id}
+      title={folder.name} 
+      messages={folder.messages || []}
+    >
+      <div className="text-gray-600"></div>
+    </ContentSection>
+  )
+))}
+
 
 
 
