@@ -58,7 +58,7 @@ const MainPage = () => {
             <Contact /></>
           )}
 
-          {user.userFolders.map((folder) => (
+          {user.userFolders&&user.userFolders.map((folder) => (
   activeSection === folder.name && (
     <ContentSection 
       key={folder.id}
