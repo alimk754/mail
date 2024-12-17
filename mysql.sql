@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS contact_emails;
  DROP TABLE IF EXISTS attachment;
  DROP TABLE IF EXISTS trash;
  DROP TABLE IF EXISTS message;
+  DROP TABLE IF EXISTS folder;
  DROP TABLE IF EXISTS mail;
 
 
@@ -28,6 +29,7 @@ CREATE TABLE message (
     fromemail VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
     drafts  VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    deleted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_email) REFERENCES mail(id),
     FOREIGN KEY (receiver_email) REFERENCES mail(id),
      message_id INT,
@@ -73,4 +75,3 @@ CREATE TABLE contact_emails (
     PRIMARY KEY (contact_id, email),
     FOREIGN KEY (contact_id) REFERENCES contact(id) 
 );
-

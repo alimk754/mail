@@ -44,10 +44,20 @@ public class Message implements Subscriber{
     @Column(name = "created_at", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL")
     @JsonFormat(pattern = "yyyy/MM/dd/HH:mm:ss")
     private LocalDateTime createdAt;
+    @Column(name = "deleted_at", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL")
+    @JsonFormat(pattern = "yyyy/MM/dd/HH:mm:ss")
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Attachment> attachments = new ArrayList<>();
 
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
 
     public boolean arenull(){
         return this.sender==null&&this.reciever==null&&mails.isEmpty();

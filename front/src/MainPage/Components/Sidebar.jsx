@@ -15,8 +15,20 @@ const Sidebar = ({
   const {user,setUser}=useContext(Datacontext);
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategory,setNewCategory] =useState("");
-  const onDoubleClick=()=>{
-    
+  const TrashClick=async ()=>{
+    navigateSection("trash");
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/delete30/${user.email}`);
+        if (response.status === 200) {
+          console.log('Login successful:');
+          
+        }else 
+          console.error('Login failed:');
+        
+      } catch (error) {
+        console.error('Login failed:', error);
+      }
+      handlePageReload(user,setUser);
   }
   const handleAddCategory = async () => {
     if(newCategory.trim()){
@@ -128,7 +140,7 @@ const Sidebar = ({
               label={e.name}
               active={activeSection === e.name}
               onClick={() => navigateSection(e.name)}
-              on
+               
             />
           ))}
 
@@ -136,8 +148,8 @@ const Sidebar = ({
             icon={Trash2}
             label="Trash"
             active={activeSection === "trash"}
-            onClick={() => navigateSection("trash")}
-            onDoubleClick={onDoubleClick}
+            onClick={TrashClick}
+          
           />
 
           <SidebarButton

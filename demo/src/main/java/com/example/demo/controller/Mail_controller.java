@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -96,6 +97,7 @@ public class Mail_controller {
     @DeleteMapping("/{id}/{type}")
     public Mail semi_delete_out_Meseage(@PathVariable int id,@PathVariable boolean type){
         Message message=mailService.getbyid(id);
+        message.setDeletedAt(LocalDateTime.now());
          if(type)
         message.notify_deleteallsender(id,message);
         else message.notify_deleteformesender(id,message);
@@ -112,6 +114,7 @@ public class Mail_controller {
     @DeleteMapping("/mess/{id}")
     public Mail semi_delete_in_message(@PathVariable int id){
         Message message=mailService.getbyid(id);
+        message.setDeletedAt(LocalDateTime.now());
         message.notify_deleteformereciver(id,new Message());
         Mail m1=new Mail.builder().email(message.getFROM()).build();
         m1=mailService.log_in((Mail) m1);
@@ -225,6 +228,18 @@ public class Mail_controller {
     public ResponseEntity<Mail> sort(@RequestBody Sort_DAO obj){
 
           return ResponseEntity.ok(mailService.sort(obj.sortField, obj.isAsc, obj.id));
+    }
+    @DeleteMapping("/delete30/{id}")
+    public void check(@PathVariable String userName){
+        Mail m=mailService.log_in(new Mail.builder().email(userName).build());
+        List<Message> trash=m.getTrash();
+        Iterator<Message> i=trash.iterator();
+        while (i.hasNext()){
+            Message tmp=i.next();
+            if(tmp.getDeletedAt().plusDays(30).isAfter(LocalDateTime.now())){
+                mailService.handleDeleteMessage(tmp.getId());
+            }
+        }
     }
 
 
