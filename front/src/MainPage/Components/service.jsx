@@ -12,6 +12,7 @@ export const Service=({
         setUser,
         searchTerm,
         setSearchTerm,
+        title
 })=>{
 
     return (
@@ -38,6 +39,7 @@ export const Service=({
              )}
            </div>
           </div>
+   {title==="Contacts"?<></>:
    
           <div className="mt-4 flex justify-end space-around space-x-6">  {/* Increased space-x from space-x-3 to space-x-6 */}
            <SortingOptionsMenu></SortingOptionsMenu>
@@ -48,7 +50,8 @@ export const Service=({
              <Filter size={18} className="mr-2" />
              {filterLabel}
            </button>
-          </div>
+          </div>}
          </div>
+        
     );
 }

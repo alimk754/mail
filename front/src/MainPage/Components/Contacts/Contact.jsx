@@ -162,7 +162,7 @@ const Contact = () => {
       />
 
       <ContactList
-        contacts={contacts}
+        contacts={contacts.sort((a, b) => a.name.localeCompare(b.name))}
         loading={loading}
         onEdit={handleEditContact}
         onDelete={handleDeleteContact}
