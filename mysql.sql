@@ -26,11 +26,13 @@ CREATE TABLE message (
     receiver_email VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
     toemail VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
     fromemail VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+    drafts  VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_email) REFERENCES mail(id),
     FOREIGN KEY (receiver_email) REFERENCES mail(id),
      message_id INT,
-	FOREIGN KEY (message_id) REFERENCES folder(id) ON DELETE CASCADE
+	FOREIGN KEY (message_id) REFERENCES folder(id) ON DELETE CASCADE,
+    FOREIGN KEY (drafts) REFERENCES mail(id) ON DELETE CASCADE
 );
 
 
