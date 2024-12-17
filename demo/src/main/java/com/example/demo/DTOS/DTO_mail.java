@@ -20,12 +20,21 @@ public class DTO_mail {
     List<Message> in=new ArrayList<>();
     List<Message> out=new ArrayList<>();
     List<Message> trash=new ArrayList<>();
+    List<Message> drafts=new ArrayList<>();
     private String message;
 
     private LocalDateTime created_at;
 
     private List<AttachmentDTO> attachments = new ArrayList<>();
     private List<ContactDTO> contacts = new ArrayList<>();
+
+    public List<Message> getDrafts() {
+        return drafts;
+    }
+
+    public void setDrafts(List<Message> drafts) {
+        this.drafts = drafts;
+    }
 
     public List<ContactDTO> getContacts() {
         return contacts;

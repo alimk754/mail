@@ -6,7 +6,7 @@ import MessageAttachments from './MessageAttachment';
 import DeleteOptions from './DeleteOptions';
 import WarningModel from './WarinigModel';
 
-const MessageItem = ({title, message ,handlePageReload}) => {
+const MessageItem = ({handleDeleteDraft,handleDoubleCLicking, title, message ,handlePageReload}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { user, setUser } = useContext(Datacontext);
   const [showDeleteDiv, setShowDeleteDiv] = useState(false);
@@ -81,7 +81,8 @@ handlePageReload(user , setUser);
   }
 
   return (
-    <div className="bg-white shadow-md rounded-lg mb-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
+    <div className="bg-white shadow-md rounded-lg mb-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300"
+    onDoubleClick={() => handleDoubleCLicking(message)}>
       <div 
         className="p-4 grid grid-cols-12 items-center gap-4"
         draggable
@@ -116,7 +117,7 @@ handlePageReload(user , setUser);
         </div>
 
         <div className="col-span-1">
-          {(title !== "Trash") ? <button onClick={(title === "Sent Mails") ? () => setShowDeleteDiv(true) : () => DeleteMessage(false)} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
+          {(title !== "Trash") ? <button onClick={(title === "Sent Mails") ? () => setShowDeleteDiv(true) : (title === "Drafts" ? () => setShowDeleteWar(true) : () => DeleteMessage(false))} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
           <Trash2 size={20} /></button> : <button onClick={retrieve} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
           <Undo size={20} /></button>} 
         </div>
@@ -129,7 +130,18 @@ handlePageReload(user , setUser);
         )}
 
         {/* Warning Modal */}
-      <WarningModel 
+        {(title === "Drafts") && <WarningModel 
+        isOpen={showDeleteWar}
+        onClose={() => setShowDeleteWar(false)}
+        onConfirm={() => handleDeleteDraft(message.id)}
+        title="Delete This Draft"
+        message={`Are you sure you want to delete this Draft?`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+       />}
+
+        {/* Warning Modal */}
+      {(title !== "Drafts") && <WarningModel 
         isOpen={showDeleteWar}
         onClose={() => setShowDeleteWar(false)}
         onConfirm={handleDeleteFromTrash}
@@ -137,7 +149,7 @@ handlePageReload(user , setUser);
         message={`Are you sure you want to delete this message from Trash?`}
         confirmText="Yes, Delete"
         cancelText="Cancel"
-      />
+      />}
 
         {/* Importance and Expand Icon Column */}
         <div className="col-span-1 flex items-center justify-end space-x-2">
@@ -171,11 +183,11 @@ handlePageReload(user , setUser);
   );
 };
 
-const MessageList = ({title, messages,handlePageReload }) => {
+const MessageList = ({handleDeleteDraft,handleDoubleCLicking, title, messages,handlePageReload }) => {
   return (
     <div className="space-y-4">
       {messages.map((message) => (
-        <MessageItem title = {title} key={message.id} message={message} handlePageReload={handlePageReload} />
+        <MessageItem handleDeleteDraft={handleDeleteDraft} handleDoubleCLicking={handleDoubleCLicking} title = {title} key={message.id} message={message} handlePageReload={handlePageReload} />
       ))}
     </div>
   );

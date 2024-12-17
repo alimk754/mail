@@ -54,7 +54,7 @@ export const Service=({
            </button>
           </div>}
     {
-      title!=="Contacts"&&title!=="Inbox"&&title!=="Sent Mails"&&title!=="Trash"?
+      title!=="Contacts"&&title!=="Inbox"&&title!=="Sent Mails"&&title!=="Trash"&&title!=="Drafts"?
       <RenameDiv title={title} navigateSection={navigateSection}></RenameDiv>
       :<></>
     }      

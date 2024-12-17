@@ -8,16 +8,10 @@ import FileAttachment from '../../../Attachments/FileAttachment';
  import './ComposeForm.css';
  import { handlePageReload } from '../PageReload';
 
- const ComposeForm = () => {
+ const ComposeForm = ({to, from, importance, subject, content, attachments ,setAttachments,setImportance,set_content,set_subject,set_to}) => {
   const {user,setUser}=useContext(Datacontext);
-  const [importance, setImportance] = useState('medium');
-  const [to,set_to]=useState("");
-  const [from,set_from]=useState(user.email);
-  const [content,set_content]=useState("");
-  const [subject,set_subject]=useState("");
   const [error,setError]=useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [attachments, setAttachments] = useState([]);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -139,7 +133,7 @@ import FileAttachment from '../../../Attachments/FileAttachment';
           <textarea
             onChange={(e)=>{set_content(e.target.value); setError(null)}}
             placeholder="Write your message here..."
-            className="textarea-field"
+            className="textarea-field focus:outline-blue-500"
             value={content}
             disabled={isLoading}
           />

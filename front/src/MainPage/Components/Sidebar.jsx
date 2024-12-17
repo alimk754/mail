@@ -1,7 +1,7 @@
 import SidebarButton from "./SidebarButton";
 import React,{useContext,useState} from "react";
 import { Datacontext } from "../../main";
-import { Mail, Trash2, Users, LogOut, Send, Menu, X,MessageCircle,PlusCircle } from "lucide-react";
+import {FileEdit, Mail, Trash2, Users, LogOut, Send, Menu, X,MessageCircle,PlusCircle } from "lucide-react";
 import { handlePageReload } from "./PageReload";
 import axios from "axios";
 
@@ -99,8 +99,7 @@ const Sidebar = ({
               variant="primary"
             />
 
-      <div className="flex-grow overflow-y-auto pr-2 no-scrollbar">
-        <nav className="mt-8 space-y-2 w-full px-4 relative">
+        <nav className="mt-8 space-y-2">
           <SidebarButton
             icon={Mail}
             label="Inbox"
@@ -140,11 +139,18 @@ const Sidebar = ({
             onClick={() => navigateSection("trash")}
             onDoubleClick={onDoubleClick}
           />
+
+          <SidebarButton
+                icon={FileEdit}
+                label="Drafts"
+                active={activeSection === "drafts"}
+                onClick={() => navigateSection("drafts")}
+              />
         </nav>
-      </div>
+      
 
       {/* Fixed Logout Button */}
-      <div className="p-4">
+      <div className="absolute bottom-4 w-56">
         <SidebarButton
           icon={LogOut}
           label="Log out"

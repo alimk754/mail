@@ -41,6 +41,28 @@ public class Mail implements Subscriber{
     @JoinColumn(name = "mail_id")
     private List<UserFolder> userFolders=new ArrayList<>();
 
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
+    @JoinColumn(name = "drafts")
+    private List<Message> drafts = new ArrayList<>();
+
+
+    public void addDraft (Message m){
+        drafts.add(m);
+    }
+
+    public void removeDraft (Message m){
+        drafts.remove(m);
+    }
+    public List<Message> getDrafts() {
+        return drafts;
+    }
+
+    public void setDrafts(List<Message> drafts) {
+        this.drafts = drafts;
+    }
+
     public List<Contact> getContacts() {
         return contacts;
     }

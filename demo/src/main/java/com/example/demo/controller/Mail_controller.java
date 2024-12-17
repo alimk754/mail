@@ -55,6 +55,44 @@ public class Mail_controller {
         }
         return;
     }
+    @PostMapping("/addDraft")
+    public Mail addDraft(@RequestBody DTO_mail obj) {
+        List<Attachment> attachments = new ArrayList<>();
+        if (obj.getAttachments() != null) {
+            for (AttachmentDTO attachmentDTO : obj.getAttachments()) {
+                Attachment attachment = new Attachment();
+                attachment.setFileName(attachmentDTO.getFileName());
+                attachment.setContentType(attachmentDTO.getContentType());
+                attachment.setFileSize(attachmentDTO.getFileSize());
+                attachment.setData(attachmentDTO.getData());
+                attachments.add(attachment);
+            }
+        }
+        Mail mail = mailService.log_in(new Mail.builder().email(obj.getFromemail()).build());
+        Message m1 = new Message.massageBuilder()
+                .message(obj.getMessage())
+                .subject(obj.getSubject())
+                .attachments(attachments)
+                .importance(obj.getImportance())
+                .created_at()
+                .build();
+        m1.setTO(obj.getToemail());
+        m1.setFROM(obj.getFromemail());
+        mail.addDraft(m1);
+        mailService.uptade(mail);
+        return mail;
+    }
+    @DeleteMapping("/deleteDraft/{id}")
+    public void deleteDraft(@PathVariable int id) {
+        System.out.println(id);
+        Mail m1 = new Mail.builder().email(mailService.getbyid(id).getFROM()).build();
+        m1 = mailService.log_in((Mail) m1);
+        m1.removeDraft(mailService.getbyid(id));
+        mailService.handleDeleteMessage(id);
+        mailService.uptade(m1);
+    }
+
+
     @DeleteMapping("/{id}/{type}")
     public Mail semi_delete_out_Meseage(@PathVariable int id,@PathVariable boolean type){
         Message message=mailService.getbyid(id);
@@ -98,6 +136,10 @@ public class Mail_controller {
         }else if (!m.getTrash().isEmpty()) {
             for (Message mess : m.getTrash()) {
                 delete(mess.getId());
+            }
+        }else if(!m.getDrafts().isEmpty()){
+            for (Message message : m.getDrafts()) {
+                deleteDraft(message.getId());
             }
         }
     }

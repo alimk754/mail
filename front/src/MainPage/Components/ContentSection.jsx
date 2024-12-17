@@ -4,7 +4,10 @@ import { Datacontext } from '../../main';
 import { Service } from './service';
 import axios from 'axios';
 import { RefreshCcw, Trash2 } from 'lucide-react';
+import { handlePageReload } from './PageReload';
+import WarningModel from './WarinigModel';
 const ContentSection = ({
+  handleDeleteDraft,
    title,
    children,
    onSearch,
@@ -13,6 +16,7 @@ const ContentSection = ({
    searchPlaceholder = "Search...",
    sortLabel = "Sort",
    filterLabel = "Filter",
+   handleDoubleCLicking,
    messages=[],
    navigateSection
 }) => {
@@ -35,47 +39,40 @@ const ContentSection = ({
 
   const handleDeleteAll = async (e) => {
     try {
-      let messagesToDelete = [];
-      if (title === "Inbox") {
-        messagesToDelete = user.in;
-      } else if (title === "Sent Mails") {
-        messagesToDelete = user.out;
-      } else if (title === "Trash") {
-        messagesToDelete = user.trash;
-     }
 
+    setShowWarining(false);
     const response = await axios.put('http://localhost:8080/api/deleteALl', 
       
        { trash: user.trash }
     );
       if (response.status === 200) {
-        console.log('Login successful:');
+        console.log('DeleteAll successful:');
         
       }else 
-        console.error('Login failed:');
+        console.error('DeleteAll failed:');
       
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('DeleteAll failed:', error);
     }
-    handlePageReload();
+    handlePageReload(user,setUser);
+  }
+  const handleDeleteAllDrafts = async (e) => {
+    try{
+      setShowWarining(false);
+      const response = await axios.put('http://localhost:8080/api/deleteALl', 
+       { drafts: user.drafts }
+    );
+      if (response.status === 200) {
+        console.log('DeleteAll successful:');
+        
+      }else 
+        console.error('DeleteAll failed:');
+    }catch(error){
+      console.error(error);
+    }
+    handlePageReload(user,setUser);
   }
 
-  const handlePageReload = async (e) => {
-
-    try {
-      const response = await axios.post('http://localhost:8080/api/mail/login', {email : user.email, password : user.password});
-      console.log(response);
-      if (response.status === 200) {
-        console.log('Login successful:', response.data);
-        setUser(u=>response.data);
-        console.log(user);
-      }else 
-        console.error('Login failed:', response.data.error);
-      
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
-  };
   const deleteCategory=async ()=>{
     try {
       const response = await axios.delete(`http://localhost:8080/api/folder/delete/${title}/${user.email}`);
@@ -90,7 +87,8 @@ const ContentSection = ({
     } catch (error) {
       console.error('Login failed:', error);
     }
-    handlePageReload();
+    handlePageReload(user,setUser);
+    navigateSection("compose");
   }
 
   return (
@@ -102,14 +100,14 @@ const ContentSection = ({
       <div className='flex'>
       <button
           className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500"
-          onClick={handlePageReload}
+          onClick={() => handlePageReload(user,setUser)}
       >
           <RefreshCcw className="mr-2" size={18} />
       </button>
       {!(title === "Inbox"||title==="Contacts"||title==="Sent Mails") && <button
           className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500"
       >
-          <Trash2 onClick={title==="trash"?() => setShowWarining(true):deleteCategory} className="mr-2" size={18} />
+          <Trash2 onClick={(title==="Trash" || title==="Drafts")?() => setShowWarining(true): deleteCategory} className="mr-2" size={18} />
       </button>}
       </div>
       </div>
@@ -129,37 +127,12 @@ const ContentSection = ({
         navigateSection={navigateSection}
         />
       <div>
-       <MessageList title={title} messages={messages} handlePageReload={handlePageReload}/>
+       <MessageList handleDeleteDraft={handleDeleteDraft} handleDoubleCLicking={handleDoubleCLicking} title={title} messages={messages} handlePageReload={() => handlePageReload(user,setUser)}/>
       </div>
 
       {/* Conditional Warning Div */}
-      {showWarning && (
-        <div
-          className="fixed inset-0 bg-gray-900 bg-opacity-70 flex justify-center items-center z-50"
-          onClick={() => setShowWarining(false)}
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg text-center space-y-4"
-          >
-            <h2 className="text-xl font-semibold text-gray-800">Warning</h2>
-            <p className="text-gray-600">Are you sure you want to delete All message?</p>
-            <div className="flex justify-center space-x-4">
-              <button
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                onClick={(e) => handleDeleteAll (e)}
-              >
-                Yes, Delete
-              </button>
-              <button
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
-                onClick={() => setShowWarining(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {(title === "Trash") && <WarningModel isOpen={showWarning} onClose={() => setShowWarining(false)} onConfirm={handleDeleteAll} title="Warning" message="Are you sure to Delete All Messages?" confirmText="Confirm" cancelText="Cancel" />}
+      {(title === "Drafts") && <WarningModel isOpen={showWarning} onClose={() => setShowWarining(false)} onConfirm={handleDeleteAllDrafts} title="Warning" message="Are you sure to Delete All Drafts?" confirmText="Confirm" cancelText="Cancel" />}
     </div>
   );
 };
