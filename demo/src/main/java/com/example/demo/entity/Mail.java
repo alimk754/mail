@@ -52,9 +52,8 @@ public class Mail implements Subscriber{
          userFolders.add(folder);
     }
 
-    public void removeFolder(Contact contact) {
-        contacts.remove(contact);
-        contact.setMail(null);
+    public void removeFolder(UserFolder folder) {
+        userFolders.remove(folder);
     }
     public void addContact(Contact contact) {
         contacts.add(contact);

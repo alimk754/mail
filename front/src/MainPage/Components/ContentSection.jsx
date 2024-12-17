@@ -75,6 +75,22 @@ const ContentSection = ({
       console.error('Login failed:', error);
     }
   };
+  const deleteCategory=async ()=>{
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/folder/delete/${title}/${user.email}`);
+      console.log(response);
+      if (response.status === 200) {
+        console.log('Login successful:', response.data);
+        setUser(u=>response.data);
+        console.log(user);
+      }else 
+        console.error('Login failed:', response.data.error);
+      
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+    handlePageReload();
+  }
 
   return (
     <div>
@@ -89,11 +105,10 @@ const ContentSection = ({
       >
           <RefreshCcw className="mr-2" size={18} />
       </button>
-      {(title === "Trash") && <button
+      {!(title === "Inbox"||title==="Contacts"||title==="Sent Mails") && <button
           className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500"
-          
       >
-          <Trash2 onClick={() => setShowWarining(true)} className="mr-2" size={18} />
+          <Trash2 onClick={title==="trash"?() => setShowWarining(true):deleteCategory} className="mr-2" size={18} />
       </button>}
       </div>
       </div>

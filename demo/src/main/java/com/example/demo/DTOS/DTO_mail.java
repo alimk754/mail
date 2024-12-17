@@ -1,14 +1,10 @@
-package com.example.demo;
+package com.example.demo.DTOS;
 
 
 
+import com.example.demo.DTOS.AttachmentDTO;
+import com.example.demo.DTOS.ContactDTO;
 import com.example.demo.entity.Message;
-
-import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

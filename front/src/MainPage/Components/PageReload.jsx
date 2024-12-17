@@ -1,6 +1,7 @@
 // src/utils/apiUtils.js
 import axios from 'axios';
-
+import { useContext } from 'react';
+import { Datacontext } from '../../main';
 export const handlePageReload = async (user, setUser) => {
   try {
     const response = await axios.post('http://localhost:8080/api/mail/login', {

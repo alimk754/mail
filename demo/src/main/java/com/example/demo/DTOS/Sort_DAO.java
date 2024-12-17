@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.DTOS;
 
 public class Sort_DAO {
     public String sortField;

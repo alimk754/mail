@@ -1,4 +1,4 @@
-const SidebarButton = ({ icon: Icon, label, active, onClick, variant = "default" }) => {
+const SidebarButton = ({ icon: Icon, label, active, onClick, variant = "default",onDoubleClick }) => {
     const baseStyles = "w-full text-left px-4 py-2 rounded-lg flex items-center gap-2";
     
     const variants = {
@@ -12,6 +12,7 @@ const SidebarButton = ({ icon: Icon, label, active, onClick, variant = "default"
     return (
       <button 
         onClick={onClick}
+        onDoubleClick={onDoubleClick}
         className={`${baseStyles} ${variants[variant]}`}
       >
         <Icon size={20} />

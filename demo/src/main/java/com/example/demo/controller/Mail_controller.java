@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.DTO_mail;
-import com.example.demo.AttachmentDTO;
+import com.example.demo.DTOS.DTO_mail;
+import com.example.demo.DTOS.AttachmentDTO;
 
-import com.example.demo.Sort_DAO;
+import com.example.demo.DTOS.Sort_DAO;
 import com.example.demo.entity.*;
 import com.example.demo.service.Mail_service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,12 +104,9 @@ public class Mail_controller {
 
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable int id){
-        System.out.println("ffffff");
+
 
         Message message=mailService.getbyid(id);
-        System.out.println(message.arenull());
-        System.out.println(message.issendernull());
-        System.out.println(message.isrecievernull());
         Mail m1=new Mail();
         if (message.arenull()) {
             mailService.handleDeleteMessage(message.getId());
@@ -120,7 +117,7 @@ public class Mail_controller {
             m1.deletetrash(id);
         }
         else {
-            System.out.println("ggggggggggggggg");
+
             m1 = mailService.log_in(new Mail.builder().email(message.getTO()).build());
             m1.deletetrash(id);
         }

@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.ContactDTO;
+import com.example.demo.DTOS.ContactDTO;
 
 import com.example.demo.entity.Contact;
 import com.example.demo.entity.Mail;
