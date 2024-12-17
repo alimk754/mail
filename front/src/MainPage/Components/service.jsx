@@ -53,7 +53,7 @@ export const Service = ({
               onChange={(e) => onSearchByChange(e.target.value)}
               className="w-full py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="">Select search option</option>
+              <option value="" disabled>Select search option</option>
               <option value="subject">Subject</option>
               <option value="sender">Sender</option>
               <option value="receiver">Receiver</option>
