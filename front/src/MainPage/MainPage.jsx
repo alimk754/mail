@@ -4,7 +4,7 @@ import Sidebar from './Components/Sidebar';
 import ComposeForm from './Components/Compose/ComposeForm';
 import ContentSection from './Components/ContentSection';
 import { Datacontext } from '../main';
-import Contact from './Components/Contact';
+import Contact from './Components/Contacts/Contact';
 const MainPage = () => {
   const [isSidebar, setSidebar] = useState(true);
   const [activeSection, setActiveSection] = useState('compose');
