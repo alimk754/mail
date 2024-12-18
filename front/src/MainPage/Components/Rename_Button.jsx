@@ -61,7 +61,7 @@ const RenameDiv = ({title,navigateSection,setError}) => {
             <input 
             type="text"
             placeholder="Name"
-            onChange={(e) => setSelected(e.target.value)}
+            onChange={(e) => {setSelected(e.target.value);setERror(null);}}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             </div>
