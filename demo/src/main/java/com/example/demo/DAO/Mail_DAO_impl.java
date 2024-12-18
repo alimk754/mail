@@ -3,12 +3,14 @@ package com.example.demo.DAO;
 import com.example.demo.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -113,9 +115,23 @@ public class Mail_DAO_impl implements Mail_DAO{
             );
             queryTrash.setParameter("id", id);
             mail.setTrash(queryTrash.getResultList());
-
-
-
+            Iterator<UserFolder> iterator=mail.getUserFolders().iterator();
+            while (iterator.hasNext()){
+                UserFolder tmp= iterator.next();
+                TypedQuery<UserFolder> queryUf = entityManager.createQuery(
+                        "SELECT uf FROM Mail m JOIN m.userFolders uf " +
+                                "WHERE m.id=:id AND "+
+                                "uf.id=:uf_id",
+                        UserFolder.class
+                );
+                queryUf.setParameter("id", id).setParameter("uf_id",tmp.getId());
+                TypedQuery<Message> query1=entityManager.createQuery(
+                        "SELECT mess FROM UserFolder uf JOIN uf.messages mess "+
+                                "Where uf.id=:id "+
+                                "ORDER BY mess."+sortField+" "+Asc, Message.class
+                ).setParameter("id",queryUf.getSingleResult().getId());
+                tmp.setMessages(query1.getResultList());
+            }
 
             return mail;
         }

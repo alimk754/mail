@@ -95,7 +95,7 @@ export const Service = ({
         <></>
       ) : (
         <div className="mt-4 flex justify-end space-around space-x-6">
-          <SortingOptionsMenu setError={setError}></SortingOptionsMenu>
+          <SortingOptionsMenu  title={title}></SortingOptionsMenu>
           {title==="Inbox"?<FilterOptionsDiv setError={setError}></FilterOptionsDiv>:<></>}
         </div>
       )}

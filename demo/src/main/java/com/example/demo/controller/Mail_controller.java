@@ -249,7 +249,6 @@ public class Mail_controller {
 
     @PostMapping("/sort")
     public ResponseEntity<Mail> sort(@RequestBody Sort_DAO obj) {
-
         return ResponseEntity.ok(mailService.sort(obj.sortField, obj.isAsc, obj.id));
     }
 

@@ -2,7 +2,8 @@ import React, { useState,useContext } from 'react';
 import { Datacontext } from '../../main';
 import axios from 'axios';
 import { handlePageReload } from './PageReload';
-const SortingOptionsDiv = () => {
+import { Contact } from 'lucide-react';
+const SortingOptionsDiv = ({title}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isAscending, setIsAscending] = useState(false);
   const {user,setUser} =useContext(Datacontext);
