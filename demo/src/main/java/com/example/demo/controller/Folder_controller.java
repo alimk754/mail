@@ -20,13 +20,6 @@ public class Folder_controller {
     public void add(@RequestBody Folder_DTO folder){
         Mail m=mailService.log_in(new Mail.builder().email(folder.email).build());
         UserFolder u=new UserFolder(folder.name);
-        Iterator<UserFolder> i=m.getUserFolders().iterator();
-        while (i.hasNext()) {
-            UserFolder temp = i.next();
-            if (temp.getName().equals(folder.name)) {
-                throw new RuntimeException("already exists");
-            }
-        }
         m.addFolder(u);
         mailService.uptade(m);
         return;

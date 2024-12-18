@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.List;
+
 @Repository
 public class Mail_DAO_impl implements Mail_DAO{
     EntityManager entityManager;
@@ -73,6 +75,7 @@ public class Mail_DAO_impl implements Mail_DAO{
 
     @Override
     public void handleDeleteMessage(int id) {
+
         entityManager.remove(entityManager.find(Message.class,id));
     }
 
@@ -98,6 +101,18 @@ public class Mail_DAO_impl implements Mail_DAO{
             return mail;
         }
         else throw new RuntimeException();
+    }
+
+    @Override
+    public List<Message> Search(String type, String like, String receiver) {
+        TypedQuery<Message> query = entityManager.createQuery(
+                        "SELECT m FROM Message m WHERE m.reciever.email = :email AND m." + type + " LIKE :likeParam",
+                        Message.class
+                )
+                .setParameter("email", receiver)
+                .setParameter("likeParam", "%" + like + "%");
+
+        return query.getResultList();
     }
 }
 

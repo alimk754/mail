@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,17 @@ public class UserFolder {
 
     public UserFolder(String name) {
         this.name = name;
+    }
+    public void addList(List<Message> m){
+        Iterator<Message> i=m.iterator();
+        while (i.hasNext()){
+            Message tmp=i.next();
+            this.add(tmp);
+        }
+    }
+
+    public List<Message> getMessages() {
+        return messages;
     }
 
     public String getName() {

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class Mail_service {
     Mail_DAO mail_dao;
@@ -59,6 +61,10 @@ public class Mail_service {
         System.out.println(Asc);
        return mail_dao.sort(sortField,Asc,id);
 
+    }
+    @Transactional
+   public List<Message> Search(String type, String Like, String receiver){
+        return mail_dao.Search(type,Like,receiver);
     }
 
 

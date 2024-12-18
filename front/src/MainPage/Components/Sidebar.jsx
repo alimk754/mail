@@ -16,7 +16,7 @@ const Sidebar = ({
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategory,setNewCategory] =useState("");
   const TrashClick=async ()=>{
-    navigateSection("trash");
+    
     try {
       const response = await axios.delete(`http://localhost:8080/api/delete30/${user.email}`);
         if (response.status === 200) {
@@ -28,7 +28,9 @@ const Sidebar = ({
       } catch (error) {
         console.error('Login failed:', error);
       }
+
       handlePageReload(user,setUser);
+      navigateSection("trash");
   }
   const handleAddCategory = async () => {
     if(newCategory.trim()){

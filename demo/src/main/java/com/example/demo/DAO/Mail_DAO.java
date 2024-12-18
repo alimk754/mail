@@ -15,6 +15,7 @@ public interface Mail_DAO {
     Contact getContactById(long id);
     void handleDeleteMessage(int id);
     Mail sort(String sortField,String Asc,String id);
+    List<Message> Search(String type,String Like,String receiver);
 
 
 }

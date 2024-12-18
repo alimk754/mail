@@ -71,6 +71,13 @@ public class Mail implements Subscriber{
         this.contacts = contacts;
     }
     public void addFolder(UserFolder folder) {
+        Iterator<UserFolder> i=userFolders.iterator();
+        while (i.hasNext()) {
+            UserFolder temp = i.next();
+            if (temp.getName().equals(folder.getName())) {
+                throw new RuntimeException("already exists");
+            }
+        }
          userFolders.add(folder);
     }
 
