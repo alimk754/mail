@@ -45,7 +45,7 @@ export const Service = ({
  
   return (
     <div className="relative bg-white mb-6 rounded-lg space-y-4">
-
+  
       {title!=="Contacts"?<div className="relative mb-6">
         <div className="flex space-x-4">
           
@@ -55,7 +55,7 @@ export const Service = ({
               onChange={(e) => onSearchByChange(e.target.value)}
               className="w-full py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="">Select search option</option>
+              <option value="" disabled>Select search option</option>
               <option value="subject">Subject</option>
               <option value="sender">Sender</option>
               <option value="receiver">Receiver</option>
@@ -96,15 +96,11 @@ export const Service = ({
       ) : (
         <div className="mt-4 flex justify-end space-around space-x-6">
           <SortingOptionsMenu setError={setError}></SortingOptionsMenu>
-          <FilterOptionsDiv setError={setError}></FilterOptionsDiv>
+          {title==="Inbox"?<FilterOptionsDiv setError={setError}></FilterOptionsDiv>:<></>}
         </div>
       )}
 
-      {title!=="Contacts"&&title!=="Inbox"&&title!=="Sent Mails"&&title!=="Trash"&&title!=="Drafts"? (
-        <RenameDiv setError={setError} title={title} navigateSection={navigateSection}></RenameDiv>
-      ) : (
-        <></>
-      )}
+      
     </div>
   );
 };
