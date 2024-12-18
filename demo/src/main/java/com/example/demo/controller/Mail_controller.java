@@ -105,7 +105,6 @@ public class Mail_controller {
     @DeleteMapping("/{id}/{type}")
     public Mail semi_delete_out_Meseage(@PathVariable int id, @PathVariable boolean type) {
         Message message = mailService.getbyid(id);
-        message.setDeletedAt(LocalDateTime.now());
         if (type)
             message.notify_deleteallsender(id, message);
         else message.notify_deleteformesender(id, message);
@@ -123,7 +122,6 @@ public class Mail_controller {
     @DeleteMapping("/mess/{id}")
     public Mail semi_delete_in_message(@PathVariable int id) {
         Message message = mailService.getbyid(id);
-        message.setDeletedAt(LocalDateTime.now());
         message.notify_deleteformereciver(id, new Message());
         Mail m1 = new Mail.builder().email(message.getFROM()).build();
         m1 = mailService.log_in((Mail) m1);

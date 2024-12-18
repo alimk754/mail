@@ -94,7 +94,29 @@ public class Mail_DAO_impl implements Mail_DAO{
                     Message.class
             );
             queryin.setParameter("email", id);
+
             mail.setOut(queryin.getResultList());
+            TypedQuery<Message> queryDraft = entityManager.createQuery(
+                    "SELECT m FROM Mail mail " +
+                            "JOIN mail.drafts m " +
+                            "WHERE mail.id = :email " +
+                            "ORDER BY m."+sortField+" "+Asc,
+                    Message.class
+            );
+            queryDraft.setParameter("email", id);
+            mail.setDrafts(queryDraft.getResultList());
+            TypedQuery<Message> queryTrash = entityManager.createQuery(
+                    "SELECT c FROM Mail s JOIN s.trash c " +
+                            "WHERE s.id = :id " +
+                            "ORDER BY c."+sortField+" " +Asc,
+                    Message.class
+            );
+            queryTrash.setParameter("id", id);
+            mail.setTrash(queryTrash.getResultList());
+
+
+
+
             return mail;
         }
         else throw new RuntimeException();
