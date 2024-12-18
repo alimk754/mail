@@ -63,6 +63,7 @@ const RenameDiv = ({title,navigateSection,setError}) => {
             placeholder="Name"
             onChange={(e) => {setSelected(e.target.value);setERror(null);}}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
             />
             </div>
             <div className="p-4 border-t border-gray-200 flex items-center justify-between">

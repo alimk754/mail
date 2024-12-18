@@ -132,6 +132,7 @@ public class Mail_controller {
         m2 = mailService.log_in((Mail) m2);
         m2.notify_deleteformereciver(id, message);
         mailService.uptademess(message);
+        
         return m1;
     }
 
