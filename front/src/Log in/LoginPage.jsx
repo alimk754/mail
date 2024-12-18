@@ -41,7 +41,7 @@ const LoginPage = () => {
         console.error('Login failed:', response.data.error);
       
     } catch (error) {
-     
+      setErrorMEssage(error.response.data.message);
     }
   };
 
