@@ -5,12 +5,13 @@ import { handlePageReload } from './PageReload';
 const FilterOptionsDiv = () => {
   const [isVisible, setIsVisible] = useState(false);
   const {user,setUser} =useContext(Datacontext);
+  
   const [selectedFolder, setSelectedFolder] = useState("");
   const [selectedSender, setSelectedSender] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const handleFilter = async() => {
     try{
-        const response = await axios.put(`http://localhost:8080/api/filter`,{reciever:user.email,Sender:selectedSender,subject:selectedSubject,directory:selectedFolder});
+        const response = await axios.put(`http://localhost:8080/api/filter`,{receiver:user.email,Sender:selectedSender,subject:selectedSubject,directory:selectedFolder});
         
       } catch (error) {
         console.error('delete failed:', error);

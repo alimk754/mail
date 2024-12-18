@@ -4,6 +4,7 @@ import com.example.demo.DAO.Mail_DAO;
 import com.example.demo.entity.Contact;
 import com.example.demo.entity.Mail;
 import com.example.demo.entity.Message;
+import com.example.demo.entity.UserFolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +67,17 @@ public class Mail_service {
    public List<Message> Search(String type, String Like, String receiver){
         return mail_dao.Search(type,Like,receiver);
     }
+    @Transactional
+    public void removeContact(int id) {
+        mail_dao.removeContact(id);
+    }
+
+    @Transactional
+    public void removeFolder(int id) {
+        mail_dao.removeFolder(id);
+    }
+
+
 
 
 }

@@ -1,6 +1,7 @@
 import { Search, Filter, SortAsc, X } from 'lucide-react';
 import SortingOptionsMenu from './sort_button';
 import RenameDiv from './Rename_Button';
+import FilterOptionsDiv from './FilterButton'
 
 export const Service = ({
   handleClearSearch,
@@ -94,13 +95,7 @@ export const Service = ({
       ) : (
         <div className="mt-4 flex justify-end space-around space-x-6">
           <SortingOptionsMenu></SortingOptionsMenu>
-          <button
-            onClick={onFilter}
-            className="flex items-center justify-center bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 active:scale-95"
-          >
-            <Filter size={18} className="mr-2" />
-            {filterLabel}
-          </button>
+          <FilterOptionsDiv></FilterOptionsDiv>
         </div>
       )}
 

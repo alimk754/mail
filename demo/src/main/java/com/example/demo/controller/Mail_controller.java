@@ -254,18 +254,18 @@ public class Mail_controller {
 
     @PutMapping("/filter")
     public void filter(@RequestBody Filter_DTO filter) {
-        System.out.println(filter.subject+" "+filter.directory+" "+filter.receiver);
-        Criteria filtering = SubjectSender.getInstance(filter.subject, filter.Sender, filter.Sender);
-        List<Message> messages = filtering.meetCriteria();
-        Mail m = mailService.log_in(new Mail.builder().email(filter.receiver).build());
-        List<UserFolder> u = m.getUserFolders();
-        Iterator<UserFolder> i = u.iterator();
-        while (i.hasNext()) {
-            UserFolder tmp = i.next();
-            if (tmp.getName().equals(filter.directory)) {
-                tmp.addList(messages);
-            }
-        }
-        mailService.uptade(m);
+       Mail m1=mailService.log_in(new Mail.builder().email(filter.receiver).build());
+       List<Message> messages=m1.getIn();
+       Criteria f=SubjectSender.getInstance(filter.subject, filter.Sender, messages);
+       List<Message> userList=f.meetCriteria();
+       List<UserFolder> u1=m1.getUserFolders();
+       Iterator<UserFolder> i=u1.iterator();
+       while (i.hasNext()){
+           UserFolder tmp=i.next();
+           if(tmp.getName().equals(filter.directory)){
+               tmp.addList(userList);
+           }
+       }
+       mailService.uptade(m1);
     }
 }
