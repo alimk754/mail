@@ -46,6 +46,7 @@ public class Folder_controller {
     @PutMapping("/rename")
     public void rename(@RequestBody Folder_DTO folder){
         Mail m1=mailService.log_in(new Mail.builder().email(folder.email).build());
+        if(folder.name.isEmpty()){throw new RuntimeException("cannot create an empty field")}
         Iterator<UserFolder> i=m1.getUserFolders().iterator();
         while (i.hasNext()) {
             UserFolder temp = i.next();
