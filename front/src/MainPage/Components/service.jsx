@@ -18,7 +18,8 @@ export const Service = ({
   title,
   navigateSection,
   searchBy,
-  onSearchByChange
+  onSearchByChange,
+  setError
 }) => {
   const getPlaceholderText = (searchByValue) => {
     switch (searchByValue) {
@@ -94,13 +95,13 @@ export const Service = ({
         <></>
       ) : (
         <div className="mt-4 flex justify-end space-around space-x-6">
-          <SortingOptionsMenu></SortingOptionsMenu>
-          <FilterOptionsDiv></FilterOptionsDiv>
+          <SortingOptionsMenu setError={setError}></SortingOptionsMenu>
+          <FilterOptionsDiv setError={setError}></FilterOptionsDiv>
         </div>
       )}
 
       {title!=="Contacts"&&title!=="Inbox"&&title!=="Sent Mails"&&title!=="Trash"&&title!=="Drafts"? (
-        <RenameDiv title={title} navigateSection={navigateSection}></RenameDiv>
+        <RenameDiv setError={setError} title={title} navigateSection={navigateSection}></RenameDiv>
       ) : (
         <></>
       )}

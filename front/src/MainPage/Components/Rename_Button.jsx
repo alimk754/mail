@@ -2,7 +2,8 @@ import React, { useState,useContext } from 'react';
 import { Datacontext } from '../../main';
 import axios from 'axios';
 import { handlePageReload } from './PageReload';
-const RenameDiv = ({title,navigateSection}) => {
+import { data } from 'react-router-dom';
+const RenameDiv = ({title,navigateSection,setError}) => {
   const [isVisible, setIsVisible] = useState(false);
   const {user,setUser} =useContext(Datacontext);
 
@@ -15,7 +16,8 @@ const RenameDiv = ({title,navigateSection}) => {
         const response = await axios.put(`http://localhost:8080/api/folder/rename`,{email:user.email,name:selectedname,oldName:title});
         
       } catch (error) {
-        console.error('delete failed:', error);
+        setError(error.response.data.message);
+        setError(null);
       }
     setIsVisible(false);
     navigateSection(selectedname);

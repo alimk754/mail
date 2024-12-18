@@ -25,8 +25,9 @@ const SortingOptionsDiv = () => {
         console.log(' successful:', response.data);
         setUser(u=>response.data);
         console.log(user);
+        setError(null);
       } catch (error) {
-        console.error('delete failed:', error);
+        setError(error.response.data.message);
       }
     setIsVisible(false);
   };

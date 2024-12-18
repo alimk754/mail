@@ -69,12 +69,16 @@ public class SubjectSender implements Criteria{
     public List<Message> meetCriteria() {
         List<Message>bySubject=subjectCriteria.meetCriteria();
         List<Message>bySender=senderCriteria.meetCriteria();
+        if(Sender.isEmpty()) return bySubject;
+        if(subject.isEmpty()) return bySender;
+
         Iterator<Message> i=bySender.iterator();
         List<Message> messages=new ArrayList<>();
         while (i.hasNext()){
             Message tmp=i.next();
             if(bySubject.contains(tmp)) messages.add(tmp);
         }
+        if(messages.isEmpty()) throw new RuntimeException("one of the criteria doesn't exist");
         return messages;
     }
 }

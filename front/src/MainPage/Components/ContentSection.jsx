@@ -25,6 +25,7 @@ const ContentSection = ({
   const [showWarning, setShowWarining] = useState(false);
   const [filteredMessages, setFilteredMessages] = useState(messages);
   const [searchBy, setSearchBy] = useState("subject");
+   const [error,setError]=useState(null);
 
   const getMessageList = () => {
     switch (title) {
@@ -112,9 +113,10 @@ const ContentSection = ({
         console.error('DeleteAll failed:');
       
     } catch (error) {
-      console.error('DeleteAll failed:', error);
+      setError(error.response.data.message);
     }
     handlePageReload(user,setUser);
+
   }
   const handleDeleteAllDrafts = async (e) => {
     try{
@@ -128,7 +130,7 @@ const ContentSection = ({
       }else 
         console.error('DeleteAll failed:');
     }catch(error){
-      console.error(error);
+      setError(error.response.data.message);
     }
     handlePageReload(user,setUser);
   }
@@ -145,7 +147,7 @@ const ContentSection = ({
         console.log(user);
       } else console.error("Login failed:", response.data.error);
     } catch (error) {
-      console.error("Login failed:", error);
+      setError(error.response.data.message);
     }
     handlePageReload(user,setUser);
     navigateSection("compose");
@@ -191,14 +193,32 @@ const ContentSection = ({
         navigateSection={navigateSection}
         searchBy={searchBy}
         onSearchByChange={handleSearchByChange}
+        setError={setError}
       />
       <div>
       <MessageList handleDeleteDraft={handleDeleteDraft} handleDoubleCLicking={handleDoubleCLicking} title={title} messages={searchTerm.trim() ? filteredMessages : getMessageList()} handlePageReload={() => handlePageReload(user,setUser)}/>
       </div>
-
+      
            {/* Conditional Warning Div */}
-           {(title === "Trash") && <WarningModel isOpen={showWarning} onClose={() => setShowWarining(false)} onConfirm={handleDeleteAll} title="Warning" message="Are you sure to Delete All Messages?" confirmText="Confirm" cancelText="Cancel" />}
+      {(title === "Trash") && <WarningModel isOpen={showWarning} onClose={() => setShowWarining(false)} onConfirm={handleDeleteAll} title="Warning" message="Are you sure to Delete All Messages?" confirmText="Confirm" cancelText="Cancel" />}
       {(title === "Drafts") && <WarningModel isOpen={showWarning} onClose={() => setShowWarining(false)} onConfirm={handleDeleteAllDrafts} title="Warning" message="Are you sure to Delete All Drafts?" confirmText="Confirm" cancelText="Cancel" />}
+      {error && (
+          <div className="error-message">
+            <svg
+              className="error-icon"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {error}
+          </div>
+        )}
+
     </div>
   );
 };

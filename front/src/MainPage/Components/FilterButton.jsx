@@ -2,7 +2,7 @@ import React, { useState,useContext } from 'react';
 import { Datacontext} from '../../main'
 import axios from 'axios';
 import { handlePageReload } from './PageReload';
-const FilterOptionsDiv = () => {
+const FilterOptionsDiv = ({setError}) => {
   const [isVisible, setIsVisible] = useState(false);
   const {user,setUser} =useContext(Datacontext);
   
@@ -12,9 +12,9 @@ const FilterOptionsDiv = () => {
   const handleFilter = async() => {
     try{
         const response = await axios.put(`http://localhost:8080/api/filter`,{receiver:user.email,Sender:selectedSender,subject:selectedSubject,directory:selectedFolder});
-        
+        setError(null);
       } catch (error) {
-        console.error('delete failed:', error);
+        setError(error.response.data.message);
       }
     setIsVisible(false);
     handlePageReload(user,setUser);

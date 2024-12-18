@@ -48,6 +48,13 @@ public class Folder_controller {
         Iterator<UserFolder> i=m1.getUserFolders().iterator();
         while (i.hasNext()) {
             UserFolder temp = i.next();
+            if (temp.getName().equals(folder.name)) {
+                throw new RuntimeException("this folder already exists");
+            }
+        }
+        i=m1.getUserFolders().iterator();
+        while (i.hasNext()) {
+            UserFolder temp = i.next();
             if (temp.getName().equals(folder.oldName)) {
                 temp.setName(folder.name);
             }
