@@ -4,8 +4,9 @@ import { Datacontext } from "../../main";
 import { Service } from "./service";
 import axios from "axios";
 import { RefreshCcw, Trash2 } from "lucide-react";
-import { handlePageReload } from './PageReload';
-import WarningModel from './WarinigModel';
+import { handlePageReload } from "./PageReload";
+import WarningModel from "./WarinigModel";
+import RenameDiv from "./Rename_Button";
 const ContentSection = ({
   handleDeleteDraft,
   title,
@@ -25,7 +26,7 @@ const ContentSection = ({
   const [showWarning, setShowWarining] = useState(false);
   const [filteredMessages, setFilteredMessages] = useState(messages);
   const [searchBy, setSearchBy] = useState("subject");
-   const [error,setError]=useState(null);
+  const [error, setError] = useState(null);
 
   const getMessageList = () => {
     switch (title) {
@@ -36,11 +37,10 @@ const ContentSection = ({
       case "Trash":
         return user.trash || [];
       case "Drafts":
-        return user.drafts || []; 
-        
-        default:
-          return messages || [];
-     
+        return user.drafts || [];
+
+      default:
+        return messages || [];
     }
   };
 
@@ -70,10 +70,10 @@ const ContentSection = ({
             return message.createdAt?.includes(searchValue);
           case "attachment":
             if (!Array.isArray(message.attachments)) return false;
-            return message.attachments.some(attachment => 
+            return message.attachments.some((attachment) =>
               attachment?.fileName?.includes(searchValue)
             );
-            
+
           case "importance":
             let imp;
             if (message.importance === 0) imp = "low";
@@ -102,40 +102,34 @@ const ContentSection = ({
 
   const handleDeleteAll = async (e) => {
     try {
+      setShowWarining(false);
+      const response = await axios.put(
+        "http://localhost:8080/api/deleteALl",
 
-    setShowWarining(false);
-    const response = await axios.put('http://localhost:8080/api/deleteALl', 
-      
-       { trash: user.trash }
-    );
+        { trash: user.trash }
+      );
       if (response.status === 200) {
-        console.log('DeleteAll successful:');
-        
-      }else 
-        console.error('DeleteAll failed:');
-      
+        console.log("DeleteAll successful:");
+      } else console.error("DeleteAll failed:");
     } catch (error) {
       setError(error.response.data.message);
     }
-    handlePageReload(user,setUser);
-
-  }
+    handlePageReload(user, setUser);
+  };
   const handleDeleteAllDrafts = async (e) => {
-    try{
+    try {
       setShowWarining(false);
-      const response = await axios.put('http://localhost:8080/api/deleteALl', 
-       { drafts: user.drafts }
-    );
+      const response = await axios.put("http://localhost:8080/api/deleteALl", {
+        drafts: user.drafts,
+      });
       if (response.status === 200) {
-        console.log('DeleteAll successful:');
-        
-      }else 
-        console.error('DeleteAll failed:');
-    }catch(error){
+        console.log("DeleteAll successful:");
+      } else console.error("DeleteAll failed:");
+    } catch (error) {
       setError(error.response.data.message);
     }
-    handlePageReload(user,setUser);
-  }
+    handlePageReload(user, setUser);
+  };
 
   const deleteCategory = async () => {
     try {
@@ -151,18 +145,33 @@ const ContentSection = ({
     } catch (error) {
       setError(error.response.data.message);
     }
-    handlePageReload(user,setUser);
+    handlePageReload(user, setUser);
     navigateSection("compose");
   };
 
   return (
     <div>
-      <div className="flex items-center text-gray-500 font-medium text-sm justify-between space-x-2">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6">{title}</h3>
+      <div className="flex items-center text-gray-500 font-medium text-sm justify-between">
+        <div className="flex items-center gap-4">
+          <h3 className="text-2xl font-bold text-gray-800 mb-6">{title}</h3>
+          {title !== "Contacts" &&
+          title !== "Inbox" &&
+          title !== "Sent Mails" &&
+          title !== "Trash" &&
+          title !== "Drafts" ? (
+            <RenameDiv
+              setError={setError}
+              title={title}
+              navigateSection={navigateSection}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
         <div className="flex">
           <button
             className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500"
-            onClick={() => handlePageReload(user,setUser)}
+            onClick={() => handlePageReload(user, setUser)}
           >
             <RefreshCcw className="mr-2" size={18} />
           </button>
@@ -172,7 +181,15 @@ const ContentSection = ({
             title === "Sent Mails"
           ) && (
             <button className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500">
-              <Trash2 onClick={(title==="Trash" || title==="Drafts")?() => setShowWarining(true): deleteCategory} className="mr-2" size={18} />
+              <Trash2
+                onClick={
+                  title === "Trash" || title === "Drafts"
+                    ? () => setShowWarining(true)
+                    : deleteCategory
+                }
+                className="mr-2"
+                size={18}
+              />
             </button>
           )}
         </div>
@@ -198,29 +215,50 @@ const ContentSection = ({
         setError={setError}
       />
       <div>
-      <MessageList handleDeleteDraft={handleDeleteDraft} handleDoubleCLicking={handleDoubleCLicking} title={title} messages={searchTerm.trim() ? filteredMessages : getMessageList()} handlePageReload={() => handlePageReload(user,setUser)}/>
+        <MessageList
+          handleDeleteDraft={handleDeleteDraft}
+          handleDoubleCLicking={handleDoubleCLicking}
+          title={title}
+          messages={searchTerm.trim() ? filteredMessages : getMessageList()}
+          handlePageReload={() => handlePageReload(user, setUser)}
+        />
       </div>
-      
-           {/* Conditional Warning Div */}
-      {(title === "Trash") && <WarningModel isOpen={showWarning} onClose={() => setShowWarining(false)} onConfirm={handleDeleteAll} title="Warning" message="Are you sure to Delete All Messages?" confirmText="Confirm" cancelText="Cancel" />}
-      {(title === "Drafts") && <WarningModel isOpen={showWarning} onClose={() => setShowWarining(false)} onConfirm={handleDeleteAllDrafts} title="Warning" message="Are you sure to Delete All Drafts?" confirmText="Confirm" cancelText="Cancel" />}
-      {error && (
-          <div className="error-message">
-            <svg
-              className="error-icon"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {error}
-          </div>
-        )}
 
+      {/* Conditional Warning Div */}
+      {title === "Trash" && (
+        <WarningModel
+          isOpen={showWarning}
+          onClose={() => setShowWarining(false)}
+          onConfirm={handleDeleteAll}
+          title="Warning"
+          message="Are you sure to Delete All Messages?"
+          confirmText="Confirm"
+          cancelText="Cancel"
+        />
+      )}
+      {title === "Drafts" && (
+        <WarningModel
+          isOpen={showWarning}
+          onClose={() => setShowWarining(false)}
+          onConfirm={handleDeleteAllDrafts}
+          title="Warning"
+          message="Are you sure to Delete All Drafts?"
+          confirmText="Confirm"
+          cancelText="Cancel"
+        />
+      )}
+      {error && (
+        <div className="error-message">
+          <svg className="error-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {error}
+        </div>
+      )}
     </div>
   );
 };
