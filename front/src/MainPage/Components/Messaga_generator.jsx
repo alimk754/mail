@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Clock, User, ChevronDown, ChevronUp, Trash2, Undo  } from 'lucide-react';
 import { Datacontext } from '../../main';
 import axios from 'axios';
-import MessageAttachments from './MessageAttachment';
+import MessageAttachments from '../../Attachments/MessageAttachment';
 import DeleteOptions from './DeleteOptions';
 import WarningModel from './WarinigModel';
 

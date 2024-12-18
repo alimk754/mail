@@ -35,10 +35,12 @@ const ContentSection = ({
         return user.out || [];
       case "Trash":
         return user.trash || [];
-        case "Drafts":
-        return user.drafts || [];
-      default:
-        return messages || [];
+      case "Drafts":
+        return user.drafts || []; 
+        
+        default:
+          return messages || [];
+     
     }
   };
 

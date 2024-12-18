@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Download, Eye } from 'lucide-react';
-import FilePreview from '../../Attachments/FilePreview';
+import FilePreview from './FilePreview';
 
 const MessageAttachments = ({ attachments }) => {
   const [selectedFile, setSelectedFile] = useState(null);
