@@ -23,13 +23,16 @@ const MainPage = () => {
   const [from,set_from]=useState(user.email);
   const [content,set_content]=useState("");
   const [subject,set_subject]=useState("");
+  const [recipients, setRecipients] = useState([to || '']);
 
 
   const handleDoubleCLicking = (message) => {
     try{
+      console.log(message);
       setActiveSection('compose');
       set_to(message.to);
       set_from(message.from);
+      setRecipients(message.multiRecipients.split(','));
       set_content(message.message);
       set_subject(message.subject);
       setAttachments(message.attachments);
@@ -90,6 +93,7 @@ const MainPage = () => {
       console.log(importance);
       const response = await axios.post('http://localhost:8080/api/addDraft', {
         toemail: to,
+        namesToCheck: recipients,
         fromemail: from,
         message: content,
         subject: subject,
@@ -103,6 +107,7 @@ const MainPage = () => {
         set_subject('');
         set_content('');
         setImportance('medium');
+        setRecipients(['']);
         setAttachments([]);
       }else 
         console.error(' failed:');
@@ -189,7 +194,7 @@ const MainPage = () => {
               <div className="text-gray-600">Drafted messages will appear here</div>
             </ContentSection>
           )}
-          {activeSection === 'compose' && <ComposeForm 
+          {activeSection === 'compose' && <ComposeForm recipients={recipients} setRecipients={setRecipients}
           to={to} set_to={set_to} from={from} set_from={set_from} content={content} set_content={set_content} subject={subject}
           set_subject={set_subject} importance={importance} setImportance={setImportance} attachments={attachments} 
           setAttachments={setAttachments}/>}

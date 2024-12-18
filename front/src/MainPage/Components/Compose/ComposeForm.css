@@ -186,3 +186,62 @@
   .low-dot {
     background-color: #10b981;
   }
+  .recipients-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .recipient-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .add-recipient-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4a4a4a;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+  }
+  
+  .add-recipient-btn:hover {
+    color: #007bff;
+  }
+  
+  .add-recipient-btn:disabled {
+    cursor: not-allowed;
+    color: #cccccc;
+  }
+
+  .delete-recipient-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4a4a4a;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+  }
+  
+  .delete-recipient-btn:hover {
+    color: #ff0000;
+  }
+  
+  .delete-recipient-btn:disabled {
+    cursor: not-allowed;
+    color: #cccccc;
+  }
+  
+  .recipient-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
