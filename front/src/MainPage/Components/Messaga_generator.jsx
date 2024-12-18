@@ -48,12 +48,12 @@ handlePageReload(user , setUser);
     try {
     
       const response = await axios.delete(`http://localhost:8080/api/${message.id}/${bool}`);
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         
-        console.log(' successful:', response.data);
-        setUser(u=>response.data);
-        console.log(user);
+        // console.log(' successful:', response.data);
+        // setUser(u=>response.data);
+        // console.log(user);
       
       }else 
         console.error(' failed:', response.data.error);

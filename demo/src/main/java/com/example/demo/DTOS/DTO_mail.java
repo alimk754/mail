@@ -21,9 +21,18 @@ public class DTO_mail {
     List<Message> out=new ArrayList<>();
     List<Message> trash=new ArrayList<>();
     List<Message> drafts=new ArrayList<>();
+    List<String> namesToCheck = new ArrayList<>();
     private String message;
 
     private LocalDateTime created_at;
+
+    public List<String> getNamesToCheck() {
+        return namesToCheck;
+    }
+
+    public void setNamesToCheck(List<String> namesToCheck) {
+        this.namesToCheck = namesToCheck;
+    }
 
     private List<AttachmentDTO> attachments = new ArrayList<>();
     private List<ContactDTO> contacts = new ArrayList<>();

@@ -67,7 +67,7 @@ public class Mail_controller {
                 attachments.add(attachment);
             }
         }
-        String result = String.join(",", obj.getNamesToCheck());
+        String result = String.join(",", obj.getMultiRecipients());
         System.out.println(result);
         Mail mail = mailService.log_in(new Mail.builder().email(obj.getFromemail()).build());
         Message m1 = new Message.massageBuilder()
@@ -79,7 +79,7 @@ public class Mail_controller {
                 .build();
         m1.setTO(obj.getToemail());
         m1.setFROM(obj.getFromemail());
-        m1.setMultiRecipients(String.join(",", obj.getNamesToCheck()));
+        m1.setMultiRecipients(String.join(",", obj.getMultiRecipients()));
         mail.addDraft(m1);
         mailService.uptade(mail);
         return mail;
