@@ -6,6 +6,7 @@ import { data } from 'react-router-dom';
 const RenameDiv = ({title,navigateSection,setError}) => {
   const [isVisible, setIsVisible] = useState(false);
   const {user,setUser} =useContext(Datacontext);
+  const [error,setERror]=useState(null);
 
 
   const [selectedname, setSelected] = useState("");
@@ -14,15 +15,14 @@ const RenameDiv = ({title,navigateSection,setError}) => {
     try {
         console.log(user.email,selectedname,title);
         const response = await axios.put(`http://localhost:8080/api/folder/rename`,{email:user.email,name:selectedname,oldName:title});
-        setError(null);
+        setERror(null);
+        setIsVisible(false);
+        navigateSection(selectedname);
+        handlePageReload(user,setUser);
       } catch (error) {
-        setError(error.response.data.message);
+        setERror(error.response.data.message);
         
       }
-    setIsVisible(false);
-    navigateSection(selectedname);
-    handlePageReload(user,setUser);
-    
   };
 
   return (
@@ -41,6 +41,22 @@ const RenameDiv = ({title,navigateSection,setError}) => {
               <h2 className="text-xl font-semibold text-gray-800">Renaming Folder</h2>
               <p className="text-sm text-gray-500 mt-1">Choose a new name</p>
             </div>
+            {error && (
+        <div className="mt-3 text-sm bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded flex items-center">
+          <svg
+            className="w-4 h-4 mr-2 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {error}
+        </div>
+      )}
             <div className="p-4 space-y-2">
             <input 
             type="text"
