@@ -129,6 +129,7 @@ public class ContactController {
         }
         Mail mail = contact.giveMail();
         mail.removeContact(contact);
+        mailService.removeContact(id);
         mailService.uptade(mail);
 
         return ResponseEntity.ok().build();
