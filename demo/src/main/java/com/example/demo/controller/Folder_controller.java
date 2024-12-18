@@ -34,6 +34,7 @@ public class Folder_controller {
             UserFolder temp = i.next();
             if (temp.getName().equals(id)) {
                m1.removeFolder(temp);
+               mailService.removeFolder(temp.getId());
                break;
             }
         }

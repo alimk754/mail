@@ -14,10 +14,10 @@ const RenameDiv = ({title,navigateSection,setError}) => {
     try {
         console.log(user.email,selectedname,title);
         const response = await axios.put(`http://localhost:8080/api/folder/rename`,{email:user.email,name:selectedname,oldName:title});
-        
+        setError(null);
       } catch (error) {
         setError(error.response.data.message);
-        setError(null);
+        
       }
     setIsVisible(false);
     navigateSection(selectedname);
