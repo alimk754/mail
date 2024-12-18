@@ -9,6 +9,9 @@ import Contact from './Components/Contacts/Contact';
 import WarningModel from './Components/WarinigModel';
 import axios from 'axios';
 import { handlePageReload } from './Components/PageReload';
+import { Search } from 'lucide-react';
+
+
 const MainPage = () => {
   const [isSidebar, setSidebar] = useState(true);
   const [activeSection, setActiveSection] = useState('compose');
@@ -24,6 +27,8 @@ const MainPage = () => {
   const [content,set_content]=useState("");
   const [subject,set_subject]=useState("");
   const [recipients, setRecipients] = useState([to || '']);
+
+
 
 
   const handleDoubleCLicking = (message) => {
@@ -159,11 +164,12 @@ const MainPage = () => {
           {activeSection === 'contacts' && (
             <>
             <ContentSection title="Contacts" messages={[]}>
-              <div className="text-gray-600">
-               
+              <div className="text-gray-600">   
               </div>
             </ContentSection>
-            <Contact /></>
+            <Contact />
+            
+            </>
           )}
 
 {user.userFolders && user.userFolders.map((folder) => (
