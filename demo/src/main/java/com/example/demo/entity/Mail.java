@@ -47,7 +47,13 @@ public class Mail implements Subscriber{
     @JoinColumn(name = "drafts")
     private List<Message> drafts = new ArrayList<>();
 
-
+    public void removeMessageFromFolders(Message m1){
+        Iterator<UserFolder> iterator= userFolders.iterator();
+        while (iterator.hasNext()){
+            UserFolder tmp= iterator.next();
+            tmp.remove(m1);
+        }
+    }
     public void addDraft (Message m){
         drafts.add(m);
     }
@@ -203,6 +209,7 @@ public class Mail implements Subscriber{
     public void notify_deleteformereciver(int id, Message m) {
         this.deletein(id);
         this.addtrash(m);
+        this.removeMessageFromFolders(m);
     }
 
 

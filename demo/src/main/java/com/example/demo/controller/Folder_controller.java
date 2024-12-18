@@ -65,4 +65,22 @@ public class Folder_controller {
 
         return;
     }
+    @DeleteMapping("/{id}/{title}/{message_id}")
+    public void delete(@PathVariable int message_id,@PathVariable String title,@PathVariable String id){
+        System.out.println(id+" "+message_id+" "+title);
+        Mail mail=mailService.log_in(new Mail.builder().email(id).build());
+        Message m=mailService.getbyid(message_id);
+        List<UserFolder> list=mail.getUserFolders();
+        Iterator<UserFolder> iterator=list.iterator();
+        while (iterator.hasNext()){
+            UserFolder tmp=iterator.next();
+            if(tmp.getName().equals(title)){
+                tmp.getMessages().remove(m);
+                System.out.println(tmp);
+                break;
+            }
+        }
+        mail.setUserFolders(list);
+        mailService.uptade(mail);
+    }
 }

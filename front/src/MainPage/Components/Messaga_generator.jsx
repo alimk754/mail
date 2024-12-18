@@ -17,6 +17,21 @@ const MessageItem = ({handleDeleteDraft,handleDoubleCLicking, title, message ,ha
     if (importance == 5) return 'bg-yellow-500';
     return 'bg-green-500';
   };
+  const DeleteFromCategory=async()=>{
+    console.log("Gggg");
+    try {
+      let checkUser = (message.from === user.email);
+      let bool = true;
+      if (message.from === user.email) bool = false; // ( !==)
+        const response = await axios.delete(`http://localhost:8080/api/folder/${user.email}/${title}/${message.id}`);
+        console.log('Full response:', response);
+        console.log('Response data:', response.data);
+       
+    } catch (error) {
+        console.error('Retrieve failed:', error.response ? error.response.data : error.message);
+    }
+    handlePageReload(user, setUser);
+  }
   const retrieve = async () => {
     try {
       let checkUser = (message.from === user.email);
@@ -117,7 +132,7 @@ handlePageReload(user , setUser);
         </div>
 
         <div className="col-span-1">
-          {(title !== "Trash") ? <button onClick={(title === "Sent Mails") ? () => setShowDeleteDiv(true) : (title === "Drafts" ? () => setShowDeleteWar(true) : () => DeleteMessage(false))} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
+          {(title !== "Trash") ? <button onClick={(title === "Sent Mails") ? () => setShowDeleteDiv(true) : (title === "Drafts" ? () => setShowDeleteWar(true) :title!=="Inbox"&&title!=="Sent Mails"&&title!=="Trash"&&title!=="Contacts"?()=>{DeleteFromCategory()}: () => DeleteMessage(false))} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
           <Trash2 size={20} /></button> : <button onClick={retrieve} className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'>
           <Undo size={20} /></button>} 
         </div>

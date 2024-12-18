@@ -256,13 +256,16 @@ public class Mail_controller {
     }
 
     @DeleteMapping("/delete30/{id}")
-    public void check(@PathVariable String userName) {
-        Mail m = mailService.log_in(new Mail.builder().email(userName).build());
+    public void check(@PathVariable String id) {
+
+        Mail m = mailService.log_in(new Mail.builder().email(id).build());
         List<Message> trash = m.getTrash();
         Iterator<Message> i = trash.iterator();
         while (i.hasNext()) {
             Message tmp = i.next();
-            if (tmp.getDeletedAt().plusDays(30).isAfter(LocalDateTime.now())) {
+            System.out.println(tmp.getDeletedAt().plusSeconds(10).isBefore(LocalDateTime.now()));
+            if (tmp.getDeletedAt().plusDays(30).isBefore(LocalDateTime.now())) {
+                m.getTrash().remove(tmp);
                 mailService.handleDeleteMessage(tmp.getId());
             }
         }
