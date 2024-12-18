@@ -3,10 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.DTOS.DTO_mail;
 import com.example.demo.DTOS.AttachmentDTO;
 
-import com.example.demo.DTOS.Filter_DTO;
 import com.example.demo.DTOS.Sort_DAO;
-import com.example.demo.criteria.Criteria;
-import com.example.demo.criteria.SubjectSender;
 import com.example.demo.entity.*;
 import com.example.demo.service.Mail_service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +17,12 @@ import java.util.*;
 @RequestMapping("/api")
 public class Mail_controller {
     Mail_service mailService;
-
     @Autowired
     public Mail_controller(Mail_service mailService) {
         this.mailService = mailService;
     }
-
     @GetMapping("/retrieve/{id}/{receiver}/{checkUser}")
-    public void retrieve(@PathVariable int id, @PathVariable boolean receiver, @PathVariable boolean checkUser) {
+    public void retrieve(@PathVariable int id,@PathVariable boolean receiver,@PathVariable boolean checkUser) {
         try {
             System.out.println("Retrieving message with ID: " + id);
 
@@ -42,7 +37,7 @@ public class Mail_controller {
             if (m == null) {
                 throw new RuntimeException("not found");
             }
-            if (!receiver) {
+            if(!receiver) {
                 Mail mail1 = mailService.log_in(new Mail.builder().email(m.getFROM()).build());
                 m.setSender(mail1);
                 mail1.deletetrash(id);
@@ -59,7 +54,6 @@ public class Mail_controller {
         }
         return;
     }
-
     @PostMapping("/addDraft")
     public Mail addDraft(@RequestBody DTO_mail obj) {
         List<Attachment> attachments = new ArrayList<>();
@@ -73,7 +67,7 @@ public class Mail_controller {
                 attachments.add(attachment);
             }
         }
-        String result = String.join(",", obj.getNamesToCheck());
+        String result = String.join(",", obj.getMultiRecipients());
         System.out.println(result);
         Mail mail = mailService.log_in(new Mail.builder().email(obj.getFromemail()).build());
         Message m1 = new Message.massageBuilder()
@@ -85,12 +79,11 @@ public class Mail_controller {
                 .build();
         m1.setTO(obj.getToemail());
         m1.setFROM(obj.getFromemail());
-        m1.setMultiRecipients(String.join(",", obj.getNamesToCheck()));
+        m1.setMultiRecipients(String.join(",", obj.getMultiRecipients()));
         mail.addDraft(m1);
         mailService.uptade(mail);
         return mail;
     }
-
     @DeleteMapping("/deleteDraft/{id}")
     public void deleteDraft(@PathVariable int id) {
         System.out.println(id);
@@ -103,53 +96,52 @@ public class Mail_controller {
 
 
     @DeleteMapping("/{id}/{type}")
-    public Mail semi_delete_out_Meseage(@PathVariable int id, @PathVariable boolean type) {
-        Message message = mailService.getbyid(id);
+    public Mail semi_delete_out_Meseage(@PathVariable int id,@PathVariable boolean type){
+        Message message=mailService.getbyid(id);
         message.setDeletedAt(LocalDateTime.now());
-        if (type)
-            message.notify_deleteallsender(id, message);
-        else message.notify_deleteformesender(id, message);
-        Mail m1 = new Mail.builder().email(message.getFROM()).build();
-        m1 = mailService.log_in((Mail) m1);
-        m1 = mailService.uptade((Mail) m1);
-        Mail m2 = new Mail.builder().email(message.getTO()).build();
-        m2 = mailService.log_in((Mail) m2);
-        if (type) m1.notify_deleteallsender(id, message);
-        else m1.notify_deleteformereciver(id, message);
+         if(type)
+        message.notify_deleteallsender(id,message);
+        else message.notify_deleteformesender(id,message);
+        Mail m1=new Mail.builder().email(message.getFROM()).build();
+        m1=mailService.log_in((Mail) m1);
+        m1=mailService.uptade((Mail) m1);
+        Mail m2=new Mail.builder().email(message.getTO()).build();
+        m2=mailService.log_in((Mail) m2);
+        if(type) m1.notify_deleteallsender(id,message);
+        else m1.notify_deleteformereciver(id,message);
         mailService.uptademess(message);
-        return m1;
+        return  m1;
     }
-
     @DeleteMapping("/mess/{id}")
-    public Mail semi_delete_in_message(@PathVariable int id) {
-        Message message = mailService.getbyid(id);
+    public Mail semi_delete_in_message(@PathVariable int id){
+        Message message=mailService.getbyid(id);
         message.setDeletedAt(LocalDateTime.now());
-        message.notify_deleteformereciver(id, new Message());
-        Mail m1 = new Mail.builder().email(message.getFROM()).build();
-        m1 = mailService.log_in((Mail) m1);
-        m1 = mailService.uptade((Mail) m1);
-        Mail m2 = new Mail.builder().email(message.getTO()).build();
-        m2 = mailService.log_in((Mail) m2);
-        m2.notify_deleteformereciver(id, message);
+        message.notify_deleteformereciver(id,new Message());
+        Mail m1=new Mail.builder().email(message.getFROM()).build();
+        m1=mailService.log_in((Mail) m1);
+        m1=mailService.uptade((Mail) m1);
+        Mail m2=new Mail.builder().email(message.getTO()).build();
+        m2=mailService.log_in((Mail) m2);
+        m2.notify_deleteformereciver(id,message);
         mailService.uptademess(message);
-        return m1;
+        return  m1;
     }
 
     @PutMapping("/deleteALl")
-    public void deleteALl(@RequestBody DTO_mail m) {
-        if (!m.getIn().isEmpty()) {
+    public void deleteALl(@RequestBody DTO_mail m){
+        if (!m.getIn().isEmpty()){
             for (Message message : m.getIn()) {
-                semi_delete_out_Meseage(message.getId(), true);
+                semi_delete_out_Meseage(message.getId(),true);
             }
-        } else if (!m.getOut().isEmpty()) {
+        }else if (!m.getOut().isEmpty()){
             for (Message message : m.getOut()) {
                 semi_delete_in_message(message.getId());
             }
-        } else if (!m.getTrash().isEmpty()) {
+        }else if (!m.getTrash().isEmpty()) {
             for (Message mess : m.getTrash()) {
                 delete(mess.getId());
             }
-        } else if (!m.getDrafts().isEmpty()) {
+        }else if(!m.getDrafts().isEmpty()){
             for (Message message : m.getDrafts()) {
                 deleteDraft(message.getId());
             }
@@ -157,18 +149,20 @@ public class Mail_controller {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable int id){
 
 
-        Message message = mailService.getbyid(id);
-        Mail m1 = new Mail();
+        Message message=mailService.getbyid(id);
+        Mail m1=new Mail();
         if (message.arenull()) {
             mailService.handleDeleteMessage(message.getId());
             return;
-        } else if (message.issendernull()) {
-            m1 = mailService.log_in(new Mail.builder().email(message.getFROM()).build());
+        }
+        else if(message.issendernull()){
+            m1=mailService.log_in(new Mail.builder().email(message.getFROM()).build());
             m1.deletetrash(id);
-        } else {
+        }
+        else {
 
             m1 = mailService.log_in(new Mail.builder().email(message.getTO()).build());
             m1.deletetrash(id);
@@ -186,15 +180,15 @@ public class Mail_controller {
         Mail savedMail = mailService.sign_up(mail);
         return ResponseEntity.ok(savedMail);
     }
-
     @PostMapping("/mail/login")
-    ResponseEntity<Mail> log_in(@RequestBody DTO_mail m) {
-        Mail mail = new Mail.builder().email(m.getEmail()).build();
-        Mail DB_mail = mailService.log_in(mail);
-        if (DB_mail.getPassword().equals(m.getPassword()))
+    ResponseEntity<Mail> log_in(@RequestBody DTO_mail m){
+        Mail mail=new Mail.builder().email(m.getEmail()).build();
+        Mail DB_mail= mailService.log_in(mail);
+        if(DB_mail.getPassword().equals(m.getPassword()))
             return ResponseEntity.ok(DB_mail);
         else throw new RuntimeException("Wrong Password");
     }
+
     @GetMapping("/check/{userName}")
     public void checkUserExists(@PathVariable String[] userName){
         Set<String> uniqueUserNames = new HashSet<>(Arrays.asList(userName));
@@ -218,7 +212,7 @@ public class Mail_controller {
         Mail mail2;
         try {
             mail2 = mailService.log_in((Mail) user2);
-        } catch (Exception e) {
+        } catch(Exception e) {
             throw new RuntimeException("User Not Found");
         }
 
@@ -245,42 +239,25 @@ public class Mail_controller {
                 .attachments(attachments)
                 .build();
         mail1.addout(m1);
-        return mailService.uptade(mail1);
+        return mailService.uptade( mail1);
     }
-
     @PostMapping("/sort")
-    public ResponseEntity<Mail> sort(@RequestBody Sort_DAO obj) {
+    public ResponseEntity<Mail> sort(@RequestBody Sort_DAO obj){
 
-        return ResponseEntity.ok(mailService.sort(obj.sortField, obj.isAsc, obj.id));
+          return ResponseEntity.ok(mailService.sort(obj.sortField, obj.isAsc, obj.id));
     }
-
     @DeleteMapping("/delete30/{id}")
-    public void check(@PathVariable String userName) {
-        Mail m = mailService.log_in(new Mail.builder().email(userName).build());
-        List<Message> trash = m.getTrash();
-        Iterator<Message> i = trash.iterator();
-        while (i.hasNext()) {
-            Message tmp = i.next();
-            if (tmp.getDeletedAt().plusDays(30).isAfter(LocalDateTime.now())) {
+    public void check(@PathVariable String userName){
+        Mail m=mailService.log_in(new Mail.builder().email(userName).build());
+        List<Message> trash=m.getTrash();
+        Iterator<Message> i=trash.iterator();
+        while (i.hasNext()){
+            Message tmp=i.next();
+            if(tmp.getDeletedAt().plusDays(30).isAfter(LocalDateTime.now())){
                 mailService.handleDeleteMessage(tmp.getId());
             }
         }
     }
 
-    @PutMapping("/filter")
-    public void filter(@RequestBody Filter_DTO filter) {
-       Mail m1=mailService.log_in(new Mail.builder().email(filter.receiver).build());
-       List<Message> messages=m1.getIn();
-       Criteria f=SubjectSender.getInstance(filter.subject, filter.Sender, messages);
-       List<Message> userList=f.meetCriteria();
-       List<UserFolder> u1=m1.getUserFolders();
-       Iterator<UserFolder> i=u1.iterator();
-       while (i.hasNext()){
-           UserFolder tmp=i.next();
-           if(tmp.getName().equals(filter.directory)){
-               tmp.addList(userList);
-           }
-       }
-       mailService.uptade(m1);
-    }
+
 }

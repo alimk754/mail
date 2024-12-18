@@ -28,6 +28,7 @@ CREATE TABLE message (
     toemail VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
     fromemail VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
     drafts  VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+    multi_recipients VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     deleted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_email) REFERENCES mail(id),

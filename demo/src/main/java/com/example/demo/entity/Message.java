@@ -48,6 +48,17 @@ public class Message implements Subscriber{
     @JsonFormat(pattern = "yyyy/MM/dd/HH:mm:ss")
     private LocalDateTime deletedAt;
 
+    @Column(name = "multi_recipients")
+    private String multiRecipients;
+
+    public String getMultiRecipients() {
+        return multiRecipients;
+    }
+
+    public void setMultiRecipients(String multiRecipients) {
+        this.multiRecipients = multiRecipients;
+    }
+
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Attachment> attachments = new ArrayList<>();
 

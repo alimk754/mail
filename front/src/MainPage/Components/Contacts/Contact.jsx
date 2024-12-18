@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Datacontext } from '../../../main';
-import { Plus } from 'lucide-react';
+import { Plus, ArrowUpDown } from 'lucide-react';
 import ContactList from './ContactList';
 import ContactForm from './ContactForm';
 import SearchContact from './SearchContact';
@@ -14,6 +14,7 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
   const [newContact, setNewContact] = useState({
     name: '',
     emails: [''],
@@ -41,16 +42,21 @@ const Contact = () => {
     setSearchTerm(term);
   };
 
-  const filteredContacts = contacts.filter(contact => {
-    const search = searchTerm;
-    return (
-      contact.name.includes(search)
-      //  ||
-      // (Array.isArray(contact.emails) 
-      //   ? contact.emails.some(email => email.includes(search))
-      //   : contact.emails.includes(search))
-    );
-  });
+  const handleSortChange = () => {
+    setSortOrder(prevOrder => prevOrder === 'asc' ? 'des' : 'asc');
+  };
+
+  const filteredAndSortedContacts = contacts
+    .filter(contact => {
+      const search = searchTerm;
+      return (
+        contact.name.includes(search)  
+      );
+    })
+    .sort((a, b) => {
+      const comparison = a.name.localeCompare(b.name);
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
 
   const handleAddContact = async () => {
     if (newContact.name && newContact.emails[0]) {
@@ -87,7 +93,7 @@ const Contact = () => {
   };
 
   const handleEditContact = (index) => {
-    const contact = contacts[index];
+    const contact = filteredAndSortedContacts[index];
     setEditIndex(index);
     setNewContact({
       name: contact.name,
@@ -105,7 +111,7 @@ const Contact = () => {
           name: newContact.name,
           emails: newContact.emails
         };
-        await contactService.updateContact(contacts[editIndex].id, payload);
+        await contactService.updateContact(filteredAndSortedContacts[editIndex].id, payload);
         await fetchContacts();
         handleClose();
       } catch (error) {
@@ -159,13 +165,21 @@ const Contact = () => {
           onSearch={handleSearch}
         />
         
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
           <button
             onClick={() => { setShowForm(true); setError(null); }}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
             <Plus className="h-4 w-4" />
             Add New Contact
+          </button>
+          
+          <button
+            onClick={handleSortChange}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+          >
+            <ArrowUpDown className="h-4 w-4" />
+            {sortOrder === 'asc' ? 'A to Z' : 'Z to A'}
           </button>
         </div>
       </div>
@@ -185,7 +199,7 @@ const Contact = () => {
       />
 
       <ContactList
-        contacts={filteredContacts.sort((a, b) => a.name.localeCompare(b.name))}
+        contacts={filteredAndSortedContacts}
         loading={loading}
         onEdit={handleEditContact}
         onDelete={handleDeleteContact}
@@ -193,4 +207,5 @@ const Contact = () => {
     </div>
   );
 };
+
 export default Contact;

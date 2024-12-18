@@ -8,49 +8,84 @@ import FileAttachment from '../../../Attachments/FileAttachment';
  import './ComposeForm.css';
  import { handlePageReload } from '../PageReload';
 
- const ComposeForm = ({to, from, importance, subject, content, attachments ,setAttachments,setImportance,set_content,set_subject,set_to}) => {
+ const ComposeForm = ({recipients, setRecipients, to, from, importance, subject, content, attachments ,setAttachments,setImportance,set_content,set_subject,set_to}) => {
   const {user,setUser}=useContext(Datacontext);
   const [error,setError]=useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const addRecipientField = () => {
+    setRecipients([...recipients, '']);
+  };
+
+  const deleteRecipientField = (indexToRemove) => {
+    // Prevent removing the first field
+    if (recipients.length > 1) {
+      const newRecipients = recipients.filter((_, index) => index !== indexToRemove);
+      setRecipients(newRecipients);
+      
+      // Update the 'to' prop with the first recipient
+      set_to(newRecipients[0] || '');
+    }
+  };
+
+  // Function to update a specific recipient
+  const updateRecipient = (index, value) => {
+    const newRecipients = [...recipients];
+    newRecipients[index] = value;
+    setRecipients(newRecipients);
+    
+    // Update the 'to' prop with the first recipient
+    set_to(newRecipients[0]);
+  };
+
   const handleClick = async (e) => {
     e.preventDefault();
-    if (!to.trim() || !subject.trim() || !content.trim()) {
+
+    const filteredRecipients = recipients.filter(rec => rec.trim() !== '');
+    if (filteredRecipients.length === 0 || !subject.trim() || !content.trim()) {
       setError("All fields are required");
       return;
     }
-    if (to === user.email) {
+    if (filteredRecipients.some(rec => rec === user.email)) {
       setError("You cannot send a message to yourself");
       return;
     }
-
-    setIsLoading(true);
-    try {
-      const response = await axios.put('http://localhost:8080/api/message', {
-        toemail: to,
-        fromemail: from,
-        message: content,
-        subject: subject,
-        importance: importance === "high" ? 10 : importance === "medium" ? 5 : 0,
-        attachments: attachments 
-      });
-  
-      if (response.status === 200) {
-        setError(null);
-        set_to('');
-        set_subject('');
-        set_content('');
-        setImportance('medium');
-        setAttachments([]);
-        console.log('successful:', response.data);
-        setUser(response.data);
-      }
-    } catch (error) {
+    try{
+      const res = await axios.get(`http://localhost:8080/api/check/${filteredRecipients}`)
+    }catch(error){
       setError(error.response.data.message);
-    } finally {
-      setIsLoading(false);
+      return;
+    }
+    setIsLoading(true);
+    for (const recipient of filteredRecipients) {
+      try {
+        const response = await axios.put('http://localhost:8080/api/message', {
+          toemail: recipient,
+          fromemail: from,
+          message: content,
+          subject: subject,
+          importance: importance === "high" ? 10 : importance === "medium" ? 5 : 0,
+          attachments: attachments 
+        });
+    
+        if (response.status === 200) {
+          setError(null);
+          set_to('');
+          set_subject('');
+          set_content('');
+          setImportance('medium');
+          setAttachments([]);
+          console.log('successful:', response.data);
+          setUser(response.data);
+        }
+      } catch (error) {
+        setError(error.response.data.message);
+      } finally {
+        setIsLoading(false);
+      }
     }
     handlePageReload(user , setUser);
+    setRecipients(['']);
   };
 
   const options = [
@@ -63,15 +98,49 @@ import FileAttachment from '../../../Attachments/FileAttachment';
     <div className="compose-container">
       <h3 className="compose-title">New Message</h3>
       <div className="form-container">
-        <div>
-          <input
-            type="text"
-            placeholder="To"
-            className="input-field"
-            onChange={(e)=>{set_to(e.target.value); setError(null)}}
-            value={to}
-            disabled={isLoading}
-          />
+      <div className="recipients-container">
+          {recipients.map((recipient, index) => (
+            <div key={index} className="recipient-input-container">
+              <input
+                type="text"
+                placeholder="To"
+                className="input-field"
+                onChange={(e) => {
+                  updateRecipient(index, e.target.value);
+                  setError(null);
+                }}
+                value={recipient}
+                disabled={isLoading}
+              />
+              {index === recipients.length - 1 && (
+                <button 
+                  className="add-recipient-btn"
+                  onClick={addRecipientField}
+                  type="button"
+                  disabled={isLoading}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </button>
+              )}
+              {/* Add delete button for additional recipient fields */}
+              {index > 0 && (
+                <button
+                  className="delete-recipient-btn"
+                  onClick={() => deleteRecipientField(index)}
+                  type="button"
+                  disabled={isLoading}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              )}
+            </div>
+          ))}
         </div>
         
         <div>

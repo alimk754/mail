@@ -1,7 +1,7 @@
 import SidebarButton from "./SidebarButton";
 import React,{useContext,useState} from "react";
 import { Datacontext } from "../../main";
-import {FileEdit, Mail, Trash2, Users, LogOut, Send, Menu, X,MessageCircle,PlusCircle } from "lucide-react";
+import {FileEdit, Mail, Trash2, Users, LogOut, Send, Menu, X,MessageCircle,PlusCircle,FolderPlus  } from "lucide-react";
 import { handlePageReload } from "./PageReload";
 import axios from "axios";
 
@@ -137,7 +137,7 @@ const Sidebar = ({
 
           {user.userFolders && user.userFolders.map((e) => (
             <SidebarButton
-              icon={MessageCircle}
+              icon={FolderPlus}
               key={e.id}
               label={e.name}
               active={activeSection === e.name}
