@@ -113,7 +113,7 @@ public class Mail_DAO_impl implements Mail_DAO{
     }
 
     @Override
-    public void removeContact(int id) {
+    public void removeContact(long id) {
         entityManager.remove(entityManager.find(Contact.class,id));
     }
 

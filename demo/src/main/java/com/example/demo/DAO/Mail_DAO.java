@@ -16,7 +16,7 @@ public interface Mail_DAO {
     void handleDeleteMessage(int id);
     Mail sort(String sortField,String Asc,String id);
     List<Message> Search(String type,String Like,String receiver);
-    void removeContact(int id);
+    void removeContact(long id);
     void removeFolder(int id);
 
 

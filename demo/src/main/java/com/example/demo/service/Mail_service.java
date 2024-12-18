@@ -68,7 +68,7 @@ public class Mail_service {
         return mail_dao.Search(type,Like,receiver);
     }
     @Transactional
-    public void removeContact(int id) {
+    public void removeContact(long id) {
         mail_dao.removeContact(id);
     }
 
