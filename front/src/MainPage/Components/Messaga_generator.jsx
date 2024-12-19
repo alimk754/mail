@@ -13,7 +13,8 @@ const MessageItem = ({
   message,
   handlePageReload,
   isSelected,
-  onSelect
+  onSelect,
+  onMessageUpdate
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { user, setUser } = useContext(Datacontext);
@@ -49,6 +50,7 @@ const MessageItem = ({
       const response = await axios.get(`http://localhost:8080/api/retrieve/${message.id}/${bool}/${checkUser}`);
       console.log('Full response:', response);
       console.log('Response data:', response.data);
+      onMessageUpdate(message.id)
     } catch (error) {
       console.error('Retrieve failed:', error.response ? error.response.data : error.message);
     }
@@ -70,10 +72,6 @@ const MessageItem = ({
       try {
         const response = await axios.delete(`http://localhost:8080/api/${message.id}/${bool}`);
         if (response.status === 200) {
-          // Success handling if needed
-          // console.log(' successful:', response.data);
-        // setUser(u=>response.data);
-        // console.log(user);
         } else
           console.error(' failed:', response.data.error);
       } catch (error) {
@@ -236,6 +234,18 @@ const MessageList = ({
   const [errorOcurred, setErrorOcurred] = useState(null);
   const [showDeleteOp, setShowDeleteOp] = useState(false);
 
+  const [currentMessages, setCurrentMessages] = useState(messages); //
+
+  React.useEffect(() => {
+    setCurrentMessages(messages);
+  }, [messages]);
+
+  const handleMessageUpdate = (messageId) => {//////////////////////////////////
+    setCurrentMessages(prevMessages => 
+      prevMessages.filter(message => message.id !== messageId)
+    );
+  };
+
   const handleSelectMessage = (messageId, isSelected) => {
     setSelectedMessages(prev => {
       const newSet = new Set(prev);
@@ -262,6 +272,11 @@ const MessageList = ({
       console.log(user.email);
       console.log(categoryName);
       const response = await axios.put(`http://localhost:8080/api/folder/${user.email}/${Array.from(selectedMessages)}/${categoryName}`);
+    
+      setCurrentMessages(prev => 
+        prev.filter(message => !selectedMessages.has(message.id))
+      );
+    
     }catch(error){
       setErrorOcurred(error.response.data.message);
       return;
@@ -291,7 +306,9 @@ const MessageList = ({
               await axios.delete(`http://localhost:8080/api/mess/aa/${Array.from(selectedMessages)}`);
             }
           
-        
+            setCurrentMessages(prev => 
+              prev.filter(message => !selectedMessages.has(message.id))
+            );
       
       setSelectedMessages(new Set());
       await handlePageReload(user, setUser);
@@ -304,7 +321,7 @@ const MessageList = ({
   return (
     <div className="space-y-4">
       
-      {messages.length > 0 && (
+      {currentMessages.length > 0 && (
         <div className="flex items-center justify-between mb-4 bg-white p-4 rounded-lg shadow">
           <div className="flex items-center space-x-4">
             <input
@@ -341,7 +358,7 @@ const MessageList = ({
       )}
 
       {/* Message List */}
-      {messages.map((message) => (
+      {currentMessages.map((message) => (//
         <MessageItem
           handleDeleteDraft={handleDeleteDraft}
           handleDoubleCLicking={handleDoubleCLicking}
@@ -351,6 +368,8 @@ const MessageList = ({
           handlePageReload={handlePageReload}
           isSelected={selectedMessages.has(message.id)}
           onSelect={handleSelectMessage}
+
+          onMessageUpdate={handleMessageUpdate} //////////////////////////////////
         />
       ))}
 
