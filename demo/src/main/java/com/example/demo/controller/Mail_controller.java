@@ -310,12 +310,15 @@ public class Mail_controller {
        List<Message> userList=f.meetCriteria();
        List<UserFolder> u1=m1.getUserFolders();
        Iterator<UserFolder> i=u1.iterator();
+       boolean flag= true;
        while (i.hasNext()){
            UserFolder tmp=i.next();
            if(tmp.getName().equals(filter.directory)){
                tmp.addList(userList);
+               flag=false;
            }
        }
+       if(flag) throw new RuntimeException("the folder doesn't exist");
        mailService.uptade(m1);
     }
 }

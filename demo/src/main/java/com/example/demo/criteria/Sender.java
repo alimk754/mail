@@ -29,6 +29,7 @@ public class Sender  implements  Criteria{
                 messageList.add(tmp);
             }
         }
+        if(!str.isEmpty()&&messageList.isEmpty()) throw new RuntimeException("one of the criteria doesn't exisit");
         return messageList;
     }
 }

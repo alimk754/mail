@@ -3,7 +3,7 @@ import MessageList from "./Messaga_generator";
 import { Datacontext } from "../../main";
 import { Service } from "./service";
 import axios from "axios";
-import { RefreshCcw, Trash2 } from "lucide-react";
+import { RefreshCcw, Trash2, X } from "lucide-react";
 import { handlePageReload } from "./PageReload";
 import WarningModel from "./WarinigModel";
 import RenameDiv from "./Rename_Button";
@@ -231,18 +231,7 @@ const ContentSection = ({
           cancelText="Cancel"
         />
       )}
-      {error && (
-        <div className="error-message">
-          <svg className="error-icon" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-              clipRule="evenodd"
-            />
-          </svg>
-          {error}
-        </div>
-      )}
+    
     </div>
   );
 };

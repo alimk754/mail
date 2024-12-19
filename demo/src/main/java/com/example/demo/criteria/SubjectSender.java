@@ -57,6 +57,10 @@ public class SubjectSender implements Criteria{
             instance.setList(m);
             instance.subjectCriteria=new SubjectCriteria(subject,m);
             instance.senderCriteria=new Sender(sender,m);
+            System.out.println(instance.Sender);
+            System.out.println(instance.subject);
+
+
         }
         return instance;
     }
