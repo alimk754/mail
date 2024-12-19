@@ -83,4 +83,12 @@ public class Folder_controller {
         mail.setUserFolders(list);
         mailService.uptade(mail);
     }
+    @DeleteMapping("/folders/{id}/{title}/{message_id}")
+    public void deletes(@PathVariable List<Integer> message_id,String id,String title){
+        Iterator<Integer> i=message_id.iterator();
+        while (i.hasNext()){
+            int tmp = i.next();
+            delete(tmp,title,id);
+        }
+    }
 }

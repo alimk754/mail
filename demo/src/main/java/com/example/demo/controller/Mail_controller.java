@@ -100,6 +100,14 @@ public class Mail_controller {
         mailService.handleDeleteMessage(id);
         mailService.uptade(m1);
     }
+    @DeleteMapping("/deleteDrafts/{id}")
+    public void deleteDrafts(@PathVariable List<Integer> id) {
+        Iterator<Integer> i= id.iterator();
+        while (i.hasNext()){
+            int tmp= i.next();
+            delete(tmp);
+        }
+    }
 
 
     @DeleteMapping("/{id}/{type}")
@@ -109,14 +117,23 @@ public class Mail_controller {
             message.notify_deleteallsender(id, message);
         else message.notify_deleteformesender(id, message);
         Mail m1 = new Mail.builder().email(message.getFROM()).build();
-        m1 = mailService.log_in((Mail) m1);
-        m1 = mailService.uptade((Mail) m1);
+        m1 = mailService.log_in(m1);
+        m1 = mailService.uptade(m1);
         Mail m2 = new Mail.builder().email(message.getTO()).build();
-        m2 = mailService.log_in((Mail) m2);
+        m2 = mailService.log_in(m2);
         if (type) m1.notify_deleteallsender(id, message);
         else m1.notify_deleteformereciver(id, message);
         mailService.uptademess(message);
         return m1;
+    }
+    @DeleteMapping("/aa/{id}/{type}")
+    public void semi_delete_out_Meseag(@PathVariable  List<Integer> id, @PathVariable boolean type) {
+        Iterator<Integer> i = id.iterator();
+        while (i.hasNext()) {
+            int tmp = i.next();
+            semi_delete_out_Meseage(tmp,type);
+        }
+
     }
 
     @DeleteMapping("/mess/{id}")
@@ -132,6 +149,14 @@ public class Mail_controller {
         mailService.uptademess(message);
 
         return m1;
+    }
+    @DeleteMapping("/mess/aa/{id}")
+    public void semi_delete_in_messag(@PathVariable List<Integer> id) {
+        Iterator<Integer> i = id.iterator();
+        while (i.hasNext()) {
+            int tmp = i.next();
+            semi_delete_in_message(tmp);
+        }
     }
 
     @PutMapping("/deleteALl")
@@ -156,14 +181,14 @@ public class Mail_controller {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable int id) {
+    public ResponseEntity<Mail> delete(@PathVariable int id) {
 
-
+        System.out.println(id);
         Message message = mailService.getbyid(id);
         Mail m1 = new Mail();
         if (message.arenull()) {
             mailService.handleDeleteMessage(message.getId());
-            return;
+            return ResponseEntity.notFound().build();
         } else if (message.issendernull()) {
             m1 = mailService.log_in(new Mail.builder().email(message.getFROM()).build());
             m1.deletetrash(id);
@@ -172,7 +197,16 @@ public class Mail_controller {
             m1 = mailService.log_in(new Mail.builder().email(message.getTO()).build());
             m1.deletetrash(id);
         }
-        mailService.uptade(m1);
+        System.out.println("bring deleted");
+        return ResponseEntity.ok(mailService.uptade(m1));
+    }
+    @DeleteMapping("/delet/{id}")
+    public void deleteApi(@PathVariable List<Integer> id) {
+        Iterator<Integer> i= id.iterator();
+        while (i.hasNext()){
+            int tmp= i.next();
+            delete(tmp);
+        }
     }
 
     @PostMapping("/mail")

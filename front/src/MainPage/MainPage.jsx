@@ -85,6 +85,7 @@ const MainPage = () => {
     set_content('');
     setImportance('medium');
     setAttachments([]);
+    setRecipients(['']);
   }
 
   const handleClickDraft = async () => {

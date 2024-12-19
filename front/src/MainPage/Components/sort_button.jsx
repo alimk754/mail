@@ -26,9 +26,9 @@ const SortingOptionsDiv = ({title}) => {
         console.log(' successful:', response.data);
         setUser(u=>response.data);
         console.log(user);
-       
+    
       } catch (error) {
-       
+        
       }
     setIsVisible(false);
   };
