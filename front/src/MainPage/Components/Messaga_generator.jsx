@@ -142,22 +142,23 @@ const MessageItem = ({
         </div>
 
         <div className="col-span-1">
-          {(title !== "Trash") ? (
-            <button
-              onClick={
-                title === "Sent Mails"
-                  ? () => setShowDeleteDiv(true)
-                  : title === "Drafts"
-                  ? () => setShowDeleteWar(true)
-                  : title !== "Inbox" && title !== "Sent Mails" && title !== "Trash" && title !== "Contacts"
-                  ? () => DeleteFromCategory()
-                  : () => DeleteMessage(false)
-              }
-              className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'
-            >
-              <Trash2 size={20} />
-            </button>
-          ) : (
+          {(title !== "Trash") ? <></>:
+          //   <button
+          //     onClick={
+          //       title === "Sent Mails"
+          //         ? () => setShowDeleteDiv(true)
+          //         : title === "Drafts"
+          //         ? () => setShowDeleteWar(true)
+          //         : title !== "Inbox" && title !== "Sent Mails" && title !== "Trash" && title !== "Contacts"
+          //         ? () => DeleteFromCategory()
+          //         : () => DeleteMessage(false)
+          //     }
+          //     className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'
+          //   >
+          //     {/* <Trash2 size={20} /> */}
+          //   </button>
+          // ) :
+           (
             <button
               onClick={retrieve}
               className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'
@@ -167,13 +168,13 @@ const MessageItem = ({
           )}
         </div>
 
-        {title === "Trash" && (
+        {/* {title === "Trash" && (
           <div className="col-span-1">
             <button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
               <Trash2 onClick={() => setShowDeleteWar(true)} size={20} />
             </button>
           </div>
-        )}
+        )} */}
 
         {/* Importance and Expand Icon Column */}
         <div className="col-span-1 flex items-center justify-end space-x-2">

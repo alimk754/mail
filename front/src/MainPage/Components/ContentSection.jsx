@@ -174,8 +174,8 @@ const ContentSection = ({
             onClick={() => handlePageReload(user, setUser)}
           >
             <RefreshCcw className="mr-2" size={18} />
-          </button>
-          {!(
+           </button>
+          {/* {!(
             title === "Inbox" ||
             title === "Contacts" ||
             title === "Sent Mails"
@@ -191,7 +191,7 @@ const ContentSection = ({
                 size={18}
               />
             </button>
-          )}
+          )}  */}
         </div>
       </div>
       <Service
