@@ -176,9 +176,42 @@ const MessageItem = ({
 
       {isExpanded && (
         <div className="p-4 bg-gray-100 border-t">
-          <div className="mb-2">
-            <MessageAttachments attachments={message.attachments} />
-            <p className="text-gray-700 break-all">{message.message}</p>
+          {/* Message Details Card */}
+          <div className="bg-white rounded-lg p-4 mb-4 shadow-sm">
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <User className="text-gray-500" size={16} />
+                  <span className="text-sm text-gray-600">From:</span>
+                  <span className="font-medium">
+                    {user.email === message.from ? "You" : message.from}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <User className="text-gray-500" size={16} />
+                  <span className="text-sm text-gray-600">To:</span>
+                  <span className="font-medium">
+                    {user.email === message.to ? "You" : message.to}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="text-sm text-gray-600">Subject:</span>
+                  <span className="font-medium">{message.subject}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Clock className="text-gray-500" size={16} />
+                  <span className="text-sm text-gray-600">Sent:</span>
+                  <span className="font-medium">{message.createdAt}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="border-t pt-4">
+              <MessageAttachments attachments={message.attachments} />
+              <p className="text-gray-700 break-all whitespace-pre-wrap">{message.message}</p>
+            </div>
           </div>
         </div>
       )}
