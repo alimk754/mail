@@ -60,7 +60,7 @@ const MessageAttachments = ({ attachments }) => {
 
   return (
     <>
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 border-b pb-8 space-y-2">
         <h4 className="text-sm font-semibold text-gray-700 mb-2">Attachments:</h4>
         <div className="grid grid-cols-1 gap-2">
           {attachments.map((attachment, index) => (

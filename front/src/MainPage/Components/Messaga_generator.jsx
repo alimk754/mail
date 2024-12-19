@@ -208,7 +208,7 @@ const MessageItem = ({
               </div>
             </div>
             
-            <div className="border-t pt-4">
+            <div className="border-t pt-2">
               <MessageAttachments attachments={message.attachments} />
               <p className="text-gray-700 break-all whitespace-pre-wrap">{message.message}</p>
             </div>
