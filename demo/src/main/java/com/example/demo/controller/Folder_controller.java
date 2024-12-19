@@ -8,6 +8,7 @@ import com.example.demo.service.Mail_service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +24,28 @@ public class Folder_controller {
         m.addFolder(u);
         mailService.uptade(m);
         return;
+    }
+    @PutMapping("/{userName}/{id}/{Category}")
+    public void addLists(@PathVariable String userName,@PathVariable String Category,@PathVariable List<Integer> id){
+        Iterator<Integer> i= id.iterator();
+        Mail m=mailService.log_in(new Mail.builder().email(userName).build());
+        List<UserFolder> userFolders=m.getUserFolders();
+        List<Message> messageList=new ArrayList<>();
+        while (i.hasNext()){
+            int tmp=i.next();
+            messageList.add(mailService.getbyid(tmp));
+        }
+        Iterator<UserFolder> iterator=userFolders.iterator();
+        boolean flag=true;
+        while (iterator.hasNext()){
+            UserFolder tmp=iterator.next();
+            if(tmp.getName().equals(Category)){
+                tmp.addList(messageList);
+                flag=false;
+            }
+        }
+        if(flag) throw new RuntimeException("Category doesn't exist");
+        mailService.uptade(m);
     }
     @DeleteMapping("/delete/{id}/{userName}")
     public void delete(@PathVariable String id,@PathVariable String userName){
@@ -84,7 +107,7 @@ public class Folder_controller {
         mailService.uptade(mail);
     }
     @DeleteMapping("/folders/{id}/{title}/{message_id}")
-    public void deletes(@PathVariable List<Integer> message_id,String id,String title){
+    public void deletes(@PathVariable List<Integer> message_id,@PathVariable String id,@PathVariable String title){
         Iterator<Integer> i=message_id.iterator();
         while (i.hasNext()){
             int tmp = i.next();

@@ -154,7 +154,9 @@ const ContentSection = ({
       <div className="flex items-center text-gray-500 font-medium text-sm justify-between">
         <div className="flex items-center gap-4">
           <h3 className="text-2xl font-bold text-gray-800 mb-6">{title}</h3>
-          {title !== "Contacts" &&
+        </div>
+        <div className="flex">
+        {title !== "Contacts" &&
           title !== "Inbox" &&
           title !== "Sent Mails" &&
           title !== "Trash" &&
@@ -167,8 +169,6 @@ const ContentSection = ({
           ) : (
             <></>
           )}
-        </div>
-        <div className="flex">
           <button
             className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500"
             onClick={() => handlePageReload(user, setUser)}

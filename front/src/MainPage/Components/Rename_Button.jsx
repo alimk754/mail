@@ -29,7 +29,7 @@ const RenameDiv = ({title,navigateSection,setError}) => {
     <div className="relative">
       <button 
         onClick={() => setIsVisible(!isVisible)}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+        className="bg-blue-500 mr-4 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
       >
         Rename
       </button>

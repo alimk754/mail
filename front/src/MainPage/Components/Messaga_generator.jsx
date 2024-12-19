@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Clock, User, ChevronDown, ChevronUp, Trash2, Undo } from 'lucide-react';
+import { Clock, User, ChevronDown, ChevronUp, Trash2, Undo, Move } from 'lucide-react';
 import { Datacontext } from '../../main';
 import axios from 'axios';
 import MessageAttachments from '../../Attachments/MessageAttachment';
@@ -247,11 +247,15 @@ const MessageList = ({
   handleDoubleCLicking,
   title,
   messages,
-  handlePageReload
+  handlePageReload,
 }) => {
   const [selectedMessages, setSelectedMessages] = useState(new Set());
   const [showBulkDeleteWarning, setShowBulkDeleteWarning] = useState(false);
   const { user, setUser } = useContext(Datacontext);
+  const [showMoveOptions, setShowMoveOptions] = useState(false);
+  const [categoryName, setCategoryName] = useState('');
+  const [errorOcurred, setErrorOcurred] = useState(null);
+  const [showDeleteOp, setShowDeleteOp] = useState(false);
 
   const handleSelectMessage = (messageId, isSelected) => {
     setSelectedMessages(prev => {
@@ -273,7 +277,23 @@ const MessageList = ({
     }
   };
 
-  const handleBulkDelete = async () => {
+  const handleBulkMove = async () => {
+    try{
+      console.log(selectedMessages);
+      console.log(user.email);
+      console.log(categoryName);
+      const response = await axios.put(`http://localhost:8080/api/folder/${user.email}/${Array.from(selectedMessages)}/${categoryName}`);
+    }catch(error){
+      setErrorOcurred(error.response.data.message);
+      return;
+    }
+    setShowMoveOptions(false);
+    setSelectedMessages(new Set());
+    setCategoryName('');
+    handlePageReload(user, setUser);
+  };
+
+  const handleBulkDelete = async (bool = false) => {
     console.log(selectedMessages);
 
     try {
@@ -286,7 +306,8 @@ const MessageList = ({
           } else if (title !== "Inbox" && title !== "Sent Mails" && title !== "Draft") {
             await axios.delete(`http://localhost:8080/api/folder/folders/${user.email}/${title}/${Array.from(selectedMessages)}`);
           } else if (title==="Sent Mails") {
-              await axios.delete(`http://localhost:8080/api/aa/${Array.from(selectedMessages)}/false`);
+              await axios.delete(`http://localhost:8080/api/aa/${Array.from(selectedMessages)}/${bool}`);
+              setShowDeleteOp(false);
             } else {
               await axios.delete(`http://localhost:8080/api/mess/aa/${Array.from(selectedMessages)}`);
             }
@@ -319,13 +340,23 @@ const MessageList = ({
           </div>
 
           {selectedMessages.size > 0 && (
-            <button
-              onClick={() => setShowBulkDeleteWarning(true)}
-              className="flex items-center space-x-2 text-red-600 hover:text-red-700"
-            >
-              <Trash2 size={16} />
-              <span>Delete Selected</span>
-            </button>
+            <div className="flex items-center space-x-4">
+              {(title !== "Trash" && title !== "Drafts") && <button
+                onClick={() => setShowMoveOptions(true)}
+                className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
+              >
+                <Move size={16} />
+                <span>Move Selected</span>
+              </button>}
+              
+              <button
+                onClick={(title === "Sent Mails") ? () => setShowDeleteOp(true) : () => setShowBulkDeleteWarning(true)}
+                className="flex items-center space-x-2 text-red-600 hover:text-red-700"
+              >
+                <Trash2 size={16} />
+                <span>Delete Selected</span>
+              </button>
+            </div>
           )}
         </div>
       )}
@@ -344,8 +375,7 @@ const MessageList = ({
         />
       ))}
 
-      
-      <WarningModel
+      {(title !== "Sent Mails") && <WarningModel
         isOpen={showBulkDeleteWarning}
         onClose={() => setShowBulkDeleteWarning(false)}
         onConfirm={handleBulkDelete}
@@ -353,7 +383,68 @@ const MessageList = ({
         message={`Are you sure you want to delete ${selectedMessages.size} selected message(s)?`}
         confirmText="Yes, Delete All"
         cancelText="Cancel"
-      />
+      />}
+
+      {(title === "Sent Mails")
+      && showDeleteOp && <DeleteOptions
+        onClose={() => setShowDeleteOp(false)}
+        onDeleteForMe={() => handleBulkDelete(false)}
+        onDeleteForEveryone={() => handleBulkDelete(true)}
+        />}
+
+      {/* Move Options Modal */}
+      {showMoveOptions && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="bg-white p-6 rounded-lg shadow-xl z-50 w-96">
+            <h3 className="text-lg font-bold mb-4">Move to Category</h3>
+            <div className="space-y-4">
+              <input
+                type="text"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                placeholder="Enter category name"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {errorOcurred && (
+        <div className="error-message mt-2 flex items-center">
+          <svg className="error-icon" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {errorOcurred}
+        </div>
+      )}
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => {
+                    setShowMoveOptions(false);
+                    setCategoryName('');
+                    setSelectedMessages(new Set());
+                  }}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleBulkMove}
+                  disabled={!categoryName.trim()}
+                  className={`px-4 py-2 text-white rounded ${
+                    categoryName.trim() 
+                      ? 'bg-blue-600 hover:bg-blue-700' 
+                      : 'bg-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
