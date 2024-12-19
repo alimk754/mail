@@ -3,12 +3,14 @@ import React from 'react';
 const SubmitButton = ({ children = 'Sign up',error }) => {
   return (
     <div className="mt-8">
+      <div className='flex justify-center'>
       <button 
         type="submit" 
-        className="py-3 px-6 text-sm tracking-wider font-semibold rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
+        className="py-3 px-14 text-sm tracking-wider font-semibold rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
       >
         {children}
       </button>
+      </div>
       {error && (
         <div className="mt-3 text-sm bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded flex items-center">
           <svg
