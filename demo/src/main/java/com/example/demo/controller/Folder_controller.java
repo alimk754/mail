@@ -114,27 +114,5 @@ public class Folder_controller {
             delete(tmp,title,id);
         }
     }
-    @PutMapping("/{userName}/{id}/{Category}")
-    public void addLists(@PathVariable String userName,@PathVariable String Category,@PathVariable List<Integer> id){
-        Iterator<Integer> i= id.iterator();
-        Mail m=mailService.log_in(new Mail.builder().email(userName).build());
-        List<UserFolder> userFolders=m.getUserFolders();
-        List<Message> messageList=new ArrayList<>();
-        while (i.hasNext()){
-            int tmp=i.next();
-            messageList.add(mailService.getbyid(tmp));
-        }
-        Iterator<UserFolder> iterator=userFolders.iterator();
-        boolean flag=true;
-        while (iterator.hasNext()){
-            UserFolder tmp=iterator.next();
-            if(tmp.getName().equals(Category)){
-                tmp.addList(messageList);
-                flag=false;
-            }
-        }
-        if(flag) throw new RuntimeException("doesn't exist");
-        mailService.uptade(m);
-    }
 
 }
