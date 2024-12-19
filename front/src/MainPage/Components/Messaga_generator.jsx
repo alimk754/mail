@@ -128,8 +128,8 @@ const MessageItem = ({
           </span>
         </div>
 
-        {/* Subject Column */}
-        <div className={title === "Trash" ? "col-span-2" : "col-span-3"}>
+        {/* Subject Column - Adjusted for Trash view */}
+        <div className={`${title === "Trash" ? "col-span-2" : "col-span-3"} overflow-hidden`}>
           <h3 className="text-lg font-bold text-gray-800 truncate">
             Subject: {message.subject}
           </h3>
@@ -141,40 +141,20 @@ const MessageItem = ({
           <span className="truncate">{message.createdAt}</span>
         </div>
 
-        <div className="col-span-1">
-          {(title !== "Trash") ? <></>:
-          //   <button
-          //     onClick={
-          //       title === "Sent Mails"
-          //         ? () => setShowDeleteDiv(true)
-          //         : title === "Drafts"
-          //         ? () => setShowDeleteWar(true)
-          //         : title !== "Inbox" && title !== "Sent Mails" && title !== "Trash" && title !== "Contacts"
-          //         ? () => DeleteFromCategory()
-          //         : () => DeleteMessage(false)
-          //     }
-          //     className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'
-          //   >
-          //     {/* <Trash2 size={20} /> */}
-          //   </button>
-          // ) :
-           (
-            <button
-              onClick={retrieve}
-              className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500'
-            >
-              <Undo size={20} />
-            </button>
-          )}
+        {/* Action Buttons Column - Adjusted for Trash view */}
+        <div className={`${title === "Trash" ? "col-span-2" : "col-span-1"} flex justify-end space-x-2`}>
+          {title === "Trash" ? (
+            <>
+              <button
+                onClick={retrieve}
+                className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500"
+              >
+                <Undo size={20} />
+              </button>
+              
+            </>
+          ) : null}
         </div>
-
-        {/* {title === "Trash" && (
-          <div className="col-span-1">
-            <button className='text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500'>
-              <Trash2 onClick={() => setShowDeleteWar(true)} size={20} />
-            </button>
-          </div>
-        )} */}
 
         {/* Importance and Expand Icon Column */}
         <div className="col-span-1 flex items-center justify-end space-x-2">
@@ -184,12 +164,12 @@ const MessageItem = ({
           />
           {isExpanded ? (
             <ChevronUp
-              className='cursor-pointer transition-all duration-300 ease-in-out transform hover:text-red-500 hover:scale-110'
+              className="cursor-pointer transition-all duration-300 ease-in-out transform hover:text-red-500 hover:scale-110"
               onClick={() => setIsExpanded(!isExpanded)}
             />
           ) : (
             <ChevronDown
-              className='cursor-pointer transition-all duration-300 ease-in-out transform hover:text-blue-500 hover:scale-110'
+              className="cursor-pointer transition-all duration-300 ease-in-out transform hover:text-blue-500 hover:scale-110"
               onClick={() => setIsExpanded(!isExpanded)}
             />
           )}
@@ -205,7 +185,7 @@ const MessageItem = ({
         </div>
       )}
 
-      {/* Warning Modal for Drafts */}
+      {/* Modals */}
       {title === "Drafts" && (
         <WarningModel
           isOpen={showDeleteWar}
@@ -218,7 +198,6 @@ const MessageItem = ({
         />
       )}
 
-      {/* Warning Modal for Trash */}
       {title !== "Drafts" && (
         <WarningModel
           isOpen={showDeleteWar}
@@ -231,7 +210,6 @@ const MessageItem = ({
         />
       )}
 
-      {/* Delete Options Modal */}
       {showDeleteDiv && (
         <DeleteOptions
           onClose={() => setShowDeleteDiv(false)}

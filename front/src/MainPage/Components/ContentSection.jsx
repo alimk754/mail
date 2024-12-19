@@ -56,7 +56,7 @@ const ContentSection = ({
     } else {
       const searchValue = value;
       const searchResults = currentMessages.filter((message) => {
-        // console.log(message);
+
         switch (searchBy) {
           case "subject":
             return message.subject?.includes(searchValue);
@@ -175,23 +175,7 @@ const ContentSection = ({
           >
             <RefreshCcw className="mr-2" size={18} />
            </button>
-          {/* {!(
-            title === "Inbox" ||
-            title === "Contacts" ||
-            title === "Sent Mails"
-          ) && (
-            <button className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500">
-              <Trash2
-                onClick={
-                  title === "Trash" || title === "Drafts"
-                    ? () => setShowWarining(true)
-                    : deleteCategory
-                }
-                className="mr-2"
-                size={18}
-              />
-            </button>
-          )}  */}
+          
         </div>
       </div>
       <Service
@@ -224,7 +208,7 @@ const ContentSection = ({
         />
       </div>
 
-      {/* Conditional Warning Div */}
+      
       {title === "Trash" && (
         <WarningModel
           isOpen={showWarning}
