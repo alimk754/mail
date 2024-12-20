@@ -193,8 +193,7 @@ public class Message implements Subscriber{
 
     @Override
     public void notify_deleteformesender(int id, Message m) {
-        this.setSender(null);
-        setDeletedAt(LocalDateTime.now());
+        this.setSender(null);setDeletedAt(LocalDateTime.now());
     }
 
     @Override
