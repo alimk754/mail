@@ -28,12 +28,13 @@ const MainPage = () => {
   const [subject,set_subject]=useState("");
   const [recipients, setRecipients] = useState([to || '']);
 
+  const [comeFromDraft,setComeFromDraft]=useState(false);
+
 
 
 
   const handleDoubleCLicking = (message) => {
     try{
-      console.log(message);
       setActiveSection('compose');
       set_to(message.to);
       set_from(message.from);
@@ -41,11 +42,9 @@ const MainPage = () => {
       set_content(message.message);
       set_subject(message.subject);
       setAttachments(message.attachments);
-      console.log(message.importance);
       setImportance((message.importance === 0) ? "low" : ((message.importance === 5) ? "medium" : "high"));
-      console.log(message)
-
       handleDeleteDraft(message.id);
+      setComeFromDraft(true);
     }catch(error){
       console.error(error);
     }
@@ -204,7 +203,7 @@ const MainPage = () => {
           {activeSection === 'compose' && <ComposeForm recipients={recipients} setRecipients={setRecipients}
           to={to} set_to={set_to} from={from} set_from={set_from} content={content} set_content={set_content} subject={subject}
           set_subject={set_subject} importance={importance} setImportance={setImportance} attachments={attachments} 
-          setAttachments={setAttachments}/>}
+          setAttachments={setAttachments} setComeFromDraft={setComeFromDraft} comeFromDraft={comeFromDraft}/>}
         </div>
       </div>
     </div>

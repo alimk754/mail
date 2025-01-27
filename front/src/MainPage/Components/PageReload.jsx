@@ -1,4 +1,3 @@
-// src/utils/apiUtils.js
 import axios from 'axios';
 import { useContext } from 'react';
 import { Datacontext } from '../../main';

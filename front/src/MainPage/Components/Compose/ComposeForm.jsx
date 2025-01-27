@@ -7,8 +7,9 @@ import { Datacontext } from '../../../main';
 import FileAttachment from '../../../Attachments/FileAttachment';
  import './ComposeForm.css';
  import { handlePageReload } from '../PageReload';
+import MessageAttachments from '../../../Attachments/MessageAttachment';
 
- const ComposeForm = ({recipients, setRecipients, to, from, importance, subject, content, attachments ,setAttachments,setImportance,set_content,set_subject,set_to}) => {
+ const ComposeForm = ({recipients, setRecipients, to, from, importance, subject, content, attachments ,setAttachments,setImportance,set_content,set_subject,set_to,setComeFromDraft,comeFromDraft}) => {
   const {user,setUser}=useContext(Datacontext);
   const [error,setError]=useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -190,13 +191,18 @@ import FileAttachment from '../../../Attachments/FileAttachment';
           </div>
         </div>
 
+
         <FileAttachment 
           attachments={attachments}
           setAttachments={setAttachments}
           error={error}
           setError={setError}
           disabled={isLoading}
-        />
+          comeFromDraft={comeFromDraft}
+          setComeFromDraft={setComeFromDraft}
+        /> 
+
+        
 
         <div>
           <textarea

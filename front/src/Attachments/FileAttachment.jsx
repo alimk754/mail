@@ -2,8 +2,9 @@
 import React, { useRef, useState } from 'react';
 import FilePreview from './FilePreview';
 import { Paperclip, X, File, Image, FileText, Video, Eye } from 'lucide-react';
+import MessageAttachments from './MessageAttachment';
 
-const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
+const FileAttachment = ({ attachments, setAttachments, error, setError,setComeFromDraft,comeFromDraft }) => {
   const maxFileSize = 200 * 1024 * 1024;
   const fileInputRef = useRef(null);
   const [previewFile, setPreviewFile] = useState(null);
@@ -101,7 +102,10 @@ const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
         )}
       </div>
 
-      {attachments.length > 0 && (
+     
+      {attachments.length > 0 &&!comeFromDraft&& (
+        
+
         <div className="space-y-2">
           {attachments.map((attachment, index) => {
             const FileIcon = getFileIcon(attachment.contentType);
@@ -120,6 +124,10 @@ const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
+                 
+
+                  
+                  
                   <button
                     onClick={() => setPreviewFile(attachment.originalFile)}
                     className="text-gray-500 hover:text-blue-500 flex-shrink-0"
@@ -134,12 +142,25 @@ const FileAttachment = ({ attachments, setAttachments, error, setError }) => {
                   >
                     <X size={20} />
                   </button>
+                  
+                  
+                  
                 </div>
+                
               </div>
             );
           })}
         </div>
+        
       )}
+
+      {attachments.length > 0 &&comeFromDraft&& (
+        <MessageAttachments attachments={attachments} comeFromDraft={comeFromDraft} setComeFromDraft={setComeFromDraft} setAttachments={setAttachments} />
+      )
+
+      }
+      
+      
 
       {previewFile && (
         <FilePreview
