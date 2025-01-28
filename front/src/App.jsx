@@ -5,7 +5,6 @@ const App = () => {
   
   return (
     <LoginPage />
-        // <MainPage></MainPage>
   );
 };
 export default App;

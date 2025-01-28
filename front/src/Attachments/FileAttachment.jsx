@@ -25,7 +25,7 @@ const FileAttachment = ({ attachments, setAttachments, error, setError,setComeFr
         <AttachmentInCompose attachments={attachments}formatFileSize={formatFileSize}  setPreviewFile={setPreviewFile} setAttachments={setAttachments} setError={setError} fileInputRef={fileInputRef} />  
       )}
       {attachments.length > 0 &&comeFromDraft&& (
-        <MessageAttachments attachments={attachments} comeFromDraft={comeFromDraft} setComeFromDraft={setComeFromDraft} setAttachments={setAttachments} />
+        <MessageAttachments attachments={attachments} comeFromDraft={comeFromDraft} setComeFromDraft={setComeFromDraft} setAttachments={setAttachments} setError={setError}/>
       )}
 
       {previewFile && (

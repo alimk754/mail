@@ -2,7 +2,7 @@ import React, { useState,useRef } from "react";
 import { X,Download, Eye } from "lucide-react";
 import FilePreview from "./FilePreview";
 
-const MessageAttachments = ({ attachments,comeFromDraft,setComeFromDraft,setAttachments }) => {
+const MessageAttachments = ({ attachments,comeFromDraft,setComeFromDraft,setAttachments,setError }) => {
   const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
 

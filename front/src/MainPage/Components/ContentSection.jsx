@@ -3,9 +3,9 @@ import MessageList from "./Messaga_generator";
 import { Datacontext } from "../../main";
 import { Service } from "./service";
 import axios from "axios";
-import { RefreshCcw, Trash2, X } from "lucide-react";
+import { RefreshCcw} from "lucide-react";
 import { handlePageReload } from "./PageReload";
-import WarningModel from "./WarinigModel";
+import WarningModel from "./WarningModel";
 import RenameDiv from "./Rename_Button";
 const ContentSection = ({
   handleDeleteDraft,

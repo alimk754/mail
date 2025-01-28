@@ -4,7 +4,7 @@ import { Datacontext } from '../../main';
 import axios from 'axios';
 import MessageAttachments from '../../Attachments/MessageAttachment';
 import DeleteOptions from './DeleteOptions';
-import WarningModel from './WarinigModel';
+import WarningModel from './WarningModel';
 
 const MessageItem = ({
   handleDeleteDraft,

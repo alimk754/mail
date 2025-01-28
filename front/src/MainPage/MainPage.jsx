@@ -1,15 +1,14 @@
 import React, { useState,useContext } from 'react';
-import { replace, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import Sidebar from './Components/Sidebar';
 import ComposeForm from './Components/Compose/ComposeForm';
 import ContentSection from './Components/ContentSection';
 import { Datacontext } from '../main';
 import Contact from './Components/Contacts/Contact';
 
-import WarningModel from './Components/WarinigModel';
+import WarningModel from './Components/WarningModel';
 import axios from 'axios';
 import { handlePageReload } from './Components/PageReload';
-import { Search } from 'lucide-react';
 
 
 const MainPage = () => {
