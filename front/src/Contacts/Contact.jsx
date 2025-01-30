@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Datacontext } from '../../../main';
+import { Datacontext } from '../main';
 import { Plus, ArrowUpDown } from 'lucide-react';
 import ContactList from './ContactList';
 import ContactForm from './ContactForm';

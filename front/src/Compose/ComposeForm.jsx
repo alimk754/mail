@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { use } from 'react';
 import axios from 'axios';
-import { Datacontext } from '../../../main';
+import { Datacontext } from '../main';
 
 
-import FileAttachment from '../../../Attachments/FileAttachment';
+import FileAttachment from '../Attachments/FileAttachment';
  import './ComposeForm.css';
- import { handlePageReload } from '../PageReload';
-import MessageAttachments from '../../../Attachments/MessageAttachment';
+ import { handlePageReload } from '../MainPage/Components/PageReload';
+import MessageAttachments from '../Attachments/MessageAttachment';
 
  const ComposeForm = ({recipients, setRecipients, to, from, importance, subject, content, attachments ,setAttachments,setImportance,set_content,set_subject,set_to,setComeFromDraft,comeFromDraft}) => {
   const {user,setUser}=useContext(Datacontext);

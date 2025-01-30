@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import SignupPage from './Registeration/SignupPage';
-import MainPage from "./MainPage/MainPage";
+import MainPage from "./Contents/MainPage";
 
 export const Datacontext = createContext();
 

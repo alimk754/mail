@@ -4,17 +4,18 @@ import { Datacontext } from "../../main";
 import {FileEdit, Mail, Trash2, Users, LogOut, Send, Menu, X,MessageCircle,PlusCircle,FolderPlus  } from "lucide-react";
 import { handlePageReload } from "./PageReload";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({
   isSidebar,
   toggleSidebar,
   activeSection,
   navigateSection,
-  onLogout,
 }) => {
   const {user,setUser}=useContext(Datacontext);
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategory,setNewCategory] =useState("");
+   const navigate = useNavigate();
   const TrashClick=async ()=>{
     
     try {
@@ -54,6 +55,9 @@ const Sidebar = ({
       handlePageReload(user,setUser);
     }
     
+  };
+  const onLogout = () => {
+    navigate("/", { replace: true, state: { disableUndo: true } });
   };
   return (
     <div
