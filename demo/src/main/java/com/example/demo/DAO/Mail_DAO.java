@@ -9,9 +9,9 @@ import java.util.List;
 public interface Mail_DAO {
     Mail sign_up(Mail m);
     Mail log_in(Mail m);
-    Mail uptade(Mail m);
+    Mail update(Mail m);
     Message getbyid(int id);
-    Message uptademess(Message m);
+    Message updatemess(Message m);
     Contact getContactById(long id);
     void handleDeleteMessage(int id);
     Mail sort(String sortField,String Asc,String id);

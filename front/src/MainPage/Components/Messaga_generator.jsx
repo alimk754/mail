@@ -5,7 +5,7 @@ import axios from 'axios';
 import MessageAttachments from '../../Attachments/MessageAttachment';
 import DeleteOptions from './DeleteOptions';
 import WarningModel from './WarningModel';
-
+import { deleteAll } from '../../apiController/apiController';
 const MessageItem = ({
   handleDeleteDraft,
   handleDoubleCLicking,
@@ -321,34 +321,7 @@ const MessageList = ({
   };
 
   const handleBulkDelete = async (bool = false) => {
-    console.log(selectedMessages);
-
-    try {
-      if (title === "Trash") {
-        const response = await axios.delete(`http://localhost:8080/api/delet/${Array.from(selectedMessages)}`);
-        console.log(response);
-      }
-          else if (title === "Drafts") {
-            await axios.delete(`http://localhost:8080/api/deleteDrafts/${Array.from(selectedMessages)}`);
-          } else if (title !== "Inbox" && title !== "Sent Mails" && title !== "Draft") {
-            await axios.delete(`http://localhost:8080/api/folder/folders/${user.email}/${title}/${Array.from(selectedMessages)}`);
-          } else if (title==="Sent Mails") {
-              await axios.delete(`http://localhost:8080/api/aa/${Array.from(selectedMessages)}/${bool}`);
-              setShowDeleteOp(false);
-            } else {
-              await axios.delete(`http://localhost:8080/api/mess/aa/${Array.from(selectedMessages)}`);
-            }
-          
-            setCurrentMessages(prev => 
-              prev.filter(message => !selectedMessages.has(message.id))
-            );
-      
-      setSelectedMessages(new Set());
-      await handlePageReload(user, setUser);
-      setShowBulkDeleteWarning(false);
-    } catch (error) {
-      console.error('Bulk delete failed:', error);
-    }
+      deleteAll(selectedMessages,title,user,bool,setShowDeleteOp,setSelectedMessages,setShowBulkDeleteWarning,setCurrentMessages,setUser)
   };
 
   return (

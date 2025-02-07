@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS contact_emails;
  DROP TABLE IF EXISTS contact;
  DROP TABLE IF EXISTS attachment;

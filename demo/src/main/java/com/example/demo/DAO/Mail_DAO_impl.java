@@ -53,7 +53,7 @@ public class Mail_DAO_impl implements Mail_DAO{
     }
 
     @Override
-    public Mail uptade(Mail m) {
+    public Mail update(Mail m) {
         Mail mail=entityManager.merge(m);
         return mail;
     }
@@ -68,7 +68,7 @@ public class Mail_DAO_impl implements Mail_DAO{
     }
 
     @Override
-    public Message uptademess(Message m) {
+    public Message updatemess(Message m) {
         return entityManager.merge(m);
     }
 

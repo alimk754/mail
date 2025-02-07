@@ -29,8 +29,8 @@ public class Mail_service {
     }
 
     @Transactional
-    public Mail uptade(Mail m) {
-        return mail_dao.uptade(m);
+    public Mail update(Mail m) {
+        return mail_dao.update(m);
     }
 
     @Transactional
@@ -43,8 +43,8 @@ public class Mail_service {
     }
 
     @Transactional
-    public Message uptademess(Message m) {
-        return mail_dao.uptademess(m);
+    public Message updatemess(Message m) {
+        return mail_dao.updatemess(m);
     }
 
     @Transactional
