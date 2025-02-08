@@ -3,7 +3,7 @@ import MessageList from "./Messaga_generator";
 import { Datacontext } from "../../main";
 import { Service } from "./service";
 import { handleSearchChange as HandleSearchChange,getMessageList } from "../../apiController/SearchingController";
-import { RefreshCcw} from "lucide-react";
+import { RefreshCcw, Trash} from "lucide-react";
 import { handlePageReload } from "./PageReload";
 import WarningModel from "./WarningModel";
 import RenameDiv from "./Rename_Button";
@@ -66,13 +66,22 @@ const ContentSection = ({
           title !== "Sent Mails" &&
           title !== "Trash" &&
           title !== "Drafts" ? (
+            <>
             <RenameDiv
               setError={setError}
               title={title}
               navigateSection={navigateSection}
             />
+               <button
+            className="text-red-600 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-red-500"
+            onClick={deleteCategory}
+          >
+            <Trash className="mr-2" size={18} />
+           </button>
+            </>
           ) : (
             <></>
+            
           )}
           <button
             className="text-gray-800 font-bold py-2 px-4 rounded flex items-center transition-all duration-300 ease-in-out transform hover:scale-110 hover:text-blue-500"

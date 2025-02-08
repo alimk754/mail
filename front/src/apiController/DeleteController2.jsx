@@ -1,10 +1,10 @@
 import axios from "axios";
 import { handlePageReload } from "../MainPage/Components/PageReload";
-
+const BASE_URL="http://localhost:8080/api"
 export const HandleCategoryDelete=async (title,user,setUser,setError,navigateSection)=>{
     try {
         const response = await axios.delete(
-          `http://localhost:8080/api/folder/delete/${title}/${user.email}`
+          `${BASE_URL}/folder/delete/${title}/${user.email}`
         );
         console.log(response);
         if (response.status === 200) {
@@ -22,7 +22,7 @@ export const HandleCategoryDelete=async (title,user,setUser,setError,navigateSec
 export const HandleDeleteAllDrafts = async (user,setUser,setShowWarining) => {
     try {
       setShowWarining(false);
-      const response = await axios.put("http://localhost:8080/api/deleteALl", {
+      const response = await axios.put(`${BASE_URL}/deleteALl`, {
         drafts: user.drafts,
       });
       if (response.status === 200) {

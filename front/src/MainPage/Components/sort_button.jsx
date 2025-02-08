@@ -1,8 +1,7 @@
 import React, { useState,useContext } from 'react';
 import { Datacontext } from '../../main';
-import axios from 'axios';
-import { handlePageReload } from './PageReload';
-import { Contact } from 'lucide-react';
+import { Sort } from '../../apiController/SortController';
+
 const SortingOptionsDiv = ({title}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isAscending, setIsAscending] = useState(false);
@@ -20,17 +19,7 @@ const SortingOptionsDiv = ({title}) => {
   const [selectedSort, setSelectedSort] = useState(sortOptions[0].value);
 
   const handleSortSelect = async() => {
-    try {
-        const response = await axios.post(`http://localhost:8080/api/sort`,{id:user.email,isAsc:isAscending,sortField:selectedSort});
-        console.log(response);
-        console.log(' successful:', response.data);
-        setUser(u=>response.data);
-        console.log(user);
-    
-      } catch (error) {
-        
-      }
-    setIsVisible(false);
+    Sort(user,isAscending,selectedSort,setIsVisible);
   };
 
   return (

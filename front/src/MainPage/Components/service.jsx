@@ -1,6 +1,5 @@
 import { Search, Filter, SortAsc, X } from 'lucide-react';
 import SortingOptionsMenu from './sort_button';
-import RenameDiv from './Rename_Button';
 import FilterOptionsDiv from './FilterButton'
 
 export const Service = ({

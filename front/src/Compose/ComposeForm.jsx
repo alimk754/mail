@@ -1,13 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { use } from 'react';
-import axios from 'axios';
+import { sendMessage } from '../apiController/ComposeController';
 import { Datacontext } from '../main';
 
 
 import FileAttachment from '../Attachments/FileAttachment';
  import './ComposeForm.css';
- import { handlePageReload } from '../MainPage/Components/PageReload';
-import MessageAttachments from '../Attachments/MessageAttachment';
+
 
  const ComposeForm = ({recipients, setRecipients, to, from, importance, subject, content, attachments ,setAttachments,setImportance,set_content,set_subject,set_to,setComeFromDraft,comeFromDraft}) => {
   const {user,setUser}=useContext(Datacontext);
@@ -39,54 +37,12 @@ import MessageAttachments from '../Attachments/MessageAttachment';
     set_to(newRecipients[0]);
   };
 
-  const handleClick = async (e) => {
-    e.preventDefault();
-
-    const filteredRecipients = recipients.filter(rec => rec.trim() !== '');
-    if (filteredRecipients.length === 0 || !subject.trim() || !content.trim()) {
-      setError("All fields are required");
-      return;
-    }
-    if (filteredRecipients.some(rec => rec === user.email)) {
-      setError("You cannot send a message to yourself");
-      return;
-    }
-    try{
-      const res = await axios.get(`http://localhost:8080/api/check/${filteredRecipients}`)
-    }catch(error){
-      setError(error.response.data.message);
-      return;
-    }
-    setIsLoading(true);
-    for (const recipient of filteredRecipients) {
-      try {
-        const response = await axios.put('http://localhost:8080/api/message', {
-          toemail: recipient,
-          fromemail: from,
-          message: content,
-          subject: subject,
-          importance: importance === "high" ? 10 : importance === "medium" ? 5 : 0,
-          attachments: attachments 
-        });
-    
-        if (response.status === 200) {
-          setError(null);
-          set_to('');
-          set_subject('');
-          set_content('');
-          setImportance('medium');
-          setAttachments([]);
-          console.log('successful:', response.data);
-          setUser(response.data);
-        }
-      } catch (error) {
-        setError(error.response.data.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    handlePageReload(user , setUser);
-    setRecipients(['']);
+  const handleClick = async (e) => { 
+    sendMessage(e,recipients,subject,content,from
+      ,importance,attachments,user,setError,setIsLoading,set_to,
+      set_subject,set_content,setImportance,
+      setAttachments,setUser,setRecipients
+    )
   };
 
   const options = [

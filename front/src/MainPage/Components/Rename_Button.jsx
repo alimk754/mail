@@ -1,8 +1,6 @@
 import React, { useState,useContext } from 'react';
 import { Datacontext } from '../../main';
-import axios from 'axios';
-import { handlePageReload } from './PageReload';
-import { data } from 'react-router-dom';
+import { HandleRename } from '../../apiController/RenameController';
 const RenameDiv = ({title,navigateSection,setError}) => {
   const [isVisible, setIsVisible] = useState(false);
   const {user,setUser} =useContext(Datacontext);
@@ -12,17 +10,7 @@ const RenameDiv = ({title,navigateSection,setError}) => {
   const [selectedname, setSelected] = useState("");
 
   const handleRename = async() => {
-    try {
-        console.log(user.email,selectedname,title);
-        const response = await axios.put(`http://localhost:8080/api/folder/rename`,{email:user.email,name:selectedname,oldName:title});
-        setERror(null);
-        setIsVisible(false);
-        navigateSection(selectedname);
-        handlePageReload(user,setUser);
-      } catch (error) {
-        setERror(error.response.data.message);
-        
-      }
+      HandleRename(user,setERror,setIsVisible,navigateSection,selectedname,title,setUser)
   };
 
   return (

@@ -1,5 +1,5 @@
  import { handlePageReload } from "../MainPage/Components/PageReload";
- 
+
  export const handleSearchChange = (e,setSearchTerm,searchBy,setFilteredMessages) => {
     const value = e.target.value;
     setSearchTerm(value);

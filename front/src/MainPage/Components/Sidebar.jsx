@@ -2,9 +2,9 @@ import SidebarButton from "./SidebarButton";
 import React,{useContext,useState} from "react";
 import { Datacontext } from "../../main";
 import {FileEdit, Mail, Trash2, Users, LogOut, Send, Menu, X,MessageCircle,PlusCircle,FolderPlus  } from "lucide-react";
-import { handlePageReload } from "./PageReload";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { HandleAddCategory } from "../../apiController/AddCategory";
+import { TrashClick  as TrashClick2} from "../../apiController/TrashClick";
 
 const Sidebar = ({
   isSidebar,
@@ -17,44 +17,11 @@ const Sidebar = ({
   const [newCategory,setNewCategory] =useState("");
    const navigate = useNavigate();
   const TrashClick=async ()=>{
+    TrashClick2(user,setUser,navigateSection);
     
-    try {
-      const response = await axios.delete(`http://localhost:8080/api/delete30/${user.email}`);
-        if (response.status === 200) {
-          console.log('Login successful:');
-          
-        }else 
-          console.error('Login failed:');
-        
-      } catch (error) {
-        console.error('Login failed:', error);
-      }
-
-      handlePageReload(user,setUser);
-      navigateSection("trash");
   }
   const handleAddCategory = async () => {
-    if(newCategory.trim()){
-      console.log('Adding new category:', newCategory);
-      try {
-      const response = await axios.put('http://localhost:8080/api/folder/add', 
-         { email:user.email, name:newCategory }
-      );
-        if (response.status === 200) {
-          console.log('Login successful:');
-          
-        }else 
-          console.error('Login failed:');
-        
-      } catch (error) {
-        console.error('Login failed:', error);
-      }
-      
-      setNewCategory('');
-      setIsAddingCategory(false);
-      handlePageReload(user,setUser);
-    }
-    
+        HandleAddCategory(newCategory,user,setNewCategory,setIsAddingCategory,setUser);
   };
   const onLogout = () => {
     navigate("/", { replace: true, state: { disableUndo: true } });
@@ -90,22 +57,29 @@ const Sidebar = ({
           </button>
         </div>
         {isAddingCategory && isSidebar && (
-          <div className="mb-4 flex space-x">
-            <input
-              type="text"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              placeholder="New category name"
-              className="flex-grow p-2 border rounded"
-            />
-            <button
-              onClick={handleAddCategory}
-              className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
-            >
-              Add
-            </button>
-          </div>
-        )}
+  <div className="text-sm"> {/* Reduce font size for the entire sidebar */}
+  {isAddingCategory && isSidebar && (
+    <div className="mb-2 flex items-center gap-1">
+      <input
+        type="text"
+        value={newCategory}
+        onChange={(e) => setNewCategory(e.target.value)}
+        placeholder="Enter category name"
+        className="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all"
+        aria-label="New category name"
+      />
+      <button
+        onClick={handleAddCategory}
+        className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 focus:outline-none focus:ring-1 focus:ring-green-500 focus:ring-offset-1 transition-all"
+        aria-label="Add category"
+      >
+        Add
+      </button>
+    </div>
+  )}
+  {/* Other sidebar items (e.g., Compose, Inbox) */}
+</div>
+)}
 
 
         {isSidebar && (
