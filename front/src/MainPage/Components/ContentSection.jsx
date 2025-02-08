@@ -2,19 +2,18 @@ import React, { useState, useContext } from "react";
 import MessageList from "./Messaga_generator";
 import { Datacontext } from "../../main";
 import { Service } from "./service";
-import axios from "axios";
+import { handleSearchChange as HandleSearchChange,getMessageList } from "../../apiController/SearchingController";
 import { RefreshCcw} from "lucide-react";
 import { handlePageReload } from "./PageReload";
 import WarningModel from "./WarningModel";
 import RenameDiv from "./Rename_Button";
+import { handleDeleteAll as HandleDeleteAll } from "../../apiController/deleteController";
+import { HandleCategoryDelete,HandleDeleteAllDrafts } from "../../apiController/DeleteController2";
 const ContentSection = ({
   handleDeleteDraft,
   title,
-  children,
-  onSearch,
   onSort,
   onFilter,
-  searchPlaceholder = "Search...",
   sortLabel = "Sort",
   filterLabel = "Filter",
   handleDoubleCLicking,
@@ -28,125 +27,31 @@ const ContentSection = ({
   const [searchBy, setSearchBy] = useState("subject");
   const [error, setError] = useState(null);
 
-  const getMessageList = () => {
-    switch (title) {
-      case "Inbox":
-        return user.in || [];
-      case "Sent Mails":
-        return user.out || [];
-      case "Trash":
-        return user.trash || [];
-      case "Drafts":
-        return user.drafts || [];
-
-      default:
-        return messages || [];
-    }
-  };
-
   const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-
-    if (!searchBy) return;
-
-    const currentMessages = getMessageList();
-    if (value.trim() === "") {
-      setFilteredMessages(currentMessages);
-    } else {
-      const searchValue = value;
-      const searchResults = currentMessages.filter((message) => {
-
-        switch (searchBy) {
-          case "subject":
-            return message.subject?.includes(searchValue);
-          case "sender":
-            return message.from?.includes(searchValue);
-          case "receiver":
-            return message.to?.includes(searchValue);
-          case "content":
-            return message.message?.includes(searchValue);
-          case "time":
-            return message.createdAt?.includes(searchValue);
-          case "attachment":
-            if (!Array.isArray(message.attachments)) return false;
-            return message.attachments.some((attachment) =>
-              attachment?.fileName?.includes(searchValue)
-            );
-
-          case "importance":
-            let imp;
-            if (message.importance === 0) imp = "low";
-            else if (message.importance === 10) imp = "high";
-            else imp = "medium";
-            return imp?.includes(searchValue);
-          default:
-            return false;
-        }
-      });
-      setFilteredMessages(searchResults);
-    }
+    HandleSearchChange(e,setSearchTerm,searchBy,setFilteredMessages)
   };
 
   const handleSearchByChange = (value) => {
     setSearchBy(value);
 
     setSearchTerm("");
-    setFilteredMessages(getMessageList());
+    setFilteredMessages(getMessageList(title,user,messages));
   };
 
   const handleClearSearch = () => {
     setSearchTerm("");
-    setFilteredMessages(getMessageList());
+    setFilteredMessages(getMessageList(title,user,messages));
   };
 
   const handleDeleteAll = async (e) => {
-    try {
-      setShowWarining(false);
-      const response = await axios.put(
-        "http://localhost:8080/api/deleteALl",
-
-        { trash: user.trash }
-      );
-      if (response.status === 200) {
-        console.log("DeleteAll successful:");
-      } else console.error("DeleteAll failed:");
-    } catch (error) {
-      setError(error.response.data.message);
-    }
-    handlePageReload(user, setUser);
+    HandleDeleteAll(user,setUser,setShowWarining);
   };
   const handleDeleteAllDrafts = async (e) => {
-    try {
-      setShowWarining(false);
-      const response = await axios.put("http://localhost:8080/api/deleteALl", {
-        drafts: user.drafts,
-      });
-      if (response.status === 200) {
-        console.log("DeleteAll successful:");
-      } else console.error("DeleteAll failed:");
-    } catch (error) {
-      setError(error.response.data.message);
-    }
-    handlePageReload(user, setUser);
+    HandleDeleteAllDrafts(user,setUser,setShowWarining);
   };
 
   const deleteCategory = async () => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:8080/api/folder/delete/${title}/${user.email}`
-      );
-      console.log(response);
-      if (response.status === 200) {
-        console.log("Login successful:", response.data);
-        setUser((u) => response.data);
-        console.log(user);
-      } else console.error("Login failed:", response.data.error);
-    } catch (error) {
-      setError(error.response.data.message);
-    }
-    handlePageReload(user, setUser);
-    navigateSection("compose");
+   HandleCategoryDelete(title,user,setUser,setError,navigateSection);
   };
 
   return (
@@ -203,7 +108,7 @@ const ContentSection = ({
           handleDeleteDraft={handleDeleteDraft}
           handleDoubleCLicking={handleDoubleCLicking}
           title={title}
-          messages={searchTerm.trim() ? filteredMessages : getMessageList()}
+          messages={searchTerm.trim() ? filteredMessages : getMessageList(title,user,messages)}
           handlePageReload={() => handlePageReload(user, setUser)}
         />
       </div>

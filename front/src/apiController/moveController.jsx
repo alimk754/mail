@@ -21,8 +21,8 @@ export const MoveController = async (selectedMessages,user,categoryName,setCurre
     setCategoryName('');
     handlePageReload(user, setUser);
   };
-  export const retrieveService=async (message,user,onMessageUpdate)=>{
-    const retrieve = async () => {
+  export const retrieveService=async (message,user,onMessageUpdate,setUser)=>{
+
         try {
           let checkUser = (message.from === user.email);
           let bool = true;
@@ -37,4 +37,4 @@ export const MoveController = async (selectedMessages,user,categoryName,setCurre
         handlePageReload(user, setUser);
       };
     
-  }
+

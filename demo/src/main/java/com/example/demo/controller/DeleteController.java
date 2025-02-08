@@ -34,13 +34,9 @@ public class DeleteController {
         deleteService.deleteALl(m);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Mail> delete(@PathVariable int id) {
-        return deleteService.delete(id);
-    }
-    @DeleteMapping("/delet/{id}")
-    public void deleteApi(@PathVariable List<Integer> id) {
-        deleteService.deleteApi(id);
+    @DeleteMapping("/delet/{id}/{email}")
+    public void deleteApi(@PathVariable List<Integer> id,@PathVariable String email) {
+        deleteService.deleteApi(id,email);
     }
     @DeleteMapping("/delete1/{id}/{type}")
     void deleteSender(@PathVariable List<Integer> id,@PathVariable  boolean type){

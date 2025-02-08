@@ -131,7 +131,7 @@ const MessageList = ({
       && showDeleteOp && <DeleteOptions
         onClose={() => setShowDeleteOp(false)}
         onDeleteForMe={() => handleBulkDelete(false)}
-        onDeleteForEveryone={() => handleBulkDelete(true)}
+
         />}
 
       {/* Move Options Modal */}

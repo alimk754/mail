@@ -1,23 +1,24 @@
 import axios from "axios";
 import { handlePageReload } from "../MainPage/Components/PageReload";
+const BASE_URL="http://localhost:8080/api"
     async function bulkdraftDelete(selectedMessages){
-        await axios.delete(`http://localhost:8080/api/deleteDrafts/${Array.from(selectedMessages)}`);
+        await axios.delete(`${BASE_URL}/deleteDrafts/${Array.from(selectedMessages)}`);
     };
 
 
-    async function bulkDeleteTrash(selectedMessages){
-        await axios.delete(`http://localhost:8080/api/delet/${Array.from(selectedMessages)}`);
+    async function bulkDeleteTrash(selectedMessages,user){
+        await axios.delete(`${BASE_URL}/delet/${Array.from(selectedMessages)}/${user.email}`);
     };
 
 
     async function bulkDeleteSent(selectedMessages,bool,setShowDeleteOp){
-        await axios.delete(`http://localhost:8080/api/delete1/${Array.from(selectedMessages)}/${bool}`);
+        await axios.delete(`${BASE_URL}/delete1/${Array.from(selectedMessages)}/${bool}`);
         setShowDeleteOp(false);
     };
 
 
     async function bulkDeleteInbox(selectedMessages){
-        await axios.delete(`http://localhost:8080/api/delete2/${Array.from(selectedMessages)}`);
+        await axios.delete(`${BASE_URL}/delete2/${Array.from(selectedMessages)}`);
     };
 
 
@@ -37,7 +38,7 @@ import { handlePageReload } from "../MainPage/Components/PageReload";
     
             switch (title) {
                 case "Trash":
-                    await bulkDeleteTrash(selectedMessages);
+                    await bulkDeleteTrash(selectedMessages,user);
                     break;
                 case "Drafts":
                     await bulkdraftDelete(selectedMessages);
@@ -67,7 +68,7 @@ import { handlePageReload } from "../MainPage/Components/PageReload";
 
     export const deleteTrashService=async(message,user,setUser)=>{
         try {
-            const response = await axios.delete(`http://localhost:8080/api/delete/${message.id}`);
+            const response = await axios.delete(`${BASE_URL}/delete/${message.id}`);
           } catch (error) {
             console.error('delete failed');
           }
@@ -77,7 +78,7 @@ import { handlePageReload } from "../MainPage/Components/PageReload";
     export const deleteCategoryService=async (title,us)=>{
         try {
             const response = await axios.delete(
-              `http://localhost:8080/api/folder/delete/${title}/${user.email}`
+              `${BASE_URL}/folder/delete/${title}/${user.email}`
             );
             console.log(response);
             if (response.status === 200) {
@@ -91,4 +92,19 @@ import { handlePageReload } from "../MainPage/Components/PageReload";
           handlePageReload(user, setUser);
           navigateSection("compose");
     }
-    
+    export const handleDeleteAll=async(user,setUser,setShowWarining)=>{
+        try {
+            setShowWarining(false);
+            const response = await axios.put(
+              "${BASE_URL}/deleteALl",
+      
+              { trash: user.trash }
+            );
+            if (response.status === 200) {
+              console.log("DeleteAll successful:");
+            } else console.error("DeleteAll failed:");
+          } catch (error) {
+            setError(error.response.data.message);
+          }
+          handlePageReload(user, setUser);
+    }

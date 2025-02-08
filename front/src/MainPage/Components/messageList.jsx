@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Clock, User, ChevronDown, ChevronUp, Trash2, Undo, Move } from 'lucide-react';
 import { Datacontext } from '../../main';
-import axios from 'axios';
 import MessageAttachments from '../../Attachments/MessageAttachment';
 import DeleteOptions from './DeleteOptions';
 import WarningModel from './WarningModel';
@@ -12,7 +11,6 @@ const MessageItem = ({
   handleDoubleCLicking,
   title,
   message,
-  handlePageReload,
   isSelected,
   onSelect,
   onMessageUpdate
@@ -29,7 +27,7 @@ const MessageItem = ({
   };
 
   const retrieve = async () => {
-   retrieveService(message,user,onMessageUpdate);
+   retrieveService(message,user,onMessageUpdate,setUser);
   };
 
   const handleDeleteFromTrash = async () => {
@@ -189,7 +187,6 @@ const MessageItem = ({
         <DeleteOptions
           onClose={() => setShowDeleteDiv(false)}
           onDeleteForMe={() => DeleteMessage(false)}
-          onDeleteForEveryone={() => DeleteMessage(true)}
         />
       )}
     </div>

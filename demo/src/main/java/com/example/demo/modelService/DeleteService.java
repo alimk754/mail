@@ -107,36 +107,32 @@ public class DeleteService {
 
         if (!m.getTrash().isEmpty()) {
             for (Message mess : m.getTrash()) {
-                delete(mess.getId());
+                delete(mess.getId(), m.getEmail());
             }
         }
     }
 
 
-    public ResponseEntity<Mail> delete( int id) {
+    public ResponseEntity<Mail> delete(int id,String email) {
 
         System.out.println(id);
         Message message = mailService.getbyid(id);
-        Mail m1 = new Mail();
-        if (message.arenull()) {
-            mailService.handleDeleteMessage(message.getId());
-            return ResponseEntity.notFound().build();
-        } else if (message.issendernull()) {
-            m1 = mailService.log_in(new Mail.builder().email(message.getFROM()).build());
-            m1.deletetrash(id);
-        } else {
-
-            m1 = mailService.log_in(new Mail.builder().email(message.getTO()).build());
-            m1.deletetrash(id);
+        Mail m1 = mailService.log_in(new Mail.builder().email(email).build());
+        m1.deletetrash(id);
+        if(message.getFROM().equals(email)) message.setSender(null);
+        else message.setReciever(null);
+        if(message.arenull()){
+            mailService.handleDeleteMessage(id);
         }
-        System.out.println("bring deleted");
+        System.out.println("being deleted");
         return ResponseEntity.ok(mailService.update(m1));
     }
-    public void deleteApi( List<Integer> id) {
+    public void deleteApi( List<Integer> id,String email) {
         Iterator<Integer> i= id.iterator();
+
         while (i.hasNext()){
             int tmp= i.next();
-            delete(tmp);
+            delete(tmp,email);
         }
     }
 

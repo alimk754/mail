@@ -3,7 +3,6 @@ import React from 'react';
 const DeleteOptionsModal = ({ 
   onClose, 
   onDeleteForMe, 
-  onDeleteForEveryone 
 }) => {
   return (
     <div
@@ -21,14 +20,9 @@ const DeleteOptionsModal = ({
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             onClick={onDeleteForMe}
           >
-            Delete for Me
+            Delete
           </button>
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={onDeleteForEveryone}
-          >
-            Delete for Everyone
-          </button>
+          
           <button
             className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
             onClick={onClose}
