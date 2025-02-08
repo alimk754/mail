@@ -10,7 +10,7 @@ import { handlePageReload } from "../MainPage/Components/PageReload";
     };
 
 
-    async function bulkDeleteSentout(selectedMessages,bool,setShowDeleteOp){
+    async function bulkDeleteSent(selectedMessages,bool,setShowDeleteOp){
         await axios.delete(`http://localhost:8080/api/delete1/${Array.from(selectedMessages)}/${bool}`);
         setShowDeleteOp(false);
     };
@@ -40,7 +40,7 @@ import { handlePageReload } from "../MainPage/Components/PageReload";
                     await bulkDeleteTrash(selectedMessages);
                     break;
                 case "Drafts":
-                    await bulkDeleteDrafts(selectedMessages);
+                    await bulkdraftDelete(selectedMessages);
                     break;
                 case "Sent Mails":
                     await bulkDeleteSent(selectedMessages, bool, setShowDeleteOp);
@@ -63,3 +63,32 @@ import { handlePageReload } from "../MainPage/Components/PageReload";
             console.error("Bulk delete failed:", error);
         }
     }
+
+
+    export const deleteTrashService=async(message,user,setUser)=>{
+        try {
+            const response = await axios.delete(`http://localhost:8080/api/delete/${message.id}`);
+          } catch (error) {
+            console.error('delete failed');
+          }
+          handlePageReload(user, setUser);
+    }
+
+    export const deleteCategoryService=async (title,us)=>{
+        try {
+            const response = await axios.delete(
+              `http://localhost:8080/api/folder/delete/${title}/${user.email}`
+            );
+            console.log(response);
+            if (response.status === 200) {
+              console.log("Login successful:", response.data);
+              setUser((u) => response.data);
+              console.log(user);
+            } else console.error("Login failed:", response.data.error);
+          } catch (error) {
+            setError(error.response.data.message);
+          }
+          handlePageReload(user, setUser);
+          navigateSection("compose");
+    }
+    
