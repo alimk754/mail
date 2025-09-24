@@ -2,17 +2,21 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
 @Entity
 @Table(name="mail")
-public class Mail implements Subscriber{
+public class Mail implements Subscriber, UserDetails {
     @Id
     @Column(name = "id")
     private String email;
     @Column(name = "pass")
     private String password;
+    @Column(name="role")
+    private String role;
     @OneToMany(mappedBy = "reciever",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
@@ -162,9 +166,21 @@ public class Mail implements Subscriber{
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -216,6 +232,7 @@ public class Mail implements Subscriber{
     public static class builder{
         private String email;
         private String password;
+        private String role;
         private List <Message> in;
         private List <Message> out;
 
@@ -225,6 +242,10 @@ public class Mail implements Subscriber{
         }
         public builder email(String email1){
             email=email1;
+            return this;
+        }
+        public builder role(String role){
+            role=role;
             return this;
         }
         public builder in(List<Message> in){

@@ -7,7 +7,12 @@ const Draft = ({user,setUser,setActiveSection,set_to,set_from,setRecipients,set_
      const handleDeleteDraft = async (messageID) => {
         try {
           const response = await axios.delete(
-            `http://localhost:8080/api/deleteDraft/${messageID}`
+            `http://localhost:8080/api/deleteDraft/${messageID}`,{
+      auth:{
+        username: user.email,
+        password: user.password
+      }
+    }
           );
         } catch (error) {
           console.error(error);

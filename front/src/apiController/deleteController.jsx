@@ -2,23 +2,39 @@ import axios from "axios";
 import { handlePageReload } from "../MainPage/Components/PageReload";
 const BASE_URL="http://localhost:8080/api"
     async function bulkdraftDelete(selectedMessages){
-        await axios.delete(`${BASE_URL}/deleteDrafts/${Array.from(selectedMessages)}`);
+        await axios.delete(`${BASE_URL}/deleteDrafts/${Array.from(selectedMessages)}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
     };
 
 
     async function bulkDeleteTrash(selectedMessages,user){
-        await axios.delete(`${BASE_URL}/delet/${Array.from(selectedMessages)}/${user.email}`);
+        await axios.delete(`${BASE_URL}/delet/${Array.from(selectedMessages)}/${user.email}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
     };
 
 
     async function bulkDeleteSent(selectedMessages,bool,setShowDeleteOp){
-        await axios.delete(`${BASE_URL}/delete1/${Array.from(selectedMessages)}/${bool}`);
+        await axios.delete(`${BASE_URL}/delete1/${Array.from(selectedMessages)}/${bool}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
         setShowDeleteOp(false);
     };
 
 
     async function bulkDeleteInbox(selectedMessages){
-        await axios.delete(`${BASE_URL}/delete2/${Array.from(selectedMessages)}`);
+        await axios.delete(`${BASE_URL}/delete2/${Array.from(selectedMessages)}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
     };
 
 
@@ -38,20 +54,40 @@ const BASE_URL="http://localhost:8080/api"
     
             switch (title) {
                 case "Trash":
-                    await bulkDeleteTrash(selectedMessages,user);
+                    await bulkDeleteTrash(selectedMessages,user,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
                     break;
                 case "Drafts":
-                    await bulkdraftDelete(selectedMessages);
+                    await bulkdraftDelete(selectedMessages,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
                     break;
                 case "Sent Mails":
-                    await bulkDeleteSent(selectedMessages, bool, setShowDeleteOp);
+                    await bulkDeleteSent(selectedMessages, bool, setShowDeleteOp,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
                     break;
                 case "Inbox":
-                    await bulkDeleteInbox(selectedMessages);
+                    await bulkDeleteInbox(selectedMessages,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
                     break;
                 default:
                     // Custom folder deletion
-                    await axios.delete(`${BASE_URL}/folder/folders/${user.email}/${title}/${Array.from(selectedMessages)}`);
+                    await axios.delete(`${BASE_URL}/folder/folders/${user.email}/${title}/${Array.from(selectedMessages)}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
                     break;
             }
     
@@ -68,7 +104,11 @@ const BASE_URL="http://localhost:8080/api"
 
     export const deleteTrashService=async(message,user,setUser)=>{
         try {
-            const response = await axios.delete(`${BASE_URL}/delete/${message.id}`);
+            const response = await axios.delete(`${BASE_URL}/delete/${message.id}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
           } catch (error) {
             console.error('delete failed');
           }
@@ -78,7 +118,11 @@ const BASE_URL="http://localhost:8080/api"
     export const deleteCategoryService=async (title,us)=>{
         try {
             const response = await axios.delete(
-              `${BASE_URL}/folder/delete/${title}/${user.email}`
+              `${BASE_URL}/folder/delete/${title}/${user.email}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }}
             );
             console.log(response);
             if (response.status === 200) {
@@ -98,7 +142,11 @@ const BASE_URL="http://localhost:8080/api"
             const response = await axios.put(
               "${BASE_URL}/deleteALl",
       
-              { trash: user.trash }
+              { trash: user.trash },{
+        auth:{
+          username: user.email,
+          password: user.password
+        }}
             );
             if (response.status === 200) {
               console.log("DeleteAll successful:");

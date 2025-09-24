@@ -41,6 +41,7 @@ public class Mail_controller {
 
     @PutMapping("/message")
     Mail addin_message(@RequestBody DTO_mail obj) {
+
         return mailService.addin_message(obj);
     }
 
@@ -55,7 +56,9 @@ public class Mail_controller {
     }
 
     @PutMapping("/filter")
-    public void filter(@RequestBody Filter_DTO filter) {
+    public String filter(@RequestBody Filter_DTO filter) {
          mailService.filter(filter);
+         return "HELLO";
+
     }
 }

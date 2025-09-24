@@ -4,7 +4,11 @@ const BASE_URL="http://localhost:8080/api"
 export const HandleRename=async(user,setERror,setIsVisible,navigateSection,selectedname,title,setUser)=>{
 try {
     console.log(user.email,selectedname,title);
-    const response = await axios.put(`${BASE_URL}/folder/rename`,{email:user.email,name:selectedname,oldName:title});
+    const response = await axios.put(`${BASE_URL}/folder/rename`,{email:user.email,name:selectedname,oldName:title},{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
     setERror(null);
     setIsVisible(false);
     navigateSection(selectedname);

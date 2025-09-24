@@ -28,13 +28,20 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post('http://localhost:8080/api/mail/login', {email : formData.username, password : formData.password});
+    try {console.log(formData);
+      const response = await axios.post('http://localhost:8080/api/mail/login', {email : formData.username, password : formData.password} ,{
+        auth:{
+          username: formData.username,
+          password: formData.password
+        }});
+        
       console.log(response);
       if (response.status === 200) {
         setErrorMEssage(null);
         console.log('Login successful:', response.data);
         setUser(u=>response.data);
+        setUser(u=>({...u,password:formData.password}));
+
         console.log(user);
         navigate('/main page');
       }else 

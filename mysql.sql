@@ -1,4 +1,5 @@
-
+CREATE DATABASE IF NOT EXISTS mydb;
+USE mydb;
 DROP TABLE IF EXISTS contact_emails;
  DROP TABLE IF EXISTS contact;
  DROP TABLE IF EXISTS attachment;
@@ -10,7 +11,8 @@ DROP TABLE IF EXISTS contact_emails;
 
 CREATE TABLE mail (
     id VARCHAR(255) COLLATE utf8mb4_bin PRIMARY KEY,
-    pass VARCHAR(255) NOT NULL
+    pass VARCHAR(255) NOT NULL,
+    role VARCHAR(60)
 );
 CREATE TABLE folder (
     id INT PRIMARY KEY AUTO_INCREMENT,

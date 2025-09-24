@@ -11,7 +11,12 @@ const FilterOptionsDiv = () => {
   const [selectedSubject, setSelectedSubject] = useState("");
   const handleFilter = async() => {
     try{
-        const response = await axios.put(`http://localhost:8080/api/filter`,{receiver:user.email,Sender:selectedSender,subject:selectedSubject,directory:selectedFolder});
+        const response = await axios.put(`http://localhost:8080/api/filter`,{receiver:user.email,Sender:selectedSender,subject:selectedSubject,directory:selectedFolder},{
+      auth:{
+        username: user.email,
+        password: user.password
+      }
+    });
         seterror(null);
         setIsVisible(false);
       } catch (error) { 

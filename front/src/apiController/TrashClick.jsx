@@ -3,7 +3,11 @@ import { handlePageReload } from "../MainPage/Components/PageReload";
 const BASE_URL="http://localhost:8080/api"
 export const TrashClick=async(user,setUser,navigateSection)=>{
     try {
-        const response = await axios.delete(`${BASE_URL}/delete30/${user.email}`);
+        const response = await axios.delete(`${BASE_URL}/delete30/${user.email}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
           if (response.status === 200) {
             console.log('Login successful:');
             

@@ -61,7 +61,12 @@ const MainPage = () => {
         importance:
           importance === "high" ? 10 : importance === "medium" ? 5 : 0,
         attachments: attachments,
-      });
+      },{
+      auth:{
+        username: user.email,
+        password: user.password
+      }
+    });
 
       if (response.status === 200) {
         set_to("");

@@ -6,7 +6,11 @@ export const MoveController = async (selectedMessages,user,categoryName,setCurre
       console.log(selectedMessages);
       console.log(user.email);
       console.log(categoryName);
-      const response = await axios.put(`${BASE_URL}/folder/${user.email}/${Array.from(selectedMessages)}/${categoryName}`);
+      const response = await axios.put(`${BASE_URL}/folder/${user.email}/${Array.from(selectedMessages)}/${categoryName}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
     
       setCurrentMessages(prev => 
         prev.filter(message => !selectedMessages.has(message.id))
@@ -27,7 +31,11 @@ export const MoveController = async (selectedMessages,user,categoryName,setCurre
           let checkUser = (message.from === user.email);
           let bool = true;
           if (message.from === user.email) bool = false;
-          const response = await axios.get(`${BASE_URL}/retrieve/${message.id}/${bool}/${checkUser}`);
+          const response = await axios.get(`${BASE_URL}/retrieve/${message.id}/${bool}/${checkUser}`,{
+        auth:{
+          username: user.email,
+          password: user.password
+        }});
           console.log('Full response:', response);
           console.log('Response data:', response.data);
           onMessageUpdate(message.id)

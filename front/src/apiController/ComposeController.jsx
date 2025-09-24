@@ -36,7 +36,12 @@ export const sendMessage = async (
 
   try {
     // Check if recipients are valid
-    const res = await axios.get(`${BASE_URL}/check/${filteredRecipients}`);
+    const res = await axios.get(`${BASE_URL}/check/${filteredRecipients}`,{
+      auth: {
+        username: user.email,
+        password: user.password
+      }
+    });
   } catch (error) {
     setError(error.response.data.message);
     return;
@@ -54,6 +59,11 @@ export const sendMessage = async (
         subject: subject,
         importance: importance === "high" ? 10 : importance === "medium" ? 5 : 0,
         attachments: attachments
+      },{
+        auth:{
+          username: user.email,
+          password: user.password
+        }
       });
 
       if (response.status === 200) {

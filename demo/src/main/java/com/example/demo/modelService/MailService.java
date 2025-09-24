@@ -13,6 +13,7 @@ import com.example.demo.entity.UserFolder;
 import com.example.demo.service.Mail_service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,11 +25,13 @@ import java.util.List;
 @Service
 public class MailService {
     Mail_service mailService;
-
+    PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MailService(Mail_service mailService) {
+    public MailService(Mail_service mailService,PasswordEncoder passwordEncoder) {
+
         this.mailService = mailService;
+        this.passwordEncoder=passwordEncoder;
     }
 
 
@@ -36,7 +39,8 @@ public class MailService {
     public ResponseEntity<Mail> signUp( DTO_mail m) {
         Mail mail = new Mail.builder()
                 .email(m.getEmail())
-                .password(m.getPassword())
+                .password(passwordEncoder.encode(m.getPassword()))
+                .role("ROLE_USER")
                 .build();
 
         Mail savedMail = mailService.sign_up(mail);
@@ -47,14 +51,14 @@ public class MailService {
     public ResponseEntity<Mail> log_in( DTO_mail m) {
         Mail mail = new Mail.builder().email(m.getEmail()).build();
         Mail DB_mail = mailService.log_in(mail);
-        if (DB_mail.getPassword().equals(m.getPassword()))
-            return ResponseEntity.ok(DB_mail);
-        else throw new RuntimeException("Wrong Password");
+        return ResponseEntity.ok(DB_mail);
+
     }
 
-    public Mail addin_message( DTO_mail obj) {
+    public Mail addin_message(DTO_mail obj) {
         Mail user1 = new Mail.builder().email(obj.getFromemail()).build();
         Mail mail1 = mailService.log_in((Mail) user1);
+
         Mail user2 = new Mail.builder().email(obj.getToemail()).build();
         Mail mail2;
         try {
@@ -86,6 +90,8 @@ public class MailService {
                 .attachments(attachments)
                 .build();
         mail1.addout(m1);
+        mail1.removeDraft(m1);
+        System.out.println("gggggggggggggggggggggggggggggggggg");
         return mailService.update(mail1);
     }
     public ResponseEntity<Mail> sort( Sort_DAO obj) {

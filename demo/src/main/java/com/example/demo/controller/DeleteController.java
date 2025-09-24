@@ -40,12 +40,12 @@ public class DeleteController {
     }
     @DeleteMapping("/delete1/{id}/{type}")
     void deleteSender(@PathVariable List<Integer> id,@PathVariable  boolean type){
-        System.out.println("gggg");
+
          deleteService.semiDeleteOutMeseages(id,type);
     }
     @DeleteMapping("/delete2/{id}")
     void deleteInbox(@PathVariable List<Integer> id){
-        System.out.print("gggggg");
+
         deleteService.semiDeleteInMessages(id);
     }
 
